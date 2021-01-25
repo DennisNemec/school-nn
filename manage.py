@@ -1,4 +1,4 @@
-#!/nix/store/m7080pw0ryjk0jhljp55rq1hd2qy8gki-python3-3.8.6/bin/python
+#!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
