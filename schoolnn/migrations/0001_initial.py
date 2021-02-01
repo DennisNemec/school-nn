@@ -27,7 +27,6 @@ class Migration(migrations.Migration):
                 ('custom', models.BooleanField(default=False)),
                 ('created_at', models.DateTimeField()),
                 ('updated_at', models.DateTimeField()),
-            ],
         ),
         migrations.CreateModel(
             name='Image',
