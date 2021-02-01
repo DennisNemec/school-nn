@@ -4,5 +4,5 @@ db.sqlite3
 *.idea
 .env
 upload.zip
-storage/data/*
-!storage/data/.gitkeep
+storage/*
+!storage/.gitkeep
