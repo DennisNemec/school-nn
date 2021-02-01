@@ -1,0 +1,18 @@
+{
+  "name": "jstools",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "autoprefixer": "^10.2.4",
+    "laravel-mix-purgecss": "^6.0.0",
+    "tailwindcss": "^2.0.2",
+    "vue": "^3.0.5"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.0.5",
+    "laravel-mix": "^6.0.11",
+    "postcss": "^8.1",
+    "vue-loader": "^16.1.0"
+  }
+}
