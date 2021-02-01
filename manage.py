@@ -5,6 +5,7 @@ import sys
 
 
 def main():
+    """Call the django CLI wrapper."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "schoolnn_app.settings")
     try:
         from django.core.management import execute_from_command_line
