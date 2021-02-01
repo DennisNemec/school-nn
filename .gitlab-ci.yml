@@ -1,0 +1,39 @@
+stages:
+  - test
+  - deploy
+
+mypy-typing-check:
+  stage: test
+  tags:
+    - mypy
+  script:
+    - python3 -m mypy . --ignore-missing-imports -v
+
+bandit-security-check:
+  stage: test
+  tags:
+    - bandit
+  script:
+    - python3 -m bandit -r .
+
+pylint-style-check:
+  stage: test
+  tags:
+    - pylint
+  script:
+    - python3 -m pylint schoolnn
+    - python3 -m pylint schoolnn_app
+
+flake8-style-check:
+  stage: test
+  tags:
+    - flake8
+  script:
+    - python3 -m flake8 -v .
+
+pydocstyle-style-check:
+  stage: test
+  tags:
+    - pydocstyle
+  script:
+    - python3 -m pydocstyle . -v
