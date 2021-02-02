@@ -61,9 +61,6 @@ class Project(models.Model):
     name = models.CharField(max_length=15)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
-    dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture_id = models.ForeignKey(Architecture, on_delete=models.CASCADE)
-    traning_pass_id = models.ForeignKey(Training_Pass, on_delete=models.CASCADE)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
