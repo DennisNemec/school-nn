@@ -25,7 +25,7 @@ def _get_password() -> str:
     return ""
 
 
-SECRET_KEY = _get_password()  # TO DO: read from config
+SECRET_KEY = "CRINGE" # TO DO: read from config
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "schoolnn"
 ]
 
 MIDDLEWARE = [

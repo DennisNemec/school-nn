@@ -16,7 +16,7 @@ class ArchitectureDeleteView(DeleteView):
 
 class ArchitectureEditView(EditView):
     model = Architecture
-    template_name = "architecture/edit.html"
+    template_name = "architecture/create.html"
 
 class ArchitectureCreateView(CreateView):
     model = Architecture
