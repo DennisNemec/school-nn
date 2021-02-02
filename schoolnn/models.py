@@ -53,6 +53,9 @@ class Architecture(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
+    def get_absolute_url(self):
+        return reverse('architecture-detail', kwargs={'pk': self.pk})
+
 
 class Project(models.Model):
     name = models.CharField(max_length=15)
