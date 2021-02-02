@@ -14,14 +14,14 @@ bandit-security-check:
   tags:
     - bandit
   script:
-    - python3 -m bandit -r .
+    - python3 -m bandit -r .  --config .bandit.yaml
 
 pylint-style-check:
   stage: test
   tags:
     - pylint
   script:
-    - python3 -m pylint schoolnn
+    - python3 -m pylint schoolnn --ignore "schoolnn/migrations"
     - python3 -m pylint schoolnn_app
 
 flake8-style-check:
@@ -29,7 +29,7 @@ flake8-style-check:
   tags:
     - flake8
   script:
-    - python3 -m flake8 -v .
+    - python3 -m flake8 -v . --exclude "schoolnn/migrations/*"
 
 pydocstyle-style-check:
   stage: test
