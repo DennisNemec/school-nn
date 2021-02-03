@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, DeleteView, UpdateView, DetailView, EditView
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import ListView, DetailView
 from myapp.models import Architecture
 
 class ArchitectureListView(ListView):
