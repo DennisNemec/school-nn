@@ -5,20 +5,21 @@ from schoolnn.models import Architecture
 
 class ArchitectureListView(ListView):
     model = Architecture
-    template_name = "architecture/list.html"
+    template_name = "architectures/list.html"
 
 class ArchitectureDetailView(DetailView):
     model = Architecture
-    template_name = "architecture/detail.html"
+    template_name = "architectures/architecture/detail.html"
 
 class ArchitectureDeleteView(DeleteView):
     model = Architecture
-    template_name = "architecture/delete.html"
+    template_name = "architectures/architecture/delete.html"
 
 class ArchitectureEditView(UpdateView):
     model = Architecture
-    template_name = "architecture/create.html"
+    template_name = "architectures/architecture/create.html"
 
 class ArchitectureCreateView(CreateView):
     model = Architecture
-    template_name = "architecture/create.html"
+    template_name = "architectures/architecture/create.html"
+

@@ -10,6 +10,9 @@ class Workspace(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
+    def __str__(self):
+        return '%s' % (self.name)
+
 
 class User(models.Model):
     password =models.CharField(max_length=50)
@@ -24,6 +27,9 @@ class User(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
+    def __str__(self):
+        return '%s' % (self.username)
+
 
 class Dataset(models.Model):
     name = models.CharField(max_length=15)
@@ -31,6 +37,9 @@ class Dataset(models.Model):
     custom = models.BooleanField(default=False)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
+
+    def __str__(self):
+        return '%s' % (self.name)
 
 
 class Image(models.Model):
@@ -41,6 +50,9 @@ class Image(models.Model):
 class Label(models.Model):
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     name = models.CharField(max_length=15)
+
+    def __str__(self):
+        return '%s' % (self.name)
 
 class Image_Label(models.Model):
     label_id = models.ForeignKey(Label, on_delete=models.CASCADE)
@@ -53,6 +65,9 @@ class Architecture(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
+    def __str__(self):
+        return '%s' % (self.name)
+
     def get_absolute_url(self):
         return reverse('architecture-detail', kwargs={'pk': self.pk})
 
@@ -63,6 +78,9 @@ class Project(models.Model):
     custom = models.BooleanField(default=False)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
+
+    def __str__(self):
+        return '%s' % (self.name)
 
 
 class Training_Pass(models.Model):
@@ -75,6 +93,9 @@ class Training_Pass(models.Model):
     architecture_id = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     model_weight = models.BinaryField()
     status = models.CharField(max_length=15)
+
+    def __str__(self):
+        return '%s' % (self.name)
 
 class Training_Step_Metrics(models.Model):
     traning_pass_id = models.ForeignKey(Training_Pass, on_delete=models.CASCADE)
