@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from schoolnn.models import Architecture
 
 class ArchitectureListView(ListView):
-    model = Architecutre
+    model = Architecture
     template_name = "architecture/list.html"
 
 class ArchitectureDetailView(DetailView):
