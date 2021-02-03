@@ -1,5 +1,0 @@
-from architectureview import ArchitectureListView
-from architectureview import ArchitectureDetailView
-from architectureview import ArchitectureDeleteView
-from architectureview import ArchitectureEditView
-from architectureview import ArchitectureCreateView
