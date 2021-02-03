@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from schoolnn.models import Architecture
 
@@ -15,7 +15,7 @@ class ArchitectureDeleteView(DeleteView):
     model = Architecture
     template_name = "architecture/delete.html"
 
-class ArchitectureEditView(EditView):
+class ArchitectureEditView(UpdateView):
     model = Architecture
     template_name = "architecture/create.html"
 
