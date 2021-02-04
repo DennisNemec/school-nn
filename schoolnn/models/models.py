@@ -47,7 +47,11 @@ class Image(models.Model):
     """Image of a dataset used for training."""
 
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    filename = models.FilePathField()
+
+    @property
+    def filename(self) -> str:
+        """Get the filename, derived from the id and zero padded."""
+        return '{:0>8}.jpg'.format(self.dataset_id)
 
 
 class Label(models.Model):
