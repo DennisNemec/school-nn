@@ -4,7 +4,8 @@ import zipfile
 from django import forms
 from django.core.validators import FileExtensionValidator
 from django.http import HttpResponseRedirect
-from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from schoolnn.models import Dataset, Label, Image, Image_Label
 from PIL import Image as PIL_Image, ImageOps
@@ -78,4 +79,11 @@ class DatasetCreate(CreateView):
 
 class DatasetUpdate(UpdateView):
     model = Dataset
-    fields = []
+    fields = ['name']
+    template_name = "datasets/form.html"
+
+
+class DatasetDelete(DeleteView):
+    model = Dataset
+    success_url = reverse_lazy('dataset-list')
+    template_name = "datasets/delete.html"
