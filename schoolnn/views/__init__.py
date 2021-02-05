@@ -1,1 +1,2 @@
-from .base_view import BaseView
+"""The SchoolNN views package."""
+from .base_view import BaseView  # noqa: F401
