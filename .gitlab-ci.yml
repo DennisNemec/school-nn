@@ -31,3 +31,9 @@ flake8-style-check:
   script:
     - python3 -m flake8 . --exclude "schoolnn/migrations/*"
 
+pytest-untittest:
+  stage: test
+  tags:
+    - pytest
+  script:
+    - python3 -m pytest
