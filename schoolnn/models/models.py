@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from .training import TrainingParameter
+from django.urls import reverse
 
 
 class Workspace(models.Model):
@@ -16,7 +17,6 @@ class Workspace(models.Model):
 
 class User(models.Model):
     """User account of students, teachers and admins."""
-
     password = models.CharField(max_length=50)
     last_login = models.DateTimeField()
     is_active = models.BooleanField(default=False)
@@ -39,6 +39,9 @@ class Dataset(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
+    def get_absolute_url(self):
+        return reverse('dataset-detail', kwargs={'pk': self.pk})
+
 
 class Image(models.Model):
     """Image of a dataset used for training."""
@@ -56,7 +59,6 @@ class Label(models.Model):
 
 class ImageLabel(models.Model):
     """Link between one image and one label."""
-
     label_id = models.ForeignKey(Label, on_delete=models.CASCADE)
     image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
 
@@ -111,8 +113,7 @@ class TrainingPass(models.Model):
 class TrainingStepMetrics(models.Model):
     """Training and validation metrics of a training block/step."""
 
-    traning_pass_id = models.ForeignKey(
-        TrainingPass, on_delete=models.CASCADE)
+    traning_pass = models.ForeignKey(TrainingPass, on_delete=models.CASCADE)
     metrics_json = models.JSONField()
 
 

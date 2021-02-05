@@ -3,3 +3,6 @@ db.sqlite3
 *.pyc
 *.idea
 .env
+upload.zip
+storage/data/*
+!storage/data/.gitkeep

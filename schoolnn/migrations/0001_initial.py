@@ -24,10 +24,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Dataset',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
                 ('custom', models.BooleanField(default=False)),
                 ('created_at', models.DateTimeField()),
                 ('updated_at', models.DateTimeField()),
