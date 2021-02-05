@@ -30,10 +30,3 @@ flake8-style-check:
     - flake8
   script:
     - python3 -m flake8 -v . --exclude "schoolnn/migrations/*"
-
-pydocstyle-style-check:
-  stage: test
-  tags:
-    - pydocstyle
-  script:
-    - python3 -m pydocstyle . -v
