@@ -4,8 +4,8 @@ import os
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from .training import TrainingParameter
 from django.urls import reverse
+from .training import TrainingParameter
 
 
 class Workspace(models.Model):
