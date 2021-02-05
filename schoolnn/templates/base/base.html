@@ -13,8 +13,36 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <title>SchoolNN</title>
 </head>
-<body class="">
+<body class="bg-light-gray font-sans text-primary">
+    <header class="h-24 bg-white flex">
+        <div class="bg-primary w-1/6 h-full flex items-center pl-12">
+            <img src="{% static 'assets/logo.svg' %}" alt="SchoolNN Logo">
+        </div>
+        <div class="w-5/6 h-full bg-white shadow-base flex items-center px-12">
+            <div>
+                <span class="font-bold">Startseite</span> › Datensätze
+            </div>
+        </div>
+    </header>
+    <nav class="w-1/6 h-screen-minus-header bg-white flex flex-col justify-between shadow-base">
+        <ul class="pl-12 pt-20 space-y-8">
+            <li class="menu-item" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
+                Datensätze
+            </li>
+            <li class="menu-item" style="background-image: url('{% static 'assets/icons/architectures.svg' %} ')">
+                Modellarchitekturen
+            </li>
+            <li class="menu-item" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">
+                Projekte
+            </li>
+        </ul>
 
+        <div class="bg-green h-32 w-full pl-12 py-8 text-white">
+            <p>Aktuelles Training</p>
+            <p class="font-bold">78% Genauigkeit</p>
+            <a href="" class="underline">Laufendes Training anzeigen</a>
+        </div>
+    </nav>
 </body>
 
 

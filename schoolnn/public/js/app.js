@@ -1,6 +1,15 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/js/app.js":
+/*!*****************************!*\
+  !*** ./resources/js/app.js ***!
+  \*****************************/
+/***/ (() => {
+
+
+
+/***/ }),
 
 /***/ "./resources/css/tailwind.css":
 /*!************************************!*\
@@ -8,6 +17,7 @@
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
@@ -74,6 +84,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		};
 /******/ 		
 /******/ 		var deferredModules = [
+/******/ 			["./resources/js/app.js"],
 /******/ 			["./resources/css/tailwind.css"]
 /******/ 		];
 /******/ 		// no chunk on demand loading
