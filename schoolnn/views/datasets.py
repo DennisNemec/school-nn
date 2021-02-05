@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView
 from schoolnn.models import Dataset, Label, Image, Image_Label
+from PIL import Image as PIL_Image, ImageOps
 
 
 class DatasetCreateForm(forms.ModelForm):
@@ -70,7 +71,9 @@ class DatasetCreate(CreateView):
         for entry in os.scandir(path):
             image = Image.objects.create(dataset=dataset)
             Image_Label.objects.create(label=label, image=image)
-            os.rename(entry.path, os.path.join(self.store_dir, str(image.id)))
+            im = PIL_Image.open(entry.path)
+            im = ImageOps.fit(im, (64, 64), PIL_Image.ANTIALIAS)
+            im.save(os.path.join(self.store_dir, str(image.id)), 'JPEG')
 
 
 class DatasetUpdate(UpdateView):
