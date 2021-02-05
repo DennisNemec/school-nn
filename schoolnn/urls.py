@@ -1,9 +1,9 @@
-""" Django routes """
+"""Manages URL routing of the webapp."""
 
 from django.urls import path
-from schoolnn.views.datasets import DatasetCreate, DatasetList
-from schoolnn.views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
-from schoolnn.views.images import ImageView
+from .views.datasets import DatasetCreate, DatasetList
+from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
+from .views.images import ImageView
 
 urlpatterns = [
     path("datasets/", DatasetList.as_view(), name="dataset-list"),

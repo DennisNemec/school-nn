@@ -102,7 +102,8 @@ class DatasetCreate(CreateView):
             image = Image.objects.create(dataset=dataset)
             ImageLabel.objects.create(label=label, image=image)
             image_pil = PIL_Image.open(entry.path)
-            image_pil = ImageOps.fit(image_pil, (512, 512), PIL_Image.ANTIALIAS)
+            image_pil = ImageOps.fit(
+                image_pil, (512, 512), PIL_Image.ANTIALIAS)
             image_pil.save(os.path.join(str(self.team_dir), image.path))
 
 
