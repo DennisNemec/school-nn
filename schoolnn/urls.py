@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from django.urls import path
 from schoolnn.views.datasets import DatasetCreate, DatasetList, DatasetDetail, DatasetUpdate, DatasetDelete
 from schoolnn.views.images import ImageView

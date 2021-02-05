@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import os
 import shutil
 import zipfile
@@ -7,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from schoolnn.models import Dataset, Label, Image, Image_Label
+from schoolnn.models import Dataset, Label, Image, ImageLabel
 from PIL import Image as PIL_Image, ImageOps
 
 
@@ -38,9 +40,9 @@ class DatasetCreate(CreateView):
 
     def form_valid(self, form: DatasetCreateForm):
         self.object = form.save()
-        self.upload_file = "storage/1/upload_{}.zip".format(self.object.id)
-        self.extract_dir = "storage/1/{}_upload/".format(self.object.id)
-        self.store_dir = "storage/1/{}/".format(self.object.id)
+        self.team_dir = "storage/1/"
+        self.upload_file = "{}/upload_{}.zip".format(self.team_dir, self.object.id)
+        self.extract_dir = "{}/{}_upload/".format(self.team_dir, self.object.id)
 
         self.handle_upload(self.request.FILES["file"])
         self.create_tags(self.object)
@@ -61,7 +63,7 @@ class DatasetCreate(CreateView):
             zip_ref.extractall(self.extract_dir)
 
     def create_tags(self, dataset: Dataset):
-        os.makedirs(self.store_dir, exist_ok=True)
+        os.makedirs(os.path.join(self.team_dir, str(dataset.id)), exist_ok=True)
 
         for entry in os.scandir(self.extract_dir):
             if entry.is_dir():
@@ -71,10 +73,10 @@ class DatasetCreate(CreateView):
     def process_images(self, path: os.DirEntry, label: Label, dataset: Dataset):
         for entry in os.scandir(path):
             image = Image.objects.create(dataset=dataset)
-            Image_Label.objects.create(label=label, image=image)
+            ImageLabel.objects.create(label=label, image=image)
             im = PIL_Image.open(entry.path)
-            im = ImageOps.fit(im, (64, 64), PIL_Image.ANTIALIAS)
-            im.save(os.path.join(self.store_dir, str(image.id)), 'JPEG')
+            im = ImageOps.fit(im, (512, 512), PIL_Image.ANTIALIAS)
+            im.save(os.path.join(self.team_dir, image.path))
 
 
 class DatasetUpdate(UpdateView):

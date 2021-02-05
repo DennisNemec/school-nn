@@ -1,4 +1,6 @@
 """All ORM models."""
+import os
+
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -46,18 +48,23 @@ class Dataset(models.Model):
 class Image(models.Model):
     """Image of a dataset used for training."""
 
-    dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
 
     @property
     def filename(self) -> str:
         """Get the filename, derived from the id and zero padded."""
-        return '{:0>8}.jpg'.format(self.dataset_id)
+        return '{:0>8}.jpg'.format(self.id)
+
+    @property
+    def path(self) -> str:
+        """Get the path of this image in the workspace storage folder."""
+        return os.path.join(str(self.dataset.id), self.filename)
 
 
 class Label(models.Model):
     """Label existing in a database."""
 
-    dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     name = models.CharField(max_length=15)
 
 
@@ -65,12 +72,6 @@ class ImageLabel(models.Model):
     """Link between one image and one label."""
     label = models.ForeignKey(Label, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-
-
-class Label(models.Model):
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    name = models.CharField(max_length=15)
 
 
 class Architecture(models.Model):

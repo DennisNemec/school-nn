@@ -2,7 +2,7 @@
 
 {% for label in dataset.label_set.all %}
     <h4>Label: {{ label.name }}</h4>
-    {% for image_label in label.image_label_set.all %}
+    {% for image_label in label.imagelabel_set.all %}
         <img src="{% url 'image-show' image_label.image.id %}" alt="{{ label.name }}"/>
     {% endfor %}
 {% endfor %}

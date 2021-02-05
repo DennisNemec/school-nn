@@ -1,3 +1,5 @@
+import os
+
 from django.http import HttpResponse
 from django.views import View
 
@@ -10,7 +12,7 @@ class ImageView(View):
         image = Image.objects.get(**kwargs)
 
         image_data = open(
-            "storage/1/{}/{}".format(image.dataset.id, image.id),
+            os.path.join('storage/1', image.path),
             'rb'
         ).read()
 
