@@ -34,10 +34,10 @@ class Dataset(models.Model):
     """Set of images used for training."""
 
     name = models.CharField(max_length=15)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     custom = models.BooleanField(default=False)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
         return reverse('dataset-detail', kwargs={'pk': self.pk})
@@ -59,8 +59,14 @@ class Label(models.Model):
 
 class ImageLabel(models.Model):
     """Link between one image and one label."""
-    label_id = models.ForeignKey(Label, on_delete=models.CASCADE)
-    image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
+    label = models.ForeignKey(Label, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+
+
+class Label(models.Model):
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    name = models.CharField(max_length=15)
 
 
 class Architecture(models.Model):
@@ -80,8 +86,9 @@ class Project(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture_id = models.ForeignKey(
+    architecture = models.ForeignKey(
         Architecture, on_delete=models.CASCADE)
+    traning_pass = models.ForeignKey('TrainingPass', on_delete=models.CASCADE)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
