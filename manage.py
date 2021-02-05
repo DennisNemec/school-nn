@@ -2,9 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from dotenv import load_dotenv
 
 
 def main():
+    load_dotenv()
+
     """Call the django CLI wrapper."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "schoolnn_app.settings")
     try:
