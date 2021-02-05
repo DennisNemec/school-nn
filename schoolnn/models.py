@@ -1,6 +1,7 @@
 """Manages TODO."""
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from datetime import datetime
 from django.db import models
 
 
@@ -24,8 +25,8 @@ class User(models.Model):
     is_superadmin = models.BooleanField(default=False)
     is_workspaceadmin = models.BooleanField(default=False)
     workspace_id = models.ForeignKey(Workspace, on_delete=models.CASCADE)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return '%s' % (self.username)
@@ -35,8 +36,8 @@ class Dataset(models.Model):
     name = models.CharField(max_length=15)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return '%s' % (self.name)
@@ -61,9 +62,9 @@ class Image_Label(models.Model):
 class Architecture(models.Model):
     name = models.CharField(max_length=15)
     custom = models.BooleanField(default=False)
-    architecture_json = models.JSONField
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    architecture_json = models.JSONField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return '%s' % (self.name)
@@ -76,8 +77,8 @@ class Project(models.Model):
     name = models.CharField(max_length=15)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return '%s' % (self.name)
@@ -106,15 +107,15 @@ class Note(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey('content_type', 'object_id')
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
 class Visiblity(models.Model):
     permissions = models.JSONField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey('content_type', 'object_id')
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
 
