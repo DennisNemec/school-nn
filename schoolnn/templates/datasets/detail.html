@@ -1,3 +1,10 @@
 <h3>Dataset: {{ dataset.name }}</h3>
 
+{% for label in dataset.label_set.all %}
+    <h4>Label: {{ label.name }}</h4>
+    {% for image_label in label.image_label_set.all %}
+        <img src="{% url 'image-show' image_label.image.id %}" alt="{{ label.name }}"/>
+    {% endfor %}
+{% endfor %}
+
 <a href="/datasets/">Liste</a>

@@ -35,7 +35,6 @@ class DatasetCreate(CreateView):
     template_name = "datasets/form.html"
 
     def form_valid(self, form: DatasetCreateForm):
-        print(form.data)
         self.object = form.save()
         self.upload_file = "storage/1/upload_{}.zip".format(self.object.id)
         self.extract_dir = "storage/1/{}_upload/".format(self.object.id)
