@@ -7,7 +7,7 @@ mypy-typing-check:
   tags:
     - mypy
   script:
-    - python3 -m mypy . --ignore-missing-imports -v
+    - python3 -m mypy . --ignore-missing-imports
 
 bandit-security-check:
   stage: test
@@ -29,4 +29,5 @@ flake8-style-check:
   tags:
     - flake8
   script:
-    - python3 -m flake8 -v . --exclude "schoolnn/migrations/*"
+    - python3 -m flake8 . --exclude "schoolnn/migrations/*"
+
