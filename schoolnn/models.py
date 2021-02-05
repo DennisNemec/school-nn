@@ -141,5 +141,3 @@ class Visiblity(models.Model):
     object_type = GenericForeignKey('content_type', 'object_id')
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
-
-

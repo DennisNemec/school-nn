@@ -1,5 +1,5 @@
 from django.urls import path
-from schoolnn.views.architectureview import ArchitectureListView, ArchitectureDetailView, ArchitectureDeleteView, ArchitectureEditView, ArchitectureCreateView
+import schoolnn.views.architectureview
 
 urlpatterns = [
     path("architectures/", ArchitectureListView.as_view(), name="architecture-list"),
