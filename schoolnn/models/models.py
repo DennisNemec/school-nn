@@ -2,6 +2,7 @@
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from .training import TrainingParameter
 
 
 class Workspace(models.Model):
@@ -95,6 +96,16 @@ class TrainingPass(models.Model):
     architecture_id = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     model_weight = models.BinaryField()
     status = models.CharField(max_length=15)
+
+    @property
+    def training_parameter(self) -> TrainingParameter:
+        """Get training parameter object from json representation."""
+        return TrainingParameter.from_json(self.training_parameter_json)
+
+    @training_parameter.setter
+    def training_parameter(self, training_parameter: TrainingParameter):
+        """Assign training parameter object and save json representation."""
+        self.training_parameter_json = training_parameter.to_json()
 
 
 class TrainingStepMetrics(models.Model):
