@@ -1,3 +1,4 @@
+"""All views having to to with images."""
 import os
 
 from django.http import HttpResponse
@@ -7,8 +8,11 @@ from schoolnn.models import Image
 
 
 class ImageView(View):
+    """Get a raw jpeg image."""
 
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(*_, **kwargs):
+        """Repond to the HTTP get request."""
         image = Image.objects.get(**kwargs)
 
         image_data = open(

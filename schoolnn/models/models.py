@@ -42,6 +42,7 @@ class Dataset(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
+        """TODO, good question."""
         return reverse('dataset-detail', kwargs={'pk': self.pk})
 
 
