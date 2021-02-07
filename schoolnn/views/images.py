@@ -15,9 +15,6 @@ class ImageView(View):
         """Repond to the HTTP get request."""
         image = Image.objects.get(**kwargs)
 
-        image_data = open(
-            os.path.join('storage/1', image.path),
-            'rb'
-        ).read()
+        image_data = open(os.path.join("storage/1", image.path), "rb").read()
 
-        return HttpResponse(image_data, 'image/jpg')
+        return HttpResponse(image_data, "image/jpg")
