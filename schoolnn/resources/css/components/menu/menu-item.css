@@ -1,0 +1,10 @@
+.menu-item {
+    @apply
+        pl-8
+        my-2
+        bg-no-repeat
+        hover:text-selected
+        cursor-pointer;
+
+    background-position: 0 0.1rem;
+}

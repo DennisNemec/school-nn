@@ -4,8 +4,10 @@ from django.urls import path
 from .views.datasets import DatasetCreate, DatasetList
 from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
+from .views.base_view import BaseView
 
 urlpatterns = [
+    path("", BaseView.as_view()),
     path("datasets/", DatasetList.as_view(), name="dataset-list"),
     path("datasets/<int:pk>/", DatasetDetail.as_view(),
          name="dataset-detail"),

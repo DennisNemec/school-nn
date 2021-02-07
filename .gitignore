@@ -1,8 +1,11 @@
 venv
 db.sqlite3
 *.pyc
-*.idea
+.idea/
+node_modules/
+__pycache__/
 .env
 upload.zip
 storage/*
 !storage/.gitkeep
+.DS_Store
