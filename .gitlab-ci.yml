@@ -14,7 +14,7 @@ bandit-security-check:
   tags:
     - bandit
   script:
-    - python3 -m bandit -r .  --config .bandit.yaml
+    - python3 -m bandit -r . --config .bandit.yaml
 
 black-style-check:
   stage: test
