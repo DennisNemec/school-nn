@@ -1,7 +1,10 @@
 """All ORM models."""
+import os
+
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.urls import reverse
 from .training import TrainingParameter
 
 
@@ -16,7 +19,6 @@ class Workspace(models.Model):
 
 class User(models.Model):
     """User account of students, teachers and admins."""
-
     password = models.CharField(max_length=50)
     last_login = models.DateTimeField()
     is_active = models.BooleanField(default=False)
@@ -34,31 +36,43 @@ class Dataset(models.Model):
     """Set of images used for training."""
 
     name = models.CharField(max_length=15)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     custom = models.BooleanField(default=False)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        """TODO, good question."""
+        return reverse('dataset-detail', kwargs={'pk': self.pk})
 
 
 class Image(models.Model):
     """Image of a dataset used for training."""
 
-    dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    filename = models.FilePathField()
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+
+    @property
+    def filename(self) -> str:
+        """Get the filename, derived from the id and zero padded."""
+        return '{:0>8}.jpg'.format(self.id)
+
+    @property
+    def path(self) -> str:
+        """Get the path of this image in the workspace storage folder."""
+        return os.path.join(str(self.dataset.id), self.filename)
 
 
 class Label(models.Model):
     """Label existing in a database."""
 
-    dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     name = models.CharField(max_length=15)
 
 
 class ImageLabel(models.Model):
     """Link between one image and one label."""
-
-    label_id = models.ForeignKey(Label, on_delete=models.CASCADE)
-    image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
+    label = models.ForeignKey(Label, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
 
 
 class Architecture(models.Model):
@@ -78,8 +92,9 @@ class Project(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture_id = models.ForeignKey(
+    architecture = models.ForeignKey(
         Architecture, on_delete=models.CASCADE)
+    traning_pass = models.ForeignKey('TrainingPass', on_delete=models.CASCADE)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
@@ -111,8 +126,7 @@ class TrainingPass(models.Model):
 class TrainingStepMetrics(models.Model):
     """Training and validation metrics of a training block/step."""
 
-    traning_pass_id = models.ForeignKey(
-        TrainingPass, on_delete=models.CASCADE)
+    traning_pass = models.ForeignKey(TrainingPass, on_delete=models.CASCADE)
     metrics_json = models.JSONField()
 
 

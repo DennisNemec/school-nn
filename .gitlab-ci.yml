@@ -14,7 +14,7 @@ bandit-security-check:
   tags:
     - bandit
   script:
-    - python3 -m bandit -r .  --config .bandit.yaml
+    - python3 -m bandit -r . --config .bandit.yaml
 
 pylint-style-check:
   stage: test
@@ -22,6 +22,7 @@ pylint-style-check:
     - pylint
   script:
     - python3 -m pylint schoolnn --ignore "schoolnn/migrations"
+      --disable "too-many-ancestors,no-member,too-few-public-methods"
     - python3 -m pylint schoolnn_app
 
 flake8-style-check:
