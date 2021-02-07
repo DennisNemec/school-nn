@@ -78,8 +78,7 @@ class Project(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture_id = models.ForeignKey(
-        Architecture, on_delete=models.CASCADE)
+    architecture_id = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
@@ -111,8 +110,7 @@ class TrainingPass(models.Model):
 class TrainingStepMetrics(models.Model):
     """Training and validation metrics of a training block/step."""
 
-    traning_pass_id = models.ForeignKey(
-        TrainingPass, on_delete=models.CASCADE)
+    traning_pass_id = models.ForeignKey(TrainingPass, on_delete=models.CASCADE)
     metrics_json = models.JSONField()
 
 
@@ -122,7 +120,7 @@ class Note(models.Model):
     text = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    object_type = GenericForeignKey('content_type', 'object_id')
+    object_type = GenericForeignKey("content_type", "object_id")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
@@ -133,6 +131,6 @@ class Visiblity(models.Model):
     permissions = models.JSONField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    object_type = GenericForeignKey('content_type', 'object_id')
+    object_type = GenericForeignKey("content_type", "object_id")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()

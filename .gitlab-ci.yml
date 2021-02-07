@@ -16,13 +16,12 @@ bandit-security-check:
   script:
     - python3 -m bandit -r .  --config .bandit.yaml
 
-pylint-style-check:
+black-style-check:
   stage: test
   tags:
-    - pylint
+    - black
   script:
-    - python3 -m pylint schoolnn --ignore "schoolnn/migrations"
-    - python3 -m pylint schoolnn_app
+    - python3 -m black . --check
 
 flake8-style-check:
   stage: test
