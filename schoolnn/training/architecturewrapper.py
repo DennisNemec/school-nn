@@ -104,7 +104,10 @@ class WrappedArchitecture:
         """Generate architecture representation from a keras model."""
         layers = []
         layers.append(
-            {"type": "Input", "shape": m.input_shape[1:]}  # Drop Batch Dimension
+            {
+                "type": "Input",
+                "shape": m.input_shape[1:],
+            }  # Drop Batch Dimension
         )
 
         for keras_layer in m.layers:

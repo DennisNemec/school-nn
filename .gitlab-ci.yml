@@ -21,7 +21,7 @@ black-style-check:
   tags:
     - black
   script:
-    - python3 -m black . --check
+    - python3 -m black . --line-length 80 --check
 
 flake8-style-check:
   stage: test

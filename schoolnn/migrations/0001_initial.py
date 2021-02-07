@@ -295,13 +295,15 @@ class Migration(migrations.Migration):
                 (
                     "image_id",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="schoolnn.image"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.image",
                     ),
                 ),
                 (
                     "label_id",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="schoolnn.label"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.label",
                     ),
                 ),
             ],
