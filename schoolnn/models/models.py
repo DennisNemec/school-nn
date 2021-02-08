@@ -20,7 +20,7 @@ class Workspace(models.Model):
     updated_at = models.DateTimeField()
 
     def __str__(self):
-        return '%s' % (self.name)
+        return "%s" % (self.name)
 
 
 class User(models.Model):
@@ -39,7 +39,7 @@ class User(models.Model):
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return '%s' % (self.username)
+        return "%s" % (self.username)
 
 
 class Dataset(models.Model):
@@ -52,13 +52,11 @@ class Dataset(models.Model):
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return '%s' % (self.name)
-
+        return "%s" % (self.name)
 
     def get_absolute_url(self):
         """TODO, good question."""
         return reverse("dataset-detail", kwargs={"pk": self.pk})
-
 
 
 class Image(models.Model):
@@ -101,10 +99,10 @@ class Architecture(models.Model):
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return '%s' % (self.name)
+        return "%s" % (self.name)
 
     def get_absolute_url(self):
-        return reverse('architecture-detail', kwargs={'pk': self.pk})
+        return reverse("architecture-detail", kwargs={"pk": self.pk})
 
 
 class Project(models.Model):
@@ -120,8 +118,7 @@ class Project(models.Model):
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return '%s' % (self.name)
-
+        return "%s" % (self.name)
 
 
 class TrainingPass(models.Model):
@@ -161,7 +158,7 @@ class Note(models.Model):
     text = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    object_type = GenericForeignKey('content_type', 'object_id')
+    object_type = GenericForeignKey("content_type", "object_id")
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
@@ -172,6 +169,6 @@ class Visiblity(models.Model):
     permissions = models.JSONField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    object_type = GenericForeignKey('content_type', 'object_id')
+    object_type = GenericForeignKey("content_type", "object_id")
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     updated_at = models.DateTimeField(default=datetime.now, blank=True)

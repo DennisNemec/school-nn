@@ -63,9 +63,7 @@ class DatasetCreate(CreateView):
         self.upload_file = "{}/upload_{}.zip".format(
             self.team_dir, self.object.id
         )
-        self.extract_dir = "{}/{}_upload/".format(
-            self.team_dir, self.object.id
-        )
+        self.extract_dir = "{}/{}_upload/".format(self.team_dir, self.object.id)
 
         self.handle_upload(self.request.FILES["file"])
         self.create_tags(self.object)
@@ -97,17 +95,13 @@ class DatasetCreate(CreateView):
                 label = Label.objects.create(name=entry.name, dataset=dataset)
                 self.process_images(entry, label, dataset)
 
-    def process_images(
-        self, path: os.DirEntry, label: Label, dataset: Dataset
-    ):
+    def process_images(self, path: os.DirEntry, label: Label, dataset: Dataset):
         """Save images center cropped."""
         for entry in os.scandir(path):
             image = Image.objects.create(dataset=dataset)
             ImageLabel.objects.create(label=label, image=image)
             image_pil = PIL_Image.open(entry.path)
-            image_pil = ImageOps.fit(
-                image_pil, (512, 512), PIL_Image.ANTIALIAS
-            )
+            image_pil = ImageOps.fit(image_pil, (512, 512), PIL_Image.ANTIALIAS)
             image_pil.save(os.path.join(str(self.team_dir), image.path))
 
 

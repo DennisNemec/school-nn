@@ -4,7 +4,6 @@ from schoolnn.models import Architecture
 from django.urls import reverse_lazy
 
 
-
 class ArchitectureListView(ListView):
     model = Architecture
     context_object_name = "architectures"
@@ -24,11 +23,11 @@ class ArchitectureDeleteView(DeleteView):
 
 class ArchitectureEditView(UpdateView):
     model = Architecture
-    fields = ['name']
+    fields = ["name"]
     template_name = "architectures/add.html"
 
 
 class ArchitectureCreateView(CreateView):
     model = Architecture
     template_name = "architectures/add.html"
-    fields = '__all__'
+    fields = "__all__"
