@@ -4,7 +4,10 @@ from .views.architectureview import (
     ArchitectureDeleteView,
     ArchitectureEditView,
 )
-from .views.architectureview import ArchitectureListView, ArchitectureDetailView
+from .views.architectureview import (
+    ArchitectureListView,
+    ArchitectureDetailView,
+)
 from .views.datasets import DatasetCreate, DatasetList
 from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
