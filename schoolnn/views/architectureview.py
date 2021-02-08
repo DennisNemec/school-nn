@@ -24,7 +24,8 @@ class ArchitectureDeleteView(DeleteView):
 
 class ArchitectureEditView(UpdateView):
     model = Architecture
-    template_name = "architectures/edit.html"
+    fields = ['name']
+    template_name = "architectures/add.html"
 
 
 class ArchitectureCreateView(CreateView):
