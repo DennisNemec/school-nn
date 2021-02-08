@@ -1,5 +1,5 @@
 """Reimport of all models."""
-from .models import (   # noqa: F401
+from .models import (  # noqa: F401
     Workspace,
     User,
     Dataset,
@@ -13,7 +13,7 @@ from .models import (   # noqa: F401
     Note,
     Visiblity,
 )
-from .training import (   # noqa: F401
+from .training import (  # noqa: F401
     LossFunction,
     Optimizer,
     TerminationCondition,

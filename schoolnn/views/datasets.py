@@ -60,10 +60,12 @@ class DatasetCreate(CreateView):
         if self.object is None:
             raise ValueError("Failed to parse the dataset create form")
         self.team_dir = "storage/1/"
-        self.upload_file = "{}/upload_{}.zip".format(self.team_dir,
-                                                     self.object.id)
-        self.extract_dir = "{}/{}_upload/".format(self.team_dir,
-                                                  self.object.id)
+        self.upload_file = "{}/upload_{}.zip".format(
+            self.team_dir, self.object.id
+        )
+        self.extract_dir = "{}/{}_upload/".format(
+            self.team_dir, self.object.id
+        )
 
         self.handle_upload(self.request.FILES["file"])
         self.create_tags(self.object)
@@ -86,24 +88,26 @@ class DatasetCreate(CreateView):
 
     def create_tags(self, dataset: Dataset):
         """Create labels."""
-        os.makedirs(os.path.join(str(self.team_dir), str(dataset.id)),
-                    exist_ok=True)
+        os.makedirs(
+            os.path.join(str(self.team_dir), str(dataset.id)), exist_ok=True
+        )
 
         for entry in os.scandir(self.extract_dir):
             if entry.is_dir():
-                label = Label.objects.create(name=entry.name,
-                                             dataset=dataset)
+                label = Label.objects.create(name=entry.name, dataset=dataset)
                 self.process_images(entry, label, dataset)
 
-    def process_images(self, path: os.DirEntry, label: Label,
-                       dataset: Dataset):
+    def process_images(
+        self, path: os.DirEntry, label: Label, dataset: Dataset
+    ):
         """Save images center cropped."""
         for entry in os.scandir(path):
             image = Image.objects.create(dataset=dataset)
             ImageLabel.objects.create(label=label, image=image)
             image_pil = PIL_Image.open(entry.path)
             image_pil = ImageOps.fit(
-                image_pil, (512, 512), PIL_Image.ANTIALIAS)
+                image_pil, (512, 512), PIL_Image.ANTIALIAS
+            )
             image_pil.save(os.path.join(str(self.team_dir), image.path))
 
 
@@ -111,7 +115,7 @@ class DatasetUpdate(UpdateView):
     """TODO."""
 
     model = Dataset
-    fields = ['name']
+    fields = ["name"]
     template_name = "datasets/form.html"
 
 
@@ -119,5 +123,5 @@ class DatasetDelete(DeleteView):
     """TODO."""
 
     model = Dataset
-    success_url = reverse_lazy('dataset-list')
+    success_url = reverse_lazy("dataset-list")
     template_name = "datasets/delete.html"

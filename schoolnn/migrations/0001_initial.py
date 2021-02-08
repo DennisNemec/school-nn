@@ -9,150 +9,333 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
+        ("contenttypes", "0002_remove_content_type_name"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Architecture',
+            name="Architecture",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
-                ('custom', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=15)),
+                ("custom", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField()),
+                ("updated_at", models.DateTimeField()),
             ],
         ),
         migrations.CreateModel(
-            name='Dataset',
+            name="Dataset",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
-                ('custom', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=15)),
+                ("custom", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Image',
+            name="Image",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.dataset')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "dataset",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.dataset",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Project',
+            name="Project",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
-                ('custom', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
-                ('architecture', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.architecture')),
-                ('dataset_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.dataset')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=15)),
+                ("custom", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField()),
+                ("updated_at", models.DateTimeField()),
+                (
+                    "architecture",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.architecture",
+                    ),
+                ),
+                (
+                    "dataset_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.dataset",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TrainingPass',
+            name="TrainingPass",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
-                ('start_datetime', models.DateTimeField()),
-                ('end_datetime', models.DateTimeField()),
-                ('training_parameter_json', models.JSONField()),
-                ('model_weight', models.BinaryField()),
-                ('status', models.CharField(max_length=15)),
-                ('architecture_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.architecture')),
-                ('dataset_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.dataset')),
-                ('project_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.project')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=15)),
+                ("start_datetime", models.DateTimeField()),
+                ("end_datetime", models.DateTimeField()),
+                ("training_parameter_json", models.JSONField()),
+                ("model_weight", models.BinaryField()),
+                ("status", models.CharField(max_length=15)),
+                (
+                    "architecture_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.architecture",
+                    ),
+                ),
+                (
+                    "dataset_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.dataset",
+                    ),
+                ),
+                (
+                    "project_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.project",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Workspace',
+            name="Workspace",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('settings_json', models.JSONField()),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=30)),
+                ("settings_json", models.JSONField()),
+                ("created_at", models.DateTimeField()),
+                ("updated_at", models.DateTimeField()),
             ],
         ),
         migrations.CreateModel(
-            name='Visiblity',
+            name="Visiblity",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('permissions', models.JSONField()),
-                ('object_id', models.PositiveIntegerField()),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
-                ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.contenttype')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("permissions", models.JSONField()),
+                ("object_id", models.PositiveIntegerField()),
+                ("created_at", models.DateTimeField()),
+                ("updated_at", models.DateTimeField()),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contenttypes.contenttype",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=50)),
-                ('last_login', models.DateTimeField()),
-                ('is_active', models.BooleanField(default=False)),
-                ('username', models.CharField(max_length=15)),
-                ('first_name', models.CharField(max_length=15)),
-                ('last_name', models.CharField(max_length=15)),
-                ('is_superadmin', models.BooleanField(default=False)),
-                ('is_workspaceadmin', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
-                ('workspace_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.workspace')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=50)),
+                ("last_login", models.DateTimeField()),
+                ("is_active", models.BooleanField(default=False)),
+                ("username", models.CharField(max_length=15)),
+                ("first_name", models.CharField(max_length=15)),
+                ("last_name", models.CharField(max_length=15)),
+                ("is_superadmin", models.BooleanField(default=False)),
+                ("is_workspaceadmin", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField()),
+                ("updated_at", models.DateTimeField()),
+                (
+                    "workspace_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.workspace",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TrainingStepMetrics',
+            name="TrainingStepMetrics",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('metrics_json', models.JSONField()),
-                ('traning_pass', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.trainingpass')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("metrics_json", models.JSONField()),
+                (
+                    "traning_pass",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.trainingpass",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='project',
-            name='traning_pass',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.trainingpass'),
+            model_name="project",
+            name="traning_pass",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="schoolnn.trainingpass",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='user_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.user'),
+            model_name="project",
+            name="user_id",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="schoolnn.user"
+            ),
         ),
         migrations.CreateModel(
-            name='Note',
+            name="Note",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField()),
-                ('object_id', models.PositiveIntegerField()),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
-                ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.contenttype')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.TextField()),
+                ("object_id", models.PositiveIntegerField()),
+                ("created_at", models.DateTimeField()),
+                ("updated_at", models.DateTimeField()),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contenttypes.contenttype",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Label',
+            name="Label",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
-                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.dataset')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=15)),
+                (
+                    "dataset",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.dataset",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ImageLabel',
+            name="ImageLabel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.image')),
-                ('label', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schoolnn.label')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "image",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.image",
+                    ),
+                ),
+                (
+                    "label",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schoolnn.label",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='dataset',
-            name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='schoolnn.user'),
+            model_name="dataset",
+            name="user",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="schoolnn.user",
+            ),
         ),
     ]

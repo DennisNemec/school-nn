@@ -19,6 +19,7 @@ class Workspace(models.Model):
 
 class User(models.Model):
     """User account of students, teachers and admins."""
+
     password = models.CharField(max_length=50)
     last_login = models.DateTimeField()
     is_active = models.BooleanField(default=False)
@@ -43,7 +44,7 @@ class Dataset(models.Model):
 
     def get_absolute_url(self):
         """TODO, good question."""
-        return reverse('dataset-detail', kwargs={'pk': self.pk})
+        return reverse("dataset-detail", kwargs={"pk": self.pk})
 
 
 class Image(models.Model):
@@ -54,7 +55,7 @@ class Image(models.Model):
     @property
     def filename(self) -> str:
         """Get the filename, derived from the id and zero padded."""
-        return '{:0>8}.jpg'.format(self.id)
+        return "{:0>8}.jpg".format(self.id)
 
     @property
     def path(self) -> str:
@@ -71,6 +72,7 @@ class Label(models.Model):
 
 class ImageLabel(models.Model):
     """Link between one image and one label."""
+
     label = models.ForeignKey(Label, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
 
@@ -92,9 +94,8 @@ class Project(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture = models.ForeignKey(
-        Architecture, on_delete=models.CASCADE)
-    traning_pass = models.ForeignKey('TrainingPass', on_delete=models.CASCADE)
+    architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
+    traning_pass = models.ForeignKey("TrainingPass", on_delete=models.CASCADE)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
@@ -136,7 +137,7 @@ class Note(models.Model):
     text = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    object_type = GenericForeignKey('content_type', 'object_id')
+    object_type = GenericForeignKey("content_type", "object_id")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
@@ -147,6 +148,6 @@ class Visiblity(models.Model):
     permissions = models.JSONField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    object_type = GenericForeignKey('content_type', 'object_id')
+    object_type = GenericForeignKey("content_type", "object_id")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
