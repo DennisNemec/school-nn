@@ -28,7 +28,7 @@ def _get_password() -> str:
 SECRET_KEY = "CRINGE" # TO DO: read from config
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = Truegit 
 
 ALLOWED_HOSTS: List[str] = []
 
