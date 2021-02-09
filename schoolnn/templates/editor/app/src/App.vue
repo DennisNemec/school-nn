@@ -196,6 +196,7 @@ export default {
         this.selectedLayer = this.selectedLayerList.find(element => element.id === 1)
         const ind = this.selectedLayerList.indexOf(this.selectedLayerList.find(element => element.id === layer.id))
         this.$delete(this.selectedLayerList, ind)
+        this.invalidState = false
       }
     },
 
