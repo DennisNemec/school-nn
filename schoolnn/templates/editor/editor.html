@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block main %}
+    <input type="hidden" value="{{ architecture_data.0 }}" name="django_provided_layer_list" />
+    <input type="hidden" value="{{ architecture_data.1 }}" name="django_selected_layer_list" />
+
+    <div id="app"></div>
+    <script src="{% static '/js/editor.chunk-vendors.js' %}"></script>
+    <script src="{% static '/js/editor.app.js' %}"></script>
+{% endblock %}

@@ -11,6 +11,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+    <!-- Vue.js specific files -->
+    <link href="{% static '/js/editor.app.js' %}" rel="preload" as="script">
+    <link href="{% static '/js/editor.chunk-vendors.js' %}" rel="preload" as="script">
+
     <title>{% block title %}SchoolNN{% endblock %}</title>
 </head>
 <body class="bg-light-gray font-sans text-primary">
@@ -39,7 +44,8 @@
         </div>
     </nav>
 
-    <main>
+    <!-- jaaa ich weiß. Muss man noch ändern -->
+    <main class="w-5/6 absolute" style="left:16.67%; top: 6rem;">
         {% block main %}
         {% endblock %}
     </main>
