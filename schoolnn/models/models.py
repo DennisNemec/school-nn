@@ -1,8 +1,11 @@
 """All ORM models."""
+
 import os
+
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from datetime import datetime
 from django.db import models
 from django.urls import reverse
 from .training import TrainingParameter
@@ -15,6 +18,9 @@ class Workspace(models.Model):
     settings_json = models.JSONField()
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
+
+    def __str__(self):
+        return "%s" % (self.name)
 
 
 class User(models.Model):
@@ -29,8 +35,11 @@ class User(models.Model):
     is_superadmin = models.BooleanField(default=False)
     is_workspaceadmin = models.BooleanField(default=False)
     workspace_id = models.ForeignKey(Workspace, on_delete=models.CASCADE)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
+
+    def __str__(self):
+        return "%s" % (self.username)
 
 
 class Dataset(models.Model):
@@ -39,8 +48,11 @@ class Dataset(models.Model):
     name = models.CharField(max_length=15)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     custom = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
+
+    def __str__(self):
+        return "%s" % (self.name)
 
     def get_absolute_url(self):
         """TODO, good question."""
@@ -82,9 +94,15 @@ class Architecture(models.Model):
 
     name = models.CharField(max_length=15)
     custom = models.BooleanField(default=False)
-    architecture_json = models.JSONField
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    architecture_json = models.JSONField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
+
+    def __str__(self):
+        return "%s" % (self.name)
+
+    def get_absolute_url(self):
+        return reverse("architecture-detail", kwargs={"pk": self.pk})
 
 
 class Project(models.Model):
@@ -96,8 +114,11 @@ class Project(models.Model):
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     traning_pass = models.ForeignKey("TrainingPass", on_delete=models.CASCADE)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
+
+    def __str__(self):
+        return "%s" % (self.name)
 
 
 class TrainingPass(models.Model):
@@ -138,8 +159,8 @@ class Note(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey("content_type", "object_id")
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
 
 class Visiblity(models.Model):
@@ -149,5 +170,5 @@ class Visiblity(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey("content_type", "object_id")
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(default=datetime.now, blank=True)
