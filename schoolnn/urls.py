@@ -12,9 +12,11 @@ from .views.datasets import DatasetCreate, DatasetList
 from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
 from .views.base_view import BaseView
+from .views.editor import ArchitectureEditor
 
 urlpatterns = [
     path("", BaseView.as_view()),
+    path("editor/", ArchitectureEditor.as_view(), name="architecture-editor"),
     path("datasets/", DatasetList.as_view(), name="dataset-list"),
     path("datasets/<int:pk>/", DatasetDetail.as_view(), name="dataset-detail"),
     path("datasets/add/", DatasetCreate.as_view(), name="dataset-add"),

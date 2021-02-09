@@ -5,6 +5,7 @@ db.sqlite3
 node_modules/
 __pycache__/
 .env
+<<<<<<< HEAD
 upload.zip
 storage/*
 !storage/.gitkeep
