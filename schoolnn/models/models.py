@@ -2,7 +2,6 @@
 
 import os
 
-
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from datetime import datetime
@@ -51,28 +50,35 @@ class Dataset(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
-    def __str__(self):
-        return "%s" % (self.name)
+    def __str__(self) -> str:
+        return self.name
 
     def get_absolute_url(self):
-        """TODO, good question."""
+        """Web link to this dataset."""
         return reverse("dataset-detail", kwargs={"pk": self.pk})
 
-
-class Image(models.Model):
-    """Image of a dataset used for training."""
-
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    @property
+    def workspace_dir(self) -> str:
+        """
+        The folder containing all data for the workspace this resource
+        belongs to.
+        """
+        return "storage/1"
 
     @property
-    def filename(self) -> str:
-        """Get the filename, derived from the id and zero padded."""
-        return "{:0>8}.jpg".format(self.id)
+    def extract_dir(self) -> str:
+        """ Temporary folder used to extract the uploaded zip. """
+        return "{}/{}_upload/".format(self.workspace_dir, self.id)
 
     @property
-    def path(self) -> str:
-        """Get the path of this image in the workspace storage folder."""
-        return os.path.join(str(self.dataset.id), self.filename)
+    def upload_file(self) -> str:
+        """ Location for the temporary stored upload zip. """
+        return "{}/{}_upload.zip".format(self.workspace_dir, self.id)
+
+    @property
+    def dir(self) -> str:
+        """ Location where images from this dataset are stored. """
+        return "{}/{}/".format(self.workspace_dir, self.id)
 
 
 class Label(models.Model):
@@ -82,11 +88,21 @@ class Label(models.Model):
     name = models.CharField(max_length=15)
 
 
-class ImageLabel(models.Model):
-    """Link between one image and one label."""
+class Image(models.Model):
+    """Image of a dataset used for training."""
 
-    label = models.ForeignKey(Label, on_delete=models.CASCADE)
-    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    label = models.ForeignKey(Label, on_delete=models.CASCADE, null=True)
+
+    @property
+    def filename(self) -> str:
+        """Get the filename, derived from the id and zero padded."""
+        return "{:0>8}.jpg".format(self.id)
+
+    @property
+    def path(self) -> str:
+        """Get the path of this image in the workspace storage folder."""
+        return os.path.join(self.dataset.dir, self.filename)
 
 
 class Architecture(models.Model):
@@ -111,14 +127,24 @@ class Project(models.Model):
     name = models.CharField(max_length=15)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
-    dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
-    traning_pass = models.ForeignKey("TrainingPass", on_delete=models.CASCADE)
+    training_parameter_json = models.JSONField()
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return "%s" % (self.name)
+
+    @property
+    def training_parameter(self) -> TrainingParameter:
+        """Get training parameter object from json representation."""
+        return TrainingParameter.from_json(self.training_parameter_json)
+
+    @training_parameter.setter
+    def training_parameter(self, training_parameter: TrainingParameter):
+        """Assign training parameter object and save json representation."""
+        self.training_parameter_json = training_parameter.to_json()
 
 
 class TrainingPass(models.Model):
@@ -130,8 +156,8 @@ class TrainingPass(models.Model):
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-    architecture_id = models.ForeignKey(Architecture, on_delete=models.CASCADE)
-    model_weight = models.BinaryField()
+    architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
+    model_weights = models.BinaryField()
     status = models.CharField(max_length=15)
 
     @property

@@ -4,7 +4,6 @@ from .models import (  # noqa: F401
     User,
     Dataset,
     Image,
-    ImageLabel,
     Label,
     Architecture,
     Project,
