@@ -10,26 +10,27 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from django.db import transaction
 from PIL import Image as PIL_Image, ImageOps
-from schoolnn.models import Dataset, Label, Image, ImageLabel
+from schoolnn.models import Dataset, Label, Image
 
 
 class DatasetCreateForm(forms.ModelForm):
-    """TODO."""
+    """Dataset form that contains an additional file field."""
 
     file = forms.FileField(
         validators=[FileExtensionValidator(allowed_extensions=["zip"])]
     )
 
     class Meta:
-        """TODO."""
+        """Django meta information."""
 
         fields = ["file", "name"]
         model = Dataset
 
 
 class DatasetList(ListView):
-    """TODO."""
+    """Lists datasets."""
 
     queryset = Dataset.objects.order_by("-created_at")
     context_object_name = "datasets"
@@ -37,82 +38,72 @@ class DatasetList(ListView):
 
 
 class DatasetDetail(DetailView):
-    """TODO."""
+    """Show dataset details."""
 
     model = Dataset
     template_name = "datasets/detail.html"
 
 
 class DatasetCreate(CreateView):
-    """Handles TODO."""
+    """Handles creation of datasets."""
 
     form_class = DatasetCreateForm
     template_name = "datasets/form.html"
 
     object: Optional[Dataset] = None
-    team_dir: Optional[str] = None
-    upload_file: Optional[str] = None
-    extract_dir: Optional[str] = None
 
     def form_valid(self, form: DatasetCreateForm):
-        """Handle commited dataset create form."""
+        """Handle committed dataset create form."""
         self.object = form.save()
         if self.object is None:
             raise ValueError("Failed to parse the dataset create form")
-        self.team_dir = "storage/1/"
-        self.upload_file = "{}/upload_{}.zip".format(
-            self.team_dir, self.object.id
-        )
-        self.extract_dir = "{}/{}_upload/".format(
-            self.team_dir, self.object.id
-        )
 
         self.handle_upload(self.request.FILES["file"])
         self.create_tags(self.object)
 
-        shutil.rmtree(self.extract_dir)
-        os.remove(self.upload_file)
+        shutil.rmtree(self.object.extract_dir)
+        os.remove(self.object.upload_file)
 
         return HttpResponseRedirect(self.get_success_url())
 
     def handle_upload(self, zip_binary):
         """"Unzips uploaded zip."""
-        os.makedirs(self.extract_dir, exist_ok=True)
+        os.makedirs(self.object.extract_dir, exist_ok=True)
 
-        with open(self.upload_file, "wb+") as destination:
+        with open(self.object.upload_file, "wb+") as destination:
             for chunk in zip_binary.chunks():
                 destination.write(chunk)
 
-        with zipfile.ZipFile(self.upload_file, "r") as zip_ref:
-            zip_ref.extractall(self.extract_dir)
+        with zipfile.ZipFile(self.object.upload_file, "r") as zip_ref:
+            zip_ref.extractall(self.object.extract_dir)
 
     def create_tags(self, dataset: Dataset):
         """Create labels."""
-        os.makedirs(
-            os.path.join(str(self.team_dir), str(dataset.id)), exist_ok=True
-        )
+        os.makedirs(os.path.join(dataset.dir), exist_ok=True)
 
-        for entry in os.scandir(self.extract_dir):
+        for entry in os.scandir(dataset.extract_dir):
             if entry.is_dir():
                 label = Label.objects.create(name=entry.name, dataset=dataset)
                 self.process_images(entry, label, dataset)
 
+    @transaction.atomic
     def process_images(
         self, path: os.DirEntry, label: Label, dataset: Dataset
     ):
         """Save images center cropped."""
         for entry in os.scandir(path):
-            image = Image.objects.create(dataset=dataset)
-            ImageLabel.objects.create(label=label, image=image)
+            image = Image.objects.create(dataset=dataset, label=label)
             image_pil = PIL_Image.open(entry.path)
+            width, height = image_pil.size
+            target_size = min([width, height, 512])
             image_pil = ImageOps.fit(
-                image_pil, (512, 512), PIL_Image.ANTIALIAS
+                image_pil, (target_size, target_size), PIL_Image.ANTIALIAS
             )
-            image_pil.save(os.path.join(str(self.team_dir), image.path))
+            image_pil.save(image.path)
 
 
 class DatasetUpdate(UpdateView):
-    """TODO."""
+    """Update an existing dataset."""
 
     model = Dataset
     fields = ["name"]
@@ -120,7 +111,7 @@ class DatasetUpdate(UpdateView):
 
 
 class DatasetDelete(DeleteView):
-    """TODO."""
+    """Delete an existing dataset."""
 
     model = Dataset
     success_url = reverse_lazy("dataset-list")
