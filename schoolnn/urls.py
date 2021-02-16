@@ -5,7 +5,7 @@ from .views.architectureview import (
     ArchitectureEditView,
     ArchitectureListView,
     ArchitectureDetailView,
-    ArchitectureEditorView
+    ArchitectureEditorView,
 )
 from .views.datasets import DatasetCreate, DatasetList
 from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
@@ -54,6 +54,6 @@ urlpatterns = [
     path(
         "architectures/<int:pk>/editor/",
         ArchitectureEditorView.as_view(),
-        name="architecture-editor"
+        name="architecture-editor",
     ),
 ]

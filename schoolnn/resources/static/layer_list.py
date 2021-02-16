@@ -185,7 +185,8 @@ def default_layers() -> str:
     Django expected the default value of JSONField
     to be a callable.
     """
-    return json.loads("""
+    return json.loads(
+        """
         [
           {
             "id": 1,
@@ -316,4 +317,5 @@ def default_layers() -> str:
             "last": true
           }
         ]
-        """)
+        """
+    )
