@@ -1,11 +1,11 @@
 """Convert from Keras to a simple dictionary/json format and vice versa."""
-import keras
 from keras import layers
 from typing import Union, Any, Callable
 from json import dumps
+import keras
 
 
-_supported_layers = Union[
+SupportedLayers = Union[
     layers.Input,
     layers.Conv2D,
     layers.MaxPooling2D,
@@ -28,67 +28,72 @@ def _activation_to_keyword(activation: Callable) -> str:
     return activation.__name__
 
 
-def _layer_to_dict(kl: Any) -> dict:
-    if isinstance(kl, layers.MaxPooling2D):
+def _layer_to_dict(keras_layer: Any) -> dict:
+    if isinstance(keras_layer, layers.MaxPooling2D):
         return {
             "type": "MaxPooling2D",
-            "pool_size": kl.pool_size,
-            "strides": kl.strides,
+            "pool_size": keras_layer.pool_size,
+            "strides": keras_layer.strides,
         }
-    if isinstance(kl, layers.Conv2D):
+    if isinstance(keras_layer, layers.Conv2D):
         return {
             "type": "Conv2D",
-            "activation": _activation_to_keyword(kl.activation),
-            "filters": kl.filters,
-            "strides": kl.strides,
-            "kernel_size": kl.kernel_size,
-            "padding": kl.padding,
+            "activation": _activation_to_keyword(keras_layer.activation),
+            "filters": keras_layer.filters,
+            "strides": keras_layer.strides,
+            "kernel_size": keras_layer.kernel_size,
+            "padding": keras_layer.padding,
         }
-    if isinstance(kl, layers.Dense):
+    if isinstance(keras_layer, layers.Dense):
         return {
             "type": "Dense",
-            "activation": _activation_to_keyword(kl.activation),
-            "units": kl.units,
+            "activation": _activation_to_keyword(keras_layer.activation),
+            "units": keras_layer.units,
         }
-    if isinstance(kl, layers.Dropout):
+    if isinstance(keras_layer, layers.Dropout):
         return {
             "type": "Dropout",
-            "rate": kl.rate,
+            "rate": keras_layer.rate,
         }
-    if isinstance(kl, layers.Flatten):
+    if isinstance(keras_layer, layers.Flatten):
         return {"type": "Flatten"}
-    if isinstance(kl, layers.BatchNormalization):
+    if isinstance(keras_layer, layers.BatchNormalization):
         return {"type": "BatchNormalization"}
-    raise ModelNotSupportedException(kl.__class__.__name__)
+    raise ModelNotSupportedException(keras_layer.__class__.__name__)
 
 
-def _dict_to_layer(d: dict) -> _supported_layers:
-    layer_type = d["type"]
+def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
+    layer_type = layer_dict["type"]
     if layer_type == "Input":
-        return layers.Input(shape=d["shape"])
-    if layer_type == "MaxPooling2D":
-        return layers.MaxPooling2D(
-            pool_size=d["pool_size"],
-            strides=d["strides"],
+        keras_layer = layers.Input(shape=layer_dict["shape"])
+    elif layer_type == "MaxPooling2D":
+        keras_layer = layers.MaxPooling2D(
+            pool_size=layer_dict["pool_size"],
+            strides=layer_dict["strides"],
         )
-    if layer_type == "Conv2D":
-        return layers.Conv2D(
-            filters=d["filters"],
-            kernel_size=d["kernel_size"],
-            strides=d["strides"],
-            padding=d["padding"],
-            activation=d["activation"],
+    elif layer_type == "Conv2D":
+        keras_layer = layers.Conv2D(
+            filters=layer_dict["filters"],
+            kernel_size=layer_dict["kernel_size"],
+            strides=layer_dict["strides"],
+            padding=layer_dict["padding"],
+            activation=layer_dict["activation"],
         )
-    if layer_type == "Flatten":
-        return layers.Flatten()
-    if layer_type == "Dropout":
-        return layers.Dropout(rate=d["rate"])
-    if layer_type == "BatchNormalization":
-        return layers.BatchNormalization()
-    if layer_type == "Dense":
-        return layers.Dense(units=d["units"], activation=d["activation"])
-    e = "Unsupported layer: {}".format(d)
-    raise DictionaryRepresentationException(e)
+    elif layer_type == "Flatten":
+        keras_layer = layers.Flatten()
+    elif layer_type == "Dropout":
+        keras_layer = layers.Dropout(rate=layer_dict["rate"])
+    elif layer_type == "BatchNormalization":
+        keras_layer = layers.BatchNormalization()
+    elif layer_type == "Dense":
+        keras_layer = layers.Dense(
+            units=layer_dict["units"], activation=layer_dict["activation"]
+        )
+    else:
+        err_msg = "Unsupported layer: {}".format(layer_type)
+        raise DictionaryRepresentationException(err_msg)
+
+    return keras_layer
 
 
 class WrappedArchitecture:
@@ -100,21 +105,19 @@ class WrappedArchitecture:
         self.to_keras_model()  # Raises exception for invalid dictionary
 
     @classmethod
-    def from_keras_model(cls, m: keras.Model):
+    def from_keras_model(cls, keras_model: keras.Model):
         """Generate architecture representation from a keras model."""
-        layers = []
-        layers.append(
-            {
-                "type": "Input",
-                "shape": m.input_shape[1:],
-            }  # Drop Batch Dimension
+        arch_layers = []
+        arch_layers.append(
+            # [1:] Drop Batch Dimension
+            {"type": "Input", "shape": keras_model.input_shape[1:]}
         )
 
-        for keras_layer in m.layers:
-            layers.append(_layer_to_dict(keras_layer))
+        for keras_layer in keras_model.layers:
+            arch_layers.append(_layer_to_dict(keras_layer))
 
-        d = {"layers": layers}
-        return cls(d)
+        architecture_dict = {"layers": arch_layers}
+        return cls(architecture_dict)
 
     def to_json(self) -> str:
         """Get the architecture as json string."""
@@ -126,10 +129,10 @@ class WrappedArchitecture:
 
     def to_keras_model(self) -> keras.Model:
         """Get the architecture as keras model."""
-        m = keras.Sequential()
+        keras_model = keras.Sequential()
 
         for dict_layer in self.dictionary_representation["layers"]:
-            m.add(_dict_to_layer(dict_layer))
+            keras_model.add(_dict_to_layer(dict_layer))
 
-        m.compile()
-        return m
+        keras_model.compile()
+        return keras_model

@@ -20,16 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-
-# SECURITY WARNING: keep the secret key used in production secret!
-def _get_password() -> str:
-    return ""
-
-
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = os.environ.get("DEBUG", "").lower() in ["true", "yes", "1", "t", "y"]
 
 ALLOWED_HOSTS: List[str] = []
 
@@ -129,3 +123,6 @@ STATIC_URL = "/public/"
 STATICFILES_DIRS = [
     "./schoolnn/public",
 ]
+
+IMAGE_DIR = "./images"
+TRAINING_BLOCK_BATCH_COUNT = 16
