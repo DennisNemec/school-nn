@@ -21,10 +21,9 @@ from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
 from .views.base_view import BaseView
 from .views.inference import InferenceView
-
+from .views.projects import ProjectCreateView, ProjectListView, ProjectDetailView, ProjectEditView
 
 TrainingManager()  # runs once, starts unfinished trainings
-
 
 urlpatterns = [
     path("", BaseView.as_view()),
@@ -110,4 +109,15 @@ urlpatterns = [
         TrainingListView.as_view(),
         name="show-trainings",
     ),
+]
+
+# Project routes
+urlpatterns += [
+    path("project/", ProjectListView.as_view(), name="project-list"),
+    path("project/create/", ProjectCreateView.as_view(), name="project-create"),
+    path("project/<int:pk>/", ProjectDetailView.as_view(), name="project-details"),
+    path("project/<int:pk>/edit/", ProjectEditView.as_view(), name="project-edit"),
+    path("project/<int:pk>/edit/dataset/", ProjectEditView.as_view(), name="project-edit-dataset"),
+    path("project/<int:pk>/edit/architecture/", ProjectEditView.as_view(), name="project-edit-architecture"),
+    path("project/<int:pk>/edit/parameters/", ProjectEditView.as_view(), name="project-edit-parameters"),
 ]
