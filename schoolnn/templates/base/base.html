@@ -18,9 +18,9 @@
 
     <title>SchoolNN – {% block title %}Startseite{% endblock %}</title>
 </head>
-<body class="bg-light-gray font-sans text-primary">
-    <header class="h-24 bg-white flex">
-        <div class="bg-primary w-1/6 h-full flex items-center pl-12 z-50">
+<body class="bg-light-gray font-sans text-primary flex flex-wrap">
+    <header class="w-full h-24 bg-white flex">
+        <div class="bg-primary w-1/6 h-full flex items-center px-12 z-50">
             <img src="{% static 'assets/logo.svg' %}" alt="SchoolNN Logo">
         </div>
         <div class="w-5/6 h-full bg-white shadow-base flex items-center px-12 z-40">
@@ -29,6 +29,7 @@
             </div>
         </div>
     </header>
+
     <nav class="w-1/6 h-screen-minus-header bg-white flex flex-col justify-between shadow-base z-40">
         <ul class="pl-12 pt-20 space-y-8">
             <li class="menu-item" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')"><a href="/datasets/list">Datensätze</a></li>
@@ -44,8 +45,7 @@
         </div>
     </nav>
 
-    <!-- jaaa ich weiß. Muss man noch ändern -->
-    <main class="w-5/6 absolute" style="left:16.67%; top: 6rem;">
+    <main class="w-5/6 pl-12 pt-20">
         {% block main %}
         {% endblock %}
     </main>
