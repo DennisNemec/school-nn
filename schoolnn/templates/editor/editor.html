@@ -2,10 +2,15 @@
 {% load static %}
 
 {% block main %}
-    <input type="hidden" value="{{ architecture_data.0 }}" name="django_provided_layer_list" />
-    <input type="hidden" value="{{ architecture_data.1 }}" name="django_selected_layer_list" />
+    <form method="POST" enctype="multipart/form-data" id="architecture_form">
+        {% csrf_token %}
+
+        <input type="hidden" value="{{ layer_list }}" name="django_provided_layer_list"/>
+        <input type="hidden" value="{{ architecture_json }}" name="architecture_json"/>
+    </form>
 
     <div id="app"></div>
+
     <script src="{% static '/js/editor.chunk-vendors.js' %}"></script>
     <script src="{% static '/js/editor.app.js' %}"></script>
 {% endblock %}

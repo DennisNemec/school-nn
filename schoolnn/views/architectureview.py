@@ -1,7 +1,10 @@
+import json
+
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from schoolnn.models import Architecture
 from django.urls import reverse_lazy
+from schoolnn.resources.static.layer_list import layer_list
 
 
 class ArchitectureListView(ListView):
@@ -30,4 +33,18 @@ class ArchitectureEditView(UpdateView):
 class ArchitectureCreateView(CreateView):
     model = Architecture
     template_name = "architectures/add.html"
-    fields = "__all__"
+    fields = ['name']
+
+
+class ArchitectureEditorView(UpdateView):
+    model = Architecture
+    context_object_name = 'architecture'
+    template_name = "editor/editor.html"
+    fields = ['architecture_json']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["layer_list"] = layer_list
+        context["architecture_json"] = json.dumps(self.object.architecture_json)
+
+        return context

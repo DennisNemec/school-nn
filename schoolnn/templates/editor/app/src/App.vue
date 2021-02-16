@@ -102,8 +102,8 @@ export default {
   */
   created() {
     // use data given by Django
-    this.selectedLayerList = JSON.parse(document.getElementsByName("django_selected_layer_list")[0].value)
     this.providedLayerList = JSON.parse(document.getElementsByName("django_provided_layer_list")[0].value)
+    this.selectedLayerList = JSON.parse(document.getElementsByName("architecture_json")[0].value)
 
     // set initial selected layer to the input layer
     this.selectedLayer = this.selectedLayerList.find(element => element.id === 1)
@@ -176,19 +176,10 @@ export default {
     },
 
     onSave() {
-      let layerList = []
-      for (let selected_layer of this.selectedLayerList) {
-        let selected_layer_dto = {}
-        selected_layer_dto.type = selected_layer.layer.type
+      document.getElementsByName("architecture_json")[0].value =
+          JSON.stringify(this.selectedLayerList,null,2)
 
-        for (let property of selected_layer.layer.properties) {
-          selected_layer_dto[property.name] = property.value
-        }
-
-        layerList.push(selected_layer_dto)
-      }
-
-      console.log(JSON.stringify(layerList,null,2))
+      document.querySelector("#architecture_form").submit()
     },
 
     onDeleteLayer(layer) {
