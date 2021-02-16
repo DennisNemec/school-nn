@@ -20,12 +20,12 @@
 </head>
 <body class="bg-light-gray font-sans text-primary flex flex-wrap">
     <header class="w-full h-24 bg-white flex">
-        <div class="w-1/5 h-full bg-primary flex items-center px-12 z-50 xl:w-1/6">
+        <a href="{% url "home" %}" class="w-1/5 h-full bg-primary flex items-center px-12 z-50 xl:w-1/6">
             <img src="{% static 'assets/logo.svg' %}" alt="SchoolNN Logo">
-        </div>
+        </a>
         <div class="w-4/5 h-full bg-white shadow-base flex items-center px-12 z-40 xl:w-5/6">
             <div>
-                <span class="font-bold"><a href="{% url "home" %}">Startseite</a></span> › Datensätze
+                <span class="font-bold"><a href="{% url "home" %}">Startseite</a></span>{% block breadcrumb %}{% endblock %}
             </div>
         </div>
     </header>
