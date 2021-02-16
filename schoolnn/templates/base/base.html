@@ -25,7 +25,7 @@
         </div>
         <div class="w-5/6 h-full bg-white shadow-base flex items-center px-12 z-40">
             <div>
-                <span class="font-bold">Startseite</span> › Datensätze
+                <span class="font-bold"><a href="{% url "home" %}">Startseite</a></span> › Datensätze
             </div>
         </div>
     </header>
@@ -34,8 +34,7 @@
         <ul class="pl-12 pt-20 space-y-8">
             <li class="menu-item" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')"><a href="/datasets/list">Datensätze</a></li>
             <li class="menu-item" style="background-image: url('{% static 'assets/icons/architectures.svg' %} ')">Modellarchitekturen</li>
-            <li class="menu-item" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">Projekte
-            </li>
+            <li class="menu-item" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">Projekte</li>
         </ul>
 
         <div class="bg-green h-32 w-full pl-12 py-8 text-white">
@@ -45,7 +44,7 @@
         </div>
     </nav>
 
-    <main class="w-5/6 pl-12 pt-20">
+    <main class="w-5/6 p-12">
         {% block main %}
         {% endblock %}
     </main>

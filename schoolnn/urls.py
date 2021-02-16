@@ -26,7 +26,7 @@ from .views.projects import ProjectCreateView, ProjectListView, ProjectDetailVie
 TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
-    path("", BaseView.as_view()),
+    path("", BaseView.as_view(), name="home"),
     path("datasets/list/", DatasetList.as_view(), name="dataset-list"),
     path(
         "datasets/list/<str:listing_type>/",
