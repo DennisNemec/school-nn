@@ -4,4 +4,10 @@
 
 {% block main %}
     <h1>Projekt erstellen</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <!-- TODO: Knopf übersetzen -->
+        <input type="submit" class="" value="Projekt anlegen">
+    </form>
 {% endblock %}

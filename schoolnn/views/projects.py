@@ -1,12 +1,33 @@
-from django.views.generic import TemplateView, DetailView
+from typing import Optional
+
+from django import forms
+from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView, DetailView, CreateView
 
 from schoolnn.models import Project
 
 
-class ProjectCreateView(TemplateView):
+class ProjectCreateView(CreateView):
     """Responsible for the creation of projects."""
 
+    class ProjectCreateForm(forms.ModelForm):
+        class Meta:
+            fields = ["name"]
+            model = Project
+
+    form_class = ProjectCreateForm
     template_name = "project/create_project.html"
+
+    object: Optional[Project] = None
+
+    def form_valid(self, form: ProjectCreateForm):
+        """If the form is valid, save the associated model."""
+        self.object = form.save()
+        if self.object is None:
+            # TODO: Translation für Fehlermeldung
+            raise ValueError("Failed to parse the project create form")
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ProjectListView(TemplateView):
