@@ -2,7 +2,7 @@ from typing import Optional
 
 from django import forms
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, DetailView, CreateView
+from django.views.generic import TemplateView, DetailView, CreateView, ListView
 
 from schoolnn.models import Project
 
@@ -30,9 +30,11 @@ class ProjectCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ProjectListView(TemplateView):
+class ProjectListView(ListView):
     """Responsible for listing all projects."""
 
+    queryset = Project.objects.order_by("-created_at")
+    context_object_name = "projects"
     template_name = "project/project_overview.html"
 
 
