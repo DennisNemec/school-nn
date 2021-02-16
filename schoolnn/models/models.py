@@ -133,14 +133,20 @@ class Project(TimestampedModelMixin):
     """One project a user/student works on."""
 
     name = models.CharField(max_length=15)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     custom = models.BooleanField(default=False)
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
-    training_parameter_json = models.JSONField()
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, null=True)
+    architecture = models.ForeignKey(
+        Architecture, on_delete=models.CASCADE, null=True
+    )
+    training_parameter_json = models.JSONField(null=True)
 
     def __str__(self):
         return "%s" % (self.name)
+
+    def get_absolute_url(self):
+        """Direct URL to this project"""
+        return reverse("project-details", kwargs={"pk": self.pk})
 
     @property
     def training_parameter(self) -> TrainingParameter:
