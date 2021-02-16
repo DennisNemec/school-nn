@@ -30,9 +30,10 @@ flake8-style-check:
   script:
     - python3 -m flake8 . --exclude "schoolnn/migrations/*"
 
-pytest-untittest:
+pytest-unittest:
   stage: test
   tags:
     - pytest
+    - tensorflow
   script:
-    - python3 -m pytest
+    - python3 -m pytest . --confcutdir tests

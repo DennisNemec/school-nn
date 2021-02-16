@@ -159,6 +159,8 @@ class TrainingPass(models.Model):
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     model_weights = models.BinaryField()
     status = models.CharField(max_length=15)
+    epoche = models.IntegerField(default=0)
+    epoche_offset = models.IntegerField(default=0)
 
     @property
     def training_parameter(self) -> TrainingParameter:
@@ -174,7 +176,7 @@ class TrainingPass(models.Model):
 class TrainingStepMetrics(models.Model):
     """Training and validation metrics of a training block/step."""
 
-    traning_pass = models.ForeignKey(TrainingPass, on_delete=models.CASCADE)
+    training_pass = models.ForeignKey(TrainingPass, on_delete=models.CASCADE)
     metrics_json = models.JSONField()
 
 

@@ -17,4 +17,6 @@ from .training import (  # noqa: F401
     Optimizer,
     TerminationCondition,
     TrainingParameter,
+    TrainingPassState,
 )
+from .augmentation_options import AugmentationOptions  # noqa: F401
