@@ -45,7 +45,15 @@ class ProjectDetailView(DetailView):
     template_name = "project/project_details.html"
 
 
+# TODO: Projekte editieren implementieren
 class ProjectEditView(TemplateView):
     """Responsible for editing all the data of a project."""
 
     template_name = "project/edit_project.html"
+
+
+# TODO: Projekte löschen implementieren
+class ProjectDeleteView(TemplateView):
+    """Responsible for deleting all the data of a project."""
+
+    template_name = "project/delete_project.html"
