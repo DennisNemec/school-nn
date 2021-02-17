@@ -9,6 +9,14 @@ from django.db import models
 from django.urls import reverse
 from .training import TrainingParameter
 
+class TimestampedModelMixin(models.Model):
+    """Abstract class that manages the created- and updated-timestamp for other classes"""
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
 
 class Workspace(TimestampedModelMixin):
     """The equivalent of a class room."""
@@ -185,13 +193,7 @@ class Visiblity(TimestampedModelMixin):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey("content_type", "object_id")
-  
-class TimestampedModelMixin(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        abstract = True
 
 
 
