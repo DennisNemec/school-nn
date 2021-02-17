@@ -9,8 +9,10 @@ from django.db import models
 from django.urls import reverse
 from .training import TrainingParameter
 
+
 class TimestampedModelMixin(models.Model):
     """Abstract class that manages the created- and updated-timestamp for other classes"""
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -186,6 +188,7 @@ class Note(TimestampedModelMixin):
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey("content_type", "object_id")
 
+
 class Visiblity(TimestampedModelMixin):
     """Defines who can see or edit an object."""
 
@@ -193,7 +196,3 @@ class Visiblity(TimestampedModelMixin):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey("content_type", "object_id")
-
-
-
-
