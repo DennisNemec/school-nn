@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "~=3.1.6"
+python-dotenv = "~=0.15.0"
+pillow = "~=8.1.0"
+schema = "~=0.7.3"
+tensorflow = "~=2.4.1"
+imgaug = "~=0.4.0"
+h5py = "~=2.10.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
