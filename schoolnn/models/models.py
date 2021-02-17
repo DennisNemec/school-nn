@@ -11,7 +11,7 @@ from .training import TrainingParameter
 
 class TimestampedModelMixin(models.Model):
     """Abstract class that manages the created-
-     and updated-timestamp for other classes"""
+    and updated-timestamp for other classes"""
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
