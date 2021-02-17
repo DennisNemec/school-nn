@@ -10,19 +10,17 @@ from django.urls import reverse
 from .training import TrainingParameter
 
 
-class Workspace(models.Model):
+class Workspace(TimestampedModelMixin):
     """The equivalent of a class room."""
 
     name = models.CharField(max_length=30)
     settings_json = models.JSONField()
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
 
     def __str__(self):
         return "%s" % (self.name)
 
 
-class User(models.Model):
+class User(TimestampedModelMixin):
     """User account of students, teachers and admins."""
 
     password = models.CharField(max_length=50)
@@ -34,21 +32,17 @@ class User(models.Model):
     is_superadmin = models.BooleanField(default=False)
     is_workspaceadmin = models.BooleanField(default=False)
     workspace_id = models.ForeignKey(Workspace, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(default=datetime.now, blank=True)
-    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return "%s" % (self.username)
 
 
-class Dataset(models.Model):
+class Dataset(TimestampedModelMixin):
     """Set of images used for training."""
 
     name = models.CharField(max_length=15)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     custom = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=datetime.now, blank=True)
-    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self) -> str:
         return self.name
@@ -105,14 +99,12 @@ class Image(models.Model):
         return os.path.join(self.dataset.dir, self.filename)
 
 
-class Architecture(models.Model):
+class Architecture(TimestampedModelMixin):
     """One sequential neural network architecure."""
 
     name = models.CharField(max_length=15)
     custom = models.BooleanField(default=False)
     architecture_json = models.JSONField()
-    created_at = models.DateTimeField(default=datetime.now, blank=True)
-    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -121,7 +113,7 @@ class Architecture(models.Model):
         return reverse("architecture-detail", kwargs={"pk": self.pk})
 
 
-class Project(models.Model):
+class Project(TimestampedModelMixin):
     """One project a user/student works on."""
 
     name = models.CharField(max_length=15)
@@ -130,8 +122,6 @@ class Project(models.Model):
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
-    created_at = models.DateTimeField(default=datetime.now, blank=True)
-    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -180,23 +170,28 @@ class TrainingStepMetrics(models.Model):
     metrics_json = models.JSONField()
 
 
-class Note(models.Model):
+class Note(TimestampedModelMixin):
     """Note of an object."""
 
     text = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey("content_type", "object_id")
-    created_at = models.DateTimeField(default=datetime.now, blank=True)
-    updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
-
-class Visiblity(models.Model):
+class Visiblity(TimestampedModelMixin):
     """Defines who can see or edit an object."""
 
     permissions = models.JSONField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     object_type = GenericForeignKey("content_type", "object_id")
-    created_at = models.DateTimeField(default=datetime.now, blank=True)
-    updated_at = models.DateTimeField(default=datetime.now, blank=True)
+  
+class TimestampedModelMixin(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+
