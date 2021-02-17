@@ -189,132 +189,28 @@ def default_layers() -> str:
         """
         [
           {
-            "id": 1,
+            "type": "MaxPooling2D",
             "name": "Input Layer",
-            "note": "",
-            "layer": {
-              "type": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "value": [
-                    32,
-                    32
-                  ]
-                },
-                {
-                  "name": "strides",
-                  "value": [
-                    0,
-                    0
-                  ]
-                }
-              ]
-            },
-            "layer_information": {
-              "type": "MaxPooling2D",
-              "default_name": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "description": "Poolgröße",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      32,
-                      32
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                },
-                {
-                  "name": "strides",
-                  "description": "Strides",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      0,
-                      0
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                }
-              ]
-            },
-            "fixed": true,
-            "first": true
+            "pool_size": [
+              32,
+              32
+            ],
+            "strides": [
+              0,
+              0
+            ]
           },
           {
-            "id": 2,
-            "name": "OutputLayer",
-            "note": "",
-            "layer": {
-              "type": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "value": [
-                    32,
-                    32
-                  ]
-                },
-                {
-                  "name": "strides",
-                  "value": [
-                    0,
-                    0
-                  ]
-                }
-              ]
-            },
-            "layer_information": {
-              "type": "MaxPooling2D",
-              "default_name": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "description": "Poolgröße",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      32,
-                      32
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                },
-                {
-                  "name": "strides",
-                  "description": "Strides",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      0,
-                      0
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                }
-              ]
-            },
-            "fixed": true,
-            "last": true
+            "type": "MaxPooling2D",
+            "name": "Output Layer",
+            "pool_size": [
+              32,
+              32
+            ],
+            "strides": [
+              0,
+              0
+            ]
           }
         ]
         """

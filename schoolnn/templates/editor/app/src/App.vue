@@ -103,7 +103,34 @@ export default {
   created() {
     // use data given by Django
     this.providedLayerList = JSON.parse(document.getElementsByName("django_provided_layer_list")[0].value)
-    this.selectedLayerList = JSON.parse(document.getElementsByName("architecture_json")[0].value)
+    const importData = JSON.parse(document.getElementsByName("architecture_json")[0].value)
+
+    const length = importData.length
+
+    this.selectedLayerList = importData.map((backendLayer, index) => {
+      const frontendLayer = {
+        id: index,
+        first: index === 0,
+        last: index === length - 1,
+        fixed: index === 0 || index === length - 1,
+        note: '',
+        name: backendLayer.name,
+        layer_information: this.providedLayerList.find(element => element.type === backendLayer.type),
+        layer: {
+          type: backendLayer.type,
+          properties: []
+        }
+      }
+
+      return Object.keys(backendLayer).reduce((frontendLayer, key) => {
+        frontendLayer.layer.properties.push({
+          name: key,
+          value: backendLayer[key]
+        })
+
+        return frontendLayer
+      }, frontendLayer)
+    })
 
     // set initial selected layer to the input layer
     this.selectedLayer = this.selectedLayerList.find(element => element.id === 1)
@@ -120,12 +147,12 @@ export default {
       }
 
       // make sure items are not inserted above the first element
-      if (typeof relatedContext.element.first != 'undefined') {
+      if (relatedContext.element.first) {
         return 1
       }
 
       // make sure items are inserted above the last element
-      if (typeof relatedContext.element.last != 'undefined') {
+      if (relatedContext.element.last) {
         return -1
       }
     },
@@ -176,14 +203,31 @@ export default {
     },
 
     onSave() {
+      let layerList = []
+
+      for (const selected_layer of this.selectedLayerList) {
+        const selected_layer_dto = {
+          type: selected_layer.layer.type,
+          name: selected_layer.name
+        }
+
+        for (const property of selected_layer.layer.properties) {
+          selected_layer_dto[property.name] = property.value
+        }
+
+        layerList.push(selected_layer_dto)
+      }
+
+      console.log(layerList, this.selectedLayerList)
+
       document.getElementsByName("architecture_json")[0].value =
-          JSON.stringify(this.selectedLayerList,null,2)
+          JSON.stringify(layerList,null,2)
 
       document.querySelector("#architecture_form").submit()
     },
 
     onDeleteLayer(layer) {
-      if (layer.id > 2) {
+      if (!layer.fixed) {
         this.selectedLayer = this.selectedLayerList.find(element => element.id === 1)
         const ind = this.selectedLayerList.indexOf(this.selectedLayerList.find(element => element.id === layer.id))
         this.$delete(this.selectedLayerList, ind)
@@ -193,7 +237,7 @@ export default {
 
     onDuplicateLayer(layer) {
       // abort if layer is either input- or output-layer
-      if (layer.id < 3) {
+      if (layer.fixed) {
         return
       }
 
