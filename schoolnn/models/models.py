@@ -4,14 +4,14 @@ import os
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from datetime import datetime
 from django.db import models
 from django.urls import reverse
 from .training import TrainingParameter
 
 
 class TimestampedModelMixin(models.Model):
-    """Abstract class that manages the created- and updated-timestamp for other classes"""
+    """Abstract class that manages the created-
+     and updated-timestamp for other classes"""
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
