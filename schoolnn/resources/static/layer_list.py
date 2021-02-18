@@ -1,27 +1,6 @@
-"""
-  Module of Architecture-Editor
+import json
 
-  It contains the needed view in order to integrate the
-  architecture-editor into Django.
-"""
-
-from django.views.generic import ListView
-from schoolnn.models.models import Architecture
-
-
-class ArchitectureEditor(ListView):
-    """
-    The architecture-editor view generates output required for the
-    drag-and-drop-field implemented in Vue.js.
-    Furthermore it handles incoming requests triggered by the user.
-    """
-
-    model = Architecture
-    template_name = "editor/editor.html"
-    context_object_name = "architecture_data"
-
-    def get_queryset(self):
-        provided_layer_list = """
+layer_list = """
         [
           {
             "type": "MaxPooling2D",
@@ -200,137 +179,39 @@ class ArchitectureEditor(ListView):
         ]
         """
 
-        selected_layer_list = """
+
+def default_layers() -> str:
+    """
+    Django expected the default value of JSONField
+    to be a callable.
+    """
+    return json.loads(
+        """
         [
           {
-            "id": 1,
+            "type": "MaxPooling2D",
             "name": "Input Layer",
-            "note": "",
-            "layer": {
-              "type": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "value": [
-                    32,
-                    32
-                  ]
-                },
-                {
-                  "name": "strides",
-                  "value": [
-                    0,
-                    0
-                  ]
-                }
-              ]
-            },
-            "layer_information": {
-              "type": "MaxPooling2D",
-              "default_name": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "description": "Poolgröße",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      32,
-                      32
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                },
-                {
-                  "name": "strides",
-                  "description": "Strides",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      0,
-                      0
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                }
-              ]
-            },
-            "fixed": true,
-            "first": true
+            "pool_size": [
+              32,
+              32
+            ],
+            "strides": [
+              0,
+              0
+            ]
           },
           {
-            "id": 2,
-            "name": "OutputLayer",
-            "note": "",
-            "layer": {
-              "type": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "value": [
-                    32,
-                    32
-                  ]
-                },
-                {
-                  "name": "strides",
-                  "value": [
-                    0,
-                    0
-                  ]
-                }
-              ]
-            },
-            "layer_information": {
-              "type": "MaxPooling2D",
-              "default_name": "MaxPooling2D",
-              "properties": [
-                {
-                  "name": "pool_size",
-                  "description": "Poolgröße",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      32,
-                      32
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                },
-                {
-                  "name": "strides",
-                  "description": "Strides",
-                  "value": {
-                    "type": "vector",
-                    "dataType": "int",
-                    "dimension": 2,
-                    "default_value": [
-                      0,
-                      0
-                    ],
-                    "min": 0,
-                    "max": 65535
-                  },
-                  "activated": true
-                }
-              ]
-            },
-            "fixed": true,
-            "last": true
+            "type": "MaxPooling2D",
+            "name": "Output Layer",
+            "pool_size": [
+              32,
+              32
+            ],
+            "strides": [
+              0,
+              0
+            ]
           }
         ]
         """
-
-        return [provided_layer_list, selected_layer_list]
+    )

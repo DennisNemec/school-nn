@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
 from .training import TrainingParameter
+from schoolnn.resources.static.layer_list import default_layers
 
 
 class TimestampedModelMixin(models.Model):
@@ -106,7 +107,11 @@ class Image(models.Model):
     @property
     def path(self) -> str:
         """Get the path of this image in the workspace storage folder."""
-        return os.path.join(self.dataset.dir, self.filename)
+        return self.get_path(self.dataset)
+
+    def get_path(self, dataset: Dataset) -> str:
+        """Get the path of this image in the workspace storage folder."""
+        return os.path.join(dataset.dir, self.filename)
 
 
 class Architecture(TimestampedModelMixin):
@@ -114,10 +119,10 @@ class Architecture(TimestampedModelMixin):
 
     name = models.CharField(max_length=15)
     custom = models.BooleanField(default=False)
-    architecture_json = models.JSONField()
+    architecture_json = models.JSONField(default=default_layers)
 
     def __str__(self):
-        return "%s" % (self.name)
+        return self.name
 
     def get_absolute_url(self):
         return reverse("architecture-detail", kwargs={"pk": self.pk})

@@ -38,7 +38,6 @@ class AugmentationOptions(NamedTuple):
             "dropout_boxes": self.dropout_boxes,
             "salt_and_pepper": self.salt_and_pepper,
             "jpeg_artifacts": self.jpeg_artifacts,
-            "gaussian_blur": self.gaussian_blur,
             "vertical_flip": self.vertical_flip,
             "distortion": self.distortion,
             "rotate": self.rotate,
@@ -60,7 +59,6 @@ class AugmentationOptions(NamedTuple):
             + self.dropout_boxes * 1
             + self.salt_and_pepper * 1
             + self.jpeg_artifacts * 1
-            + self.gaussian_blur * 1
             + self.vertical_flip * 1
             + self.distortion * 1
             + self.rotate * 1
@@ -102,12 +100,6 @@ class AugmentationOptions(NamedTuple):
         # Adds JPEG compression arrifacts
         if self.jpeg_artifacts:
             return augmenters.JpegCompression(compression=(80, 95))
-        return augmenters.Identity()
-
-    def _get_gaussian_blur(self) -> augmenters.Augmenter:
-        # Add minimal blur
-        if self.gaussian_blur:
-            return augmenters.GaussianBlur(sigma=(0.0, 0.07))
         return augmenters.Identity()
 
     def _get_vertical_flip(self) -> augmenters.Augmenter:
@@ -159,24 +151,24 @@ class AugmentationOptions(NamedTuple):
         if chance_of_augmentation_to_be_applied > 1:
             chance_of_augmentation_to_be_applied = 1
 
-        def apply_sometimes(aug: augmenters.Augmenter) -> augmenters.Augmenter:
-            return augmenters.Sometimes(
-                chance_of_augmentation_to_be_applied, aug
-            )
+        augmentations = [
+            self._get_channel_shuffle(),
+            self._get_brightness(),
+            self._get_gaussian_noise(),
+            self._get_dropout_boxes(),
+            self._get_salt_and_pepper(),
+            self._get_jpeg_artifacts(),
+            self._get_vertical_flip(),
+            self._get_distortion(),
+            self._get_scale_and_translate(),
+            self._get_rotater(),
+            self._get_color(),
+        ]
 
-        return augmenters.Sequential(
-            [
-                apply_sometimes(self._get_channel_shuffle()),
-                apply_sometimes(self._get_brightness()),
-                apply_sometimes(self._get_gaussian_noise()),
-                apply_sometimes(self._get_dropout_boxes()),
-                apply_sometimes(self._get_salt_and_pepper()),
-                apply_sometimes(self._get_jpeg_artifacts()),
-                apply_sometimes(self._get_gaussian_blur()),
-                apply_sometimes(self._get_vertical_flip()),
-                apply_sometimes(self._get_distortion()),
-                apply_sometimes(self._get_scale_and_translate()),
-                apply_sometimes(self._get_rotater()),
-                apply_sometimes(self._get_color()),
-            ]
-        )
+        augmentations = [
+            aug
+            for aug in augmentations
+            if not isinstance(aug, augmenters.Identity)
+        ]
+
+        return augmenters.SomeOf((3, 6), augmentations)
