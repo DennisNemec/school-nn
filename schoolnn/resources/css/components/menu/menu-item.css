@@ -3,8 +3,13 @@
         pl-8
         my-2
         bg-no-repeat
-        hover:text-selected
+        hover:text-accent
         cursor-pointer;
 
     background-position: 0 0.1rem;
+
+    &.active{
+         @apply
+            text-accent;
+    }
 }

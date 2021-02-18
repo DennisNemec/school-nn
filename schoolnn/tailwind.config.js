@@ -14,6 +14,7 @@ module.exports = {
     extend: {
       colors: {
         "primary": "#334D6E",
+        "accent": "#109CF1", // Buttons
         "light-gray": "#F1F3F5",
         "text-gray": "#90A0B7",
         "black": "#192A3E",
