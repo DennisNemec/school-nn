@@ -102,7 +102,11 @@ class Image(models.Model):
     @property
     def path(self) -> str:
         """Get the path of this image in the workspace storage folder."""
-        return os.path.join(self.dataset.dir, self.filename)
+        return self.get_path(self.dataset)
+
+    def get_path(self, dataset: Dataset) -> str:
+        """Get the path of this image in the workspace storage folder."""
+        return os.path.join(dataset.dir, self.filename)
 
 
 class Architecture(models.Model):

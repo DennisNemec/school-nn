@@ -1,7 +1,7 @@
 """Generate batches for training and validation."""
 from random import shuffle, seed, randint
 from typing import List, Tuple, Optional
-from numpy import array, float32
+from numpy import array
 from keras import utils
 from imgaug import augmenters
 from PIL import Image as PillowImage
@@ -14,22 +14,27 @@ from ..models import (
 )
 
 
-def get_image_as_array(
-    image: Image,
+def numpy_image_batch_to_x_batch(
+    numpy_image_batch: array,
     dimensions: Tuple[int, int],
     augmenter: Optional[augmenters.Augmenter] = None,
 ) -> array:
-    """Get numpy rgb image data as array from an image."""
-    image_pil = PillowImage.open(image.path)
+    """Augment and resize a batch of images."""
+    resize_params = {"height": dimensions[0], "width": dimensions[1]}
+    resizer = augmenters.Resize(resize_params)
+
     if augmenter:
-        img_augmented = augmenter(image=array(image_pil.convert("RGB")))
-        image_pil = PillowImage.fromarray(img_augmented)
-    image_pil.resize(dimensions)
-    image_pil_rgb = image_pil.convert("RGB")
-    img_float = array(image_pil_rgb).astype(float32)
-    img_float -= 128.0  # Shift to zero centered
-    img_float *= 0.01  # Shift to standard deivation of one
-    return img_float
+        new_augmenter = augmenters.Sequential([augmenter, resizer])
+    else:
+        new_augmenter = resizer
+
+    images_augmented = new_augmenter(images=numpy_image_batch)
+    images_augmented = numpy_image_batch
+
+    images_augmented = images_augmented.astype("float32")
+    images_augmented -= 128.0  # Shift to zero centered
+    images_augmented *= 0.01  # Shift to standard deivation of one
+    return images_augmented
 
 
 # Warning: Undefined random behaviour (seed race condition) when
@@ -64,7 +69,7 @@ class BatchGeneratorTraining(utils.Sequence):
         )
         self.augmenter = augmentation_options.get_augmenter()
 
-    def _generate_x_y(self) -> Optional[Tuple[array, array]]:
+    def _generate_xraw_y(self) -> Optional[Tuple[array, array]]:
         if self.training_pass.epoche_offset >= len(self.image_list_shuffled):
             self.training_pass.epoche += 1
             self.training_pass.epoche_offset = 0
@@ -79,16 +84,14 @@ class BatchGeneratorTraining(utils.Sequence):
             self.training_pass.epoche_offset += 1
             return None
 
-        x = get_image_as_array(
-            image=image,
-            dimensions=self.image_dimensions,
-            augmenter=self.augmenter,
+        x_raw = array(
+            PillowImage.open(image.get_path(self.dataset)).convert("RGB")
         )
 
         y = self.one_hot_encoder(image.label)
         self.training_pass.epoche_offset += 1
 
-        return x, y
+        return x_raw, y
 
     def on_epoch_end(self):
         self.training_pass.save(update_fields=["epoche", "epoche_offset"])
@@ -97,16 +100,23 @@ class BatchGeneratorTraining(utils.Sequence):
         return self.batch_count
 
     def __getitem__(self, index):
-        batch_x = []
+        batch_x_raw = []
         batch_y = []
-        while len(batch_x) < self.batch_size:
-            x_y_values = self._generate_x_y()
+        while len(batch_y) < self.batch_size:
+            x_y_values = self._generate_xraw_y()
             if x_y_values is None:
                 # Label was not set
                 continue
-            x, y = x_y_values
-            batch_x.append(x)
+            x_raw, y = x_y_values
+            batch_x_raw.append(x_raw)
             batch_y.append(y)
+
+        batch_x = numpy_image_batch_to_x_batch(
+            array(batch_x_raw),
+            dimensions=self.image_dimensions,
+            augmenter=self.augmenter,
+        )
+
         return array(batch_x), array(batch_y)
 
 
@@ -134,24 +144,22 @@ class BatchGeneratorValidation(utils.Sequence):
         seed(self.training_pass.id + self.training_pass.epoche)
         shuffle(self.image_list_shuffled)
 
-    def _generate_x_y(self) -> Optional[Tuple[array, array]]:
+    def _generate_xraw_y(self) -> Optional[Tuple[array, array]]:
         image_index = self.offset % len(self.image_list_shuffled)
         image = self.image_list_shuffled[image_index]
+
         if image.label is None:
-            # Skip image without label
             self.offset += 1
             return None
 
-        x = get_image_as_array(
-            image=image,
-            dimensions=self.image_dimensions,
-            augmenter=None,
+        x_raw = array(
+            PillowImage.open(image.get_path(self.dataset)).convert("RGB")
         )
 
         y = self.one_hot_encoder(image.label)
         self.offset += 1
 
-        return x, y
+        return x_raw, y
 
     def on_epoch_end(self):
         pass
@@ -160,14 +168,21 @@ class BatchGeneratorValidation(utils.Sequence):
         return self.batch_count
 
     def __getitem__(self, index):
-        batch_x = []
+        batch_x_raw = []
         batch_y = []
-        while len(batch_x) < self.batch_size:
-            x_y_values = self._generate_x_y()
+        while len(batch_y) < self.batch_size:
+            x_y_values = self._generate_xraw_y()
             if x_y_values is None:
                 # Label was not set
                 continue
-            x, y = x_y_values
-            batch_x.append(x)
+            x_raw, y = x_y_values
+            batch_x_raw.append(x_raw)
             batch_y.append(y)
+
+        batch_x = numpy_image_batch_to_x_batch(
+            array(batch_x_raw),
+            dimensions=self.image_dimensions,
+            augmenter=None,
+        )
+
         return array(batch_x), array(batch_y)
