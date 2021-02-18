@@ -9,7 +9,8 @@
         transition-all
         duration-200
         ease-in-out
-        border-2;
+        border-2
+        cursor-pointer;
 }
 
 [class*="button-standard"] {

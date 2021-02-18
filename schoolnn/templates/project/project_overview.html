@@ -12,14 +12,18 @@
         <h1>Projekte</h1>
         <a class="button-standard-add" href="{% url "project-create" %}">Projekt erstellen</a>
     </div>
+
+    <div class="space-y-4">
         {% for project in projects %}
-            <li class="">
-                <a href="{% url "project-details" project.id %}">{{ project.name }}</a>
-            </li>
+            <article class="w-full p-6 rounded-xl bg-white shadow-base flex items-center justify-between">
+                {{ project.name }}
+                <div>
+                    <a class="text-text-gray" href="{% url "project-details" project.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "project-edit" project.id %}">Einstellungen</a> &bullet;
+                    <a class="text-text-gray" href="{% url "project-delete" project.id %}">Löschen</a>
+                </div>
+            </article>
         {% endfor %}
-    </ul>
+    </div>
 
-    <br>
-
-    <a href="{% url "project-create" %}">Neues Projekt erstellen</a>
 {% endblock %}
