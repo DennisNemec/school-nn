@@ -3,8 +3,13 @@ from typing import Optional
 from django import forms
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, DetailView, CreateView, \
-    ListView, DeleteView
+from django.views.generic import (
+    TemplateView,
+    DetailView,
+    CreateView,
+    ListView,
+    DeleteView,
+)
 
 from schoolnn.models import Project
 

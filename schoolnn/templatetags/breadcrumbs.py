@@ -18,7 +18,8 @@ def breadcrumb(parser, token):
 
     Parameters:
     -First parameter is the title of the crumb,
-    -Second (optional) parameter is the url variable to link to, produced by url tag, i.e.:
+    -Second (optional) parameter is the url variable to link to,
+    produced by url tag, i.e.:
         {% url person_detail object.id as person_url %}
         then:
         {% breadcrumb person.name person_url %}
@@ -46,7 +47,7 @@ def breadcrumb_url(parser, token):
 
     # Extract our extra title parameter
     title = bits.pop(1)
-    token.contents = ' '.join(bits)
+    token.contents = " ".join(bits)
 
     url_node = url(parser, token)
 
@@ -67,8 +68,8 @@ class BreadcrumbNode(Node):
             try:
                 val = self.vars[0]
                 title = val.resolve(context)
-            except:
-                title = ''
+            except VariableDoesNotExist:
+                title = ""
 
         else:
             title = title.strip("'").strip('"')
@@ -81,7 +82,7 @@ class BreadcrumbNode(Node):
             try:
                 url = val.resolve(context)
             except VariableDoesNotExist:
-                print('URL does not exist', val)
+                print("URL does not exist", val)
                 url = None
 
         return create_crumb(title, url)
@@ -99,8 +100,8 @@ class UrlBreadcrumbNode(Node):
             try:
                 val = self.title
                 title = val.resolve(context)
-            except:
-                title = ''
+            except VariableDoesNotExist:
+                title = ""
         else:
             title = title.strip("'").strip('"')
             title = smart_text(title)

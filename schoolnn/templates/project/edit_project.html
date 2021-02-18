@@ -1,9 +1,18 @@
 {% extends "base/base.html" %}
 
+{% load breadcrumbs %}
+
 {% block title %}Projekt bearbeiten{% endblock %}
 
-{% block breadcrumb %} › <a href="{% url "project-list" %}">Projekte</a> › Projekt bearbeiten{% endblock %}
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+    {% breadcrumb "Projekt bearbeiten" %}
+{% endblock %}
 
 {% block main %}
     <h1>Projekt bearbeiten</h1>
+
+
 {% endblock %}

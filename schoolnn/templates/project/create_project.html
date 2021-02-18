@@ -1,14 +1,18 @@
 {% extends "base/base.html" %}
+{% load breadcrumbs %}
 
 {% block title %}Projekt erstellen{% endblock %}
 
-{% block breadcrumb %} › <a href="{% url "project-list" %}">Projekte</a> › Projekt erstellen{% endblock %}
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% breadcrumb "Projekt erstellen" %}
+{% endblock %}
 
 {% block main %}
     <h1>Projekt erstellen</h1>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form }}
         <!-- TODO: Knopf übersetzen -->
         <input type="submit" class="" value="Projekt anlegen">
     </form>

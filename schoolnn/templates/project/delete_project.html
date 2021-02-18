@@ -1,8 +1,14 @@
 {% extends "base/base.html" %}
+{% load breadcrumbs %}
 
 {% block title %}Projekt „{{ project.name }}“ löschen{% endblock %}
 
-{% block breadcrumb %} › <a href="{% url "project-list" %}">Projekte</a> › Projekt löschen{% endblock %}
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+    {% breadcrumb "Projekt löschen" %}
+{% endblock %}
 
 {% block main %}
     <h1>Projekt „{{ project.name }}“ löschen</h1>

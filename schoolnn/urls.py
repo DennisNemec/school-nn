@@ -119,15 +119,9 @@ urlpatterns = [
 
 # Project routes
 urlpatterns += [
+    path("project/", ProjectListView.as_view(), name="project-list"),
     path(
-        "project/",
-        ProjectListView.as_view(),
-        name="project-list"
-    ),
-    path(
-        "project/create/",
-        ProjectCreateView.as_view(),
-        name="project-create"
+        "project/create/", ProjectCreateView.as_view(), name="project-create"
     ),
     path(
         "project/<int:pk>/",
@@ -157,6 +151,6 @@ urlpatterns += [
     path(
         "project/<int:pk>/delete",
         ProjectDeleteView.as_view(),
-        name="project-delete"
+        name="project-delete",
     ),
 ]
