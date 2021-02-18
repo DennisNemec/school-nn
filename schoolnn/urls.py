@@ -26,6 +26,7 @@ from .views.projects import (
     ProjectListView,
     ProjectDetailView,
     ProjectEditView,
+    ProjectDeleteView,
 )
 
 TrainingManager()  # runs once, starts unfinished trainings
@@ -118,9 +119,15 @@ urlpatterns = [
 
 # Project routes
 urlpatterns += [
-    path("project/", ProjectListView.as_view(), name="project-list"),
     path(
-        "project/create/", ProjectCreateView.as_view(), name="project-create"
+        "project/",
+        ProjectListView.as_view(),
+        name="project-list"
+    ),
+    path(
+        "project/create/",
+        ProjectCreateView.as_view(),
+        name="project-create"
     ),
     path(
         "project/<int:pk>/",
@@ -146,5 +153,10 @@ urlpatterns += [
         "project/<int:pk>/edit/parameters/",
         ProjectEditView.as_view(),
         name="project-edit-parameters",
+    ),
+    path(
+        "project/<int:pk>/delete",
+        ProjectDeleteView.as_view(),
+        name="project-delete"
     ),
 ]

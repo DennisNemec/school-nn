@@ -6,5 +6,13 @@
 
 {% block main %}
     <h1>Projekt „{{ project.name }}“ löschen</h1>
-    <!-- TODO: Projekte löschen implementieren -->
+
+    <p class="my-4">Möchtest du das Projekt „{{ project.name }} wirklich löschen?“</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Projekt löschen"/>
+    </form>
+
+    <a href="{% url "project-details" project.id %}">&larr; Zurück</a>
 {% endblock %}

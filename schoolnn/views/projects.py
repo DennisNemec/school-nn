@@ -2,7 +2,9 @@ from typing import Optional
 
 from django import forms
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, DetailView, CreateView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, DetailView, CreateView, \
+    ListView, DeleteView
 
 from schoolnn.models import Project
 
@@ -52,8 +54,9 @@ class ProjectEditView(TemplateView):
     template_name = "project/edit_project.html"
 
 
-# TODO: Projekte löschen implementieren
-class ProjectDeleteView(TemplateView):
+class ProjectDeleteView(DeleteView):
     """Responsible for deleting all the data of a project."""
 
+    model = Project
+    success_url = reverse_lazy("project-list")
     template_name = "project/delete_project.html"
