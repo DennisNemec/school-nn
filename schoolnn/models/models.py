@@ -8,6 +8,7 @@ from datetime import datetime
 from django.db import models
 from django.urls import reverse
 from .training import TrainingParameter
+from schoolnn.resources.static.layer_list import default_layers
 
 
 class Workspace(models.Model):
@@ -114,12 +115,12 @@ class Architecture(models.Model):
 
     name = models.CharField(max_length=15)
     custom = models.BooleanField(default=False)
-    architecture_json = models.JSONField()
+    architecture_json = models.JSONField(default=default_layers)
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return "%s" % (self.name)
+        return self.name
 
     def get_absolute_url(self):
         return reverse("architecture-detail", kwargs={"pk": self.pk})

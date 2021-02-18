@@ -10,9 +10,8 @@
     <input type="text" class="w-2/3 bg-light-gray font-black p-3 rounded-md" :value=layer.layer_information.type disabled />
     <br /><br/>
 
-    <form>
-      <!-- print activated properties -->
-      <div v-for="property in layer.layer_information.properties.filter(property => property.activated === true)" :key="property.name">
+    <!-- print activated properties -->
+    <div v-for="property in layer.layer_information.properties.filter(property => property.activated === true)" :key="property.name">
         <p class="text-icon-gray font-light mb-2">{{property.description}}<br/></p>
 
         <!-- print scalar values -->
@@ -40,8 +39,7 @@
         <br />
       </div>
 
-      <button v-on:click="$emit('on-save')" class="border-2 text-white bg-selected border-selected hover:bg-white hover:text-selected rounded-md p-2 disabled:opacity-0" :disabled="invalidState === true">Speichern</button>
-    </form>
+    <button v-on:click="$emit('on-save')" class="border-2 text-white bg-selected border-selected hover:bg-white hover:text-selected rounded-md p-2 disabled:opacity-0" :disabled="invalidState === true">Speichern</button>
   </div>
 </template>
 
