@@ -1,0 +1,46 @@
+[class*="button-"] {
+    @apply
+        inline-block
+        py-3
+        px-6
+        items-center
+        font-semibold
+        rounded-lg
+        transition-all
+        duration-200
+        ease-in-out
+        border-2;
+}
+
+[class*="button-standard"] {
+    @apply bg-accent border-accent text-white shadow-button;
+
+    &:hover{
+        @apply bg-accent-hover border-accent-hover shadow-button-hover;
+    }
+
+    &:focus, &:active{
+        @apply bg-accent-focus border-accent-focus shadow-button-focus;
+    }
+}
+
+[class*="button-inverted"] {
+    @apply bg-transparent border-accent text-accent;
+
+    &:hover {
+        @apply border-accent-hover text-accent-hover;
+    }
+
+    &:focus, &:active{
+        @apply border-accent-focus text-accent-focus;
+    }
+}
+
+.button-standard-add {
+    @apply
+        pl-16
+        bg-no-repeat;
+
+    background-position: 1.5rem center;
+    background-image: url("/public/assets/icons/plus_white.svg");
+}

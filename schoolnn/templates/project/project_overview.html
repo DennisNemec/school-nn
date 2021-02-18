@@ -8,9 +8,10 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Projektübersicht</h1>
-    <hr>
-    <ul>
+    <div class="flex items-center justify-between mb-6">
+        <h1>Projekte</h1>
+        <a class="button-standard-add" href="{% url "project-create" %}">Projekt erstellen</a>
+    </div>
         {% for project in projects %}
             <li class="">
                 <a href="{% url "project-details" project.id %}">{{ project.name }}</a>
