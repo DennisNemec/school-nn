@@ -21,7 +21,6 @@ module.exports = {
         "text-gray": "#90A0B7",
         "black": "#192A3E",
         "icon-gray": "#90A0B7",
-        "selected": "#109CF1",
         "green": "#2ED47A",
         "yellow": "#FFB946"
       },
@@ -39,6 +38,10 @@ module.exports = {
 
       fontFamily: {
         "sans": ['"Poppins"', 'sans-serif'],
+      },
+
+      minHeight: {
+        '4': '1rem',
       }
     },
   },

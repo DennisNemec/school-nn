@@ -1,4 +1,5 @@
 @import "~tailwindcss/base.css";
+@import "./base/typography.css";
 @import "./base/input.css";
 
 @import "~tailwindcss/components.css";
