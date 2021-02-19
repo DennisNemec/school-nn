@@ -6,16 +6,34 @@
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Projekte" "project-list" %}
+
     {% url "project-details" project.id as detail_url %}
     {% breadcrumb project.name detail_url %}
-    {% breadcrumb "Projekt bearbeiten" %}
+
+    {% if step == "dataset" %}
+        {% breadcrumb "Datensatz wählen" %}
+    {% elif step == "architecture" %}
+        {% breadcrumb "Modellarchitektur bearbeiten" %}
+    {% elif step == "parameters" %}
+        {% breadcrumb "Trainings-Parameter bearbeiten" %}
+    {% else %}
+        {% url "project-edit" project.id as edit_url %}
+        {% breadcrumb "Projekteinstellungen" edit_url %}
+    {% endif %}
+{% endblock %}
+
+{% block top %}
+    {% if step == "dataset" %}
+        <h1>Datensatz wählen</h1>
+    {% else %}
+        <h1>Projekteinstellungen</h1>
+    {% endif %}
 {% endblock %}
 
 {% block main %}
-    <h1>Projekt bearbeiten</h1>
-
-{% block top %}
-        <h1>Projekteinstellungen</h1>
-{% endblock %}
-
+    {% if step == "dataset" %}
+        {% include "project/partials/dataset-select-form.html" %}
+    {% else %}
+        {% include "project/partials/project-settings-form.html" %}
+    {% endif %}
 {% endblock %}

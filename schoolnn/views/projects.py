@@ -1,17 +1,19 @@
 from typing import Optional
 
 from django import forms
+from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, resolve
+from django.views import View
 from django.views.generic import (
-    TemplateView,
     DetailView,
     CreateView,
     ListView,
     DeleteView,
 )
 
-from schoolnn.models import Project
+from schoolnn.models import Project, Dataset, Architecture
 
 
 class ProjectCreateView(CreateView):
@@ -52,11 +54,41 @@ class ProjectDetailView(DetailView):
     template_name = "project/project_details.html"
 
 
-# TODO: Projekte editieren implementieren
-class ProjectEditView(TemplateView):
+class ProjectEditView(View):
     """Responsible for editing all the data of a project."""
-
+    step = ""
+    project = ""
+    context = {}
     template_name = "project/edit_project.html"
+
+    def get(self, request, *args, **kwargs):
+        self._setup()
+
+        return render(request, self.template_name, self.context)
+
+
+    def _setup(self):
+        self.step = self._get_step()
+        self.project = self._get_project()
+        self.context["step"] = self.step
+        self.context["project"] = self.project
+        self.context = {**self.context, **self._get_step_data()}
+
+    # project-edit-dataset -> dataset
+    def _get_step(self):
+        url_name = resolve(self.request.path_info).url_name
+        return url_name.split("-")[-1]
+
+    def _get_project(self):
+        return Project.objects.get(pk=self.kwargs["pk"])
+
+    def _get_step_data(self):
+        if self.step == "dataset":
+            return {"datasets": Dataset.objects.all()}
+        elif self.step == "architecture":
+            return {"architectures": Architecture.objects.all()}
+        else:
+            return {}
 
 
 class ProjectDeleteView(DeleteView):

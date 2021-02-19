@@ -1,0 +1,11 @@
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="dataset">Datensatz</label>
+    <select class="block mb-8" name="dataset" id="dataset">
+        {% for dataset in datasets %}
+            <option value="{{ dataset.id }}" {% if project.dataset == dataset %}selected{% endif %}>{{ dataset.name }}</option>
+        {% endfor %}
+    </select>
+    <a class="button-inverted" href="{% url "project-details" project.id %}">&larr; Abbrechen</a>
+    <input class="button-standard w-auto" type="submit" value="Datensatz wählen"/>
+</form>
