@@ -116,3 +116,9 @@ class DatasetDelete(DeleteView):
     model = Dataset
     success_url = reverse_lazy("dataset-list")
     template_name = "datasets/delete.html"
+
+    def delete(self, request, *args, **kwargs):
+        dataset = self.get_object()
+        shutil.rmtree(dataset.dir)
+
+        return super().delete(request, args, kwargs)
