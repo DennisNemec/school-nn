@@ -7,12 +7,14 @@
     {% breadcrumb_url "Projekte" "project-list" %}
 {% endblock %}
 
-{% block main %}
+{% block top %}
     <div class="flex items-center justify-between mb-6">
         <h1>Projekte</h1>
         <a class="button-standard-add" href="{% url "project-create" %}">Projekt erstellen</a>
     </div>
+{% endblock %}
 
+{% block main %}
     <div class="space-y-4">
         {% for project in projects %}
             <article class="w-full p-6 rounded-xl bg-white shadow-base flex items-center justify-between">
@@ -25,5 +27,4 @@
             </article>
         {% endfor %}
     </div>
-
 {% endblock %}

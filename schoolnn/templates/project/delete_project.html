@@ -10,10 +10,11 @@
     {% breadcrumb "Projekt löschen" %}
 {% endblock %}
 
-{% block main %}
-    <h1>Projekt „{{ project.name }}“ löschen</h1>
+{% block top %}
+    <h1 class="mb-6">Projekt „{{ project.name }}“ löschen</h1>
+{% endblock %}
 
-    <p class="my-4">Möchtest du das Projekt „{{ project.name }} wirklich löschen?“</p>
+{% block main %}
 
     <form method="POST">
         {% csrf_token %}

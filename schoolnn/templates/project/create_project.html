@@ -8,8 +8,11 @@
     {% breadcrumb "Projekt erstellen" %}
 {% endblock %}
 
-{% block main %}
+{% block top %}
     <h1>Projekt erstellen</h1>
+{% endblock %}
+
+{% block main %}
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form }}
