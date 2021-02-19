@@ -10,7 +10,7 @@ from django.views.generic import (
     DetailView,
     CreateView,
     ListView,
-    DeleteView,
+    DeleteView
 )
 
 from schoolnn.models import Project, Dataset, Architecture
@@ -66,6 +66,19 @@ class ProjectEditView(View):
 
         return render(request, self.template_name, self.context)
 
+    def post(self, request, *args, **kwargs):
+        self._setup()
+
+        if self.step == "dataset":
+            self.project.dataset_id = request.POST.get("dataset")
+            messages.success(request, "Datensatz erfolgreich gewählt")
+        else:
+            self.project.name = request.POST.get("name")
+            messages.success(request, "Projekteinstellungen gespeichert")
+
+        self.project.save()
+
+        return redirect("project-details", self.kwargs["pk"])
 
     def _setup(self):
         self.step = self._get_step()
