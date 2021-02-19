@@ -5,38 +5,39 @@ from django.views.generic import ListView, DetailView
 from schoolnn.models import Architecture
 from django.urls import reverse_lazy
 from schoolnn.resources.static.layer_list import layer_list
+from schoolnn.views.mixins import AuthMixin
 
 
-class ArchitectureListView(ListView):
+class ArchitectureListView(AuthMixin, ListView):
     model = Architecture
     context_object_name = "architectures"
     template_name = "architectures/list.html"
 
 
-class ArchitectureDetailView(DetailView):
+class ArchitectureDetailView(AuthMixin, DetailView):
     model = Architecture
     template_name = "architectures/detail.html"
 
 
-class ArchitectureDeleteView(DeleteView):
+class ArchitectureDeleteView(AuthMixin, DeleteView):
     model = Architecture
     success_url = reverse_lazy("architecture-list")
     template_name = "architectures/delete.html"
 
 
-class ArchitectureEditView(UpdateView):
+class ArchitectureEditView(AuthMixin, UpdateView):
     model = Architecture
     fields = ["name"]
     template_name = "architectures/add.html"
 
 
-class ArchitectureCreateView(CreateView):
+class ArchitectureCreateView(AuthMixin, CreateView):
     model = Architecture
     template_name = "architectures/add.html"
     fields = ["name"]
 
 
-class ArchitectureEditorView(UpdateView):
+class ArchitectureEditorView(AuthMixin, UpdateView):
     model = Architecture
     context_object_name = "architecture"
     template_name = "editor/editor.html"
