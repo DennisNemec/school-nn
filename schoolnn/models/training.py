@@ -140,10 +140,6 @@ class TrainingParameter:
 
     def to_json(self) -> str:
         """Dump to a json string."""
-
-        if self.is_empty():
-            return "{}"
-
         return dumps(
             {
                 "validation_split": self.validation_split,
@@ -154,18 +150,4 @@ class TrainingParameter:
                 "optimizer": self.optimizer.value,
                 "augmentation_options": self.augmentation_options.to_dict(),
             }
-        )
-
-    def is_empty(self):
-        return any(
-            value is None
-            for value in [
-                self.validation_split,
-                self.learning_rate,
-                self.termination_condition,
-                self.batch_size,
-                self.loss_function,
-                self.optimizer,
-                self.augmentation_options,
-            ]
         )
