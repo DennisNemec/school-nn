@@ -55,6 +55,17 @@
         <div class="mb-8">
             {% block top %}{% endblock %}
         </div>
+
+        {% if messages %}
+            <div class="space-y-4 mb-8">
+            {% for message in messages %}
+                <div class="w-full px-4 py-3 rounded-lg text-white  {% if message.tags %}{% if message.tags == "success" %}bg-green{% elif message.tags == "error" %}bg-red{% endif %}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+
         {% block main %}{% endblock %}
     </main>
 </body>
