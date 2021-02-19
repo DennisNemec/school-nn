@@ -14,7 +14,12 @@ from .views.base_view import BaseView
 
 urlpatterns = [
     path("", BaseView.as_view()),
-    path("datasets/", DatasetList.as_view(), name="dataset-list"),
+    path("datasets/list/", DatasetList.as_view(), name="dataset-list"),
+    path(
+        "datasets/list/<str:listing_type>/",
+        DatasetList.as_view(),
+        name="dataset-list",
+    ),
     path("datasets/<int:pk>/", DatasetDetail.as_view(), name="dataset-detail"),
     path("datasets/add/", DatasetCreate.as_view(), name="dataset-add"),
     path(
