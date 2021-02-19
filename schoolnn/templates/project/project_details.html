@@ -13,8 +13,36 @@
     <h1>Projekt „{{ project.name }}“</h1>
 {% endblock %}
 
-    <br>
+{% block main %}
+    <div class="space-y-8 my-8">
+        <section>
+            <h3>Datensatz</h3>
+            <p class="mb-4">{{ project.dataset }}</p>
+            <a class="button-inverted" href="{% url "project-edit-dataset" project.id %}">Datensatz wählen</a>
+        </section>
 
-    <a href="{% url "project-delete" project.id %}">Projekt löschen</a><br>
-    <a href="{% url "project-edit" project.id %}">Projekt bearbeiten</a>
+        <hr>
+
+        <section>
+            <h3>Modellarchitektur</h3>
+            <p class="mb-4">{{ project.architecture }}</p>
+            <a class="button-inverted" href="{% url "project-edit-architecture" project.id %}">Modellarchitektur bearbeiten</a>
+        </section>
+
+        <hr>
+
+        <section>
+            <h3>Trainingsparameter</h3>
+            <p class="mb-4">{{ project.training_parameter }}</p>
+            <a class="button-inverted" href="{% url "project-edit-parameters" project.id %}">Trainingsparameter bearbeiten</a>
+        </section>
+
+        <hr>
+    </div>
+
+    <div class="space-x-4">
+        <a class="button-standard" href="{% url "project-edit" project.id %}">Projekteinstellungen</a>
+        <a class="button-standard" href="{% url "project-delete" project.id %}">Projekt löschen</a>
+    </div>
+
 {% endblock %}
