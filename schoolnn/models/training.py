@@ -157,12 +157,15 @@ class TrainingParameter:
         )
 
     def is_empty(self):
-        return any(value is None for value in [
-            self.validation_split,
-            self.learning_rate,
-            self.termination_condition,
-            self.batch_size,
-            self.loss_function,
-            self.optimizer,
-            self.augmentation_options,
-        ])
+        return any(
+            value is None
+            for value in [
+                self.validation_split,
+                self.learning_rate,
+                self.termination_condition,
+                self.batch_size,
+                self.loss_function,
+                self.optimizer,
+                self.augmentation_options,
+            ]
+        )

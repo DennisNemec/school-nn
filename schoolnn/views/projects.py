@@ -6,12 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, resolve
 from django.views import View
-from django.views.generic import (
-    DetailView,
-    CreateView,
-    ListView,
-    DeleteView
-)
+from django.views.generic import DetailView, CreateView, ListView, DeleteView
 
 from schoolnn.models import Project, Dataset, Architecture
 
@@ -56,6 +51,7 @@ class ProjectDetailView(DetailView):
 
 class ProjectEditView(View):
     """Responsible for editing all the data of a project."""
+
     step = ""
     project = ""
     context = {}
