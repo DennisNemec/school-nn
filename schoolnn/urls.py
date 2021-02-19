@@ -16,15 +16,14 @@ from .views.training import (
     TrainingStopView,
     TrainingCompareView,
 )
+from .views.auth import AuthLoginView
 from .views.datasets import DatasetCreate, DatasetList
 from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
 from .views.base_view import BaseView
 from .views.inference import InferenceView
 
-
 TrainingManager()  # runs once, starts unfinished trainings
-
 
 urlpatterns = [
     path("", BaseView.as_view()),
@@ -109,5 +108,10 @@ urlpatterns = [
         "project/<int:project_pk>/training",
         TrainingListView.as_view(),
         name="show-trainings",
+    ),
+    path(
+        "login/",
+        AuthLoginView.as_view(),
+        name="auth-login",
     ),
 ]
