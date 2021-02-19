@@ -80,8 +80,13 @@ class DatasetCreate(CreateView):
     def create_tags(self, dataset: Dataset):
         """Create labels."""
         os.makedirs(os.path.join(dataset.dir), exist_ok=True)
+        dir_name = dataset.extract_dir
+        entries = os.listdir(dir_name)
 
-        for entry in os.scandir(dataset.extract_dir):
+        if len(entries) == 1:
+            dir_name = os.path.join(dataset.extract_dir, entries[0])
+
+        for entry in os.scandir(dir_name):
             if entry.is_dir():
                 label = Label.objects.create(name=entry.name, dataset=dataset)
                 self.process_images(entry, label, dataset)
