@@ -15,11 +15,13 @@
 {% endblock %}
 
 {% block main %}
+    <p class="my-12">Möchtest du das Projekt „{{ project.name }} wirklich löschen?“</p>
 
     <form method="POST">
         {% csrf_token %}
-        <input type="submit" value="Projekt löschen"/>
+        <div class="space-x-4">
+            <a class="button-inverted" href="{% url "project-details" project.id %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto" type="submit" value="Projekt löschen"/>
+        </div>
     </form>
-
-    <a href="{% url "project-details" project.id %}">&larr; Zurück</a>
 {% endblock %}
