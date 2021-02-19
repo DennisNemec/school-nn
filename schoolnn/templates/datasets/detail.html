@@ -1,14 +1,19 @@
-<h3>Dataset: {{ dataset.name }}</h3>
+{% extends "base/base.html" %}
+{% load static %}
 
-{% for label in dataset.label_set.all %}
-    <h4>Label: {{ label.name }}</h4>
-    {% for image in label.image_set.all %}
-        <img src="{% url 'image-show' image.id %}" alt="{{ label.name }}"/>
+{% block main %}
+    <h3>Dataset: {{ dataset.name }}</h3>
+
+    {% for label in dataset.label_set.all %}
+        <h4>Label: {{ label.name }}</h4>
+        {% for image in label.image_set.all %}
+            <img loading=lazy src="{% url 'image-show' image.id %}" alt="{{ label.name }}"/>
+        {% endfor %}
     {% endfor %}
-{% endfor %}
 
-<p>
-    <a href="/datasets/">Liste</a>
-    <a href="edit/">Edit</a>
-    <a href="delete/">Delete</a>
-</p>
+    <p>
+        <a href="/datasets/">Liste</a>
+        <a href="edit/">Edit</a>
+        <a href="delete/">Delete</a>
+    </p>
+{% endblock %}
