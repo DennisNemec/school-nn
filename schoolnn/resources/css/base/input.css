@@ -14,3 +14,8 @@ label {
     @apply
         mb-2;
 }
+
+select {
+    @apply
+        rounded-xl p-4 font-bold shadow-md;
+}

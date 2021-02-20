@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 
-{% load breadcrumbs %}
+{% load breadcrumbs static %}
 
 {% block title %}Projekt bearbeiten{% endblock %}
 
@@ -25,6 +25,10 @@
 {% block top %}
     {% if step == "dataset" %}
         <h1>Datensatz wählen</h1>
+    {% elif step == "architecture" %}
+        <h1>Modellarchitektur bearbeiten</h1>
+    {% elif step == "parameters" %}
+        <h1>Trainings-Parameter bearbeiten</h1>
     {% else %}
         <h1>Projekteinstellungen</h1>
     {% endif %}
@@ -33,6 +37,15 @@
 {% block main %}
     {% if step == "dataset" %}
         {% include "project/partials/dataset-select-form.html" %}
+    {% elif step == "architecture" %}
+        <input type="hidden" value="{{ architecture_data.0 }}" name="django_provided_layer_list" />
+        <input type="hidden" value="{{ architecture_data.1 }}" name="django_selected_layer_list" />
+
+        <div id="app"></div>
+        <script src="{% static '/js/editor.chunk-vendors.js' %}"></script>
+        <script src="{% static '/js/editor.app.js' %}"></script>
+    {% elif step == "parameters" %}
+        {% include "project/partials/parameter-form.html" %}
     {% else %}
         {% include "project/partials/project-settings-form.html" %}
     {% endif %}

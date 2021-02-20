@@ -52,10 +52,7 @@ class ProjectDetailView(DetailView):
 class ProjectEditView(View):
     """Responsible for editing all the data of a project."""
 
-    step = ""
-    project = ""
-    context = {}
-    template_name = "project/edit_project.html"
+    template_name: str = "project/edit_project.html"
 
     def get(self, request, *args, **kwargs):
         self._setup()
@@ -79,8 +76,7 @@ class ProjectEditView(View):
     def _setup(self):
         self.step = self._get_step()
         self.project = self._get_project()
-        self.context["step"] = self.step
-        self.context["project"] = self.project
+        self.context = {"step": self.step, "project": self.project}
         self.context = {**self.context, **self._get_step_data()}
 
     # project-edit-dataset -> dataset

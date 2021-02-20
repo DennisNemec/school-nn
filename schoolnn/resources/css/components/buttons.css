@@ -3,9 +3,9 @@
         inline-block
         py-3
         px-6
+        rounded-lg
         items-center
         font-semibold
-        rounded-lg
         transition-all
         duration-200
         ease-in-out
