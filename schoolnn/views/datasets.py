@@ -62,7 +62,7 @@ class DatasetList(ListView):
         if "listing_type" in self.kwargs:
             listing_type = self.kwargs["listing_type"]
 
-        # check location
+        # check url location
         if listing_type == "own" or listing_type == "":
             datasets = Dataset.objects.order_by("-created_at")
         elif listing_type == "shared":
@@ -80,6 +80,7 @@ class DatasetList(ListView):
             # save dataset specific details to dataset object
             dataset_dict = {}
             dataset_dict["name"] = dataset.name
+            dataset_dict["id"] = dataset.id
             dataset_dict["image_amount"] = 0
             dataset_dict["status"] = {
                 "is_completely_labeled": unlabeled_count,
@@ -108,6 +109,7 @@ class DatasetList(ListView):
 
             dataset_list.append(dataset_dict)
 
+        
         return [listing_type, json.dumps(dataset_list)]
 
 

@@ -19,7 +19,7 @@
       </template>
 
       <template v-slot:accordion-content>
-        <table class="table-fixed w-1/3 text-primary">
+        <table class="table-fixed w-1/3 text-primary mb-4">
           <thead>
             <tr>
               <th class="w-2/5"></th>
@@ -44,6 +44,8 @@
             </tr>
           </tbody>
         </table>
+
+        <a class="text-selected" :href="'/datasets/' + id">Details anzeigen</a>
 
         <div class="mt-10 w-full text-primary">
           <div class="w-full mb-8" v-for="cat in categories" v-bind:key="cat.name">
@@ -73,6 +75,7 @@ export default {
     unlabeledCount: Number,
     statusText: String,
     creationDate: String,
+    id: Number,
     categories: Array
   },
 
