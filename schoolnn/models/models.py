@@ -118,7 +118,7 @@ class Image(models.Model):
 class Architecture(TimestampedModelMixin):
     """One sequential neural network architecure."""
 
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=15, null=True)
     custom = models.BooleanField(default=False)
     architecture_json = models.JSONField(default=default_layers)
 
