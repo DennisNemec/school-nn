@@ -1,11 +1,12 @@
 """All ORM models."""
 
 import os
-
+from typing import Optional
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
+from json import loads
 from .training import TrainingParameter
 from schoolnn.resources.static.layer_list import default_layers
 
@@ -177,12 +178,42 @@ class TrainingPass(models.Model):
         """Assign training parameter object and save json representation."""
         self.training_parameter_json = training_parameter.to_json()
 
+    @property
+    def duration_human_readable(self) -> str:
+        """Get training duration readable for humans."""
+        duration = self.end_datetime - self.start_datetime
+        result = ""
+        if duration.days:
+            result += "{} {} ".format(duration.days, "Tage")
+        result += "{:02}:{:02}:{:02}h".format(
+            int(duration.seconds / 3600),
+            int(duration.seconds / 60) % 60,
+            int(duration.seconds) % 60,
+        )
+        return result
+
+    @property
+    def latest_training_step_metrics(self) -> Optional["TrainingStepMetrics"]:
+        """Get latest training step of this training pass."""
+        last = TrainingStepMetrics.objects.filter(training_pass=self).order_by(
+            "-id"
+        )[:1]
+        # last is array
+        if last:
+            return last[0]
+        return None
+
 
 class TrainingStepMetrics(models.Model):
     """Training and validation metrics of a training block/step."""
 
     training_pass = models.ForeignKey(TrainingPass, on_delete=models.CASCADE)
     metrics_json = models.JSONField()
+
+    @property
+    def metrics_dict(self) -> dict:
+        """Obtain metrics as dictionary."""
+        return loads(self.metrics_json)
 
 
 class Note(TimestampedModelMixin):

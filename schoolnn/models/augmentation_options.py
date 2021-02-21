@@ -75,25 +75,25 @@ class AugmentationOptions(NamedTuple):
     def _get_brightness(self) -> augmenters.Augmenter:
         # Changes brightnes
         if self.brightness:
-            return augmenters.Add((-0.35, 0.35))
+            return augmenters.Add((-70, 70))
         return augmenters.Identity()
 
     def _get_gaussian_noise(self) -> augmenters.Augmenter:
         # Makes image slightly more noisy
         if self.gaussian_noise:
-            return augmenters.ChannelShuffle(0.15)
+            return augmenters.ChannelShuffle(0.17)
         return augmenters.Identity()
 
     def _get_dropout_boxes(self) -> augmenters.Augmenter:
-        # Renders small black boxes over the image, blocking 3% of the image
+        # Renders small black boxes over the image, blocking 5% of the image
         if self.dropout_boxes:
-            return augmenters.CoarseDropout(0.03, size_percent=7)
+            return augmenters.CoarseDropout(0.05, size_percent=7)
         return augmenters.Identity()
 
     def _get_salt_and_pepper(self) -> augmenters.Augmenter:
-        # Replaces 2% of all pixels with salt and pepper noise
+        # Replaces 4% of all pixels with salt and pepper noise
         if self.salt_and_pepper:
-            return augmenters.SaltAndPepper(0.02)
+            return augmenters.SaltAndPepper(0.04)
         return augmenters.Identity()
 
     def _get_jpeg_artifacts(self) -> augmenters.Augmenter:
@@ -111,7 +111,7 @@ class AugmentationOptions(NamedTuple):
     def _get_distortion(self) -> augmenters.Augmenter:
         # Slight distortion
         if self.distortion:
-            return augmenters.PiecewiseAffine(scale=(0.0, 0.03))
+            return augmenters.PiecewiseAffine(scale=(0.0, 0.04))
         return augmenters.Identity()
 
     def _get_scale_and_translate(self) -> augmenters.Augmenter:
@@ -119,7 +119,7 @@ class AugmentationOptions(NamedTuple):
         translation_percent = 0.2
         if self.scale_and_translate:
             return augmenters.Affine(
-                scale=(0.85, 1.35),
+                scale=(0.7, 1.4),
                 translate_percent={
                     "x": (-translation_percent, translation_percent),
                     "y": (-translation_percent, translation_percent),
@@ -137,8 +137,8 @@ class AugmentationOptions(NamedTuple):
         # Change hue and saturation by -10% to 10%
         if self.color:
             return augmenters.MultiplyHueAndSaturation(
-                mul_hue=(0.9, 1.1),
-                mul_saturation=(0.5, 1.5),
+                mul_hue=(0.85, 1.15),
+                mul_saturation=(0.45, 1.55),
             )
         return augmenters.Identity()
 
@@ -147,7 +147,7 @@ class AugmentationOptions(NamedTuple):
         if self.activated_count() == 0:
             return augmenters.Identity()
 
-        chance_of_augmentation_to_be_applied = 5 / self.activated_count()
+        chance_of_augmentation_to_be_applied = 6 / self.activated_count()
         if chance_of_augmentation_to_be_applied > 1:
             chance_of_augmentation_to_be_applied = 1
 

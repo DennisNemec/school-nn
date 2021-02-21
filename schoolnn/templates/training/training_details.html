@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>SchoolNN</title>
+    <script src="/public/js/chart.js_2.9.4.js"></script>
+</head>
+<body>
+<h3>Training {{ training_pass.name }}</h3>
+<div>
+    <a href="../training">Übersicht</a><br>
+    <a href="{{ training_pass.id }}/inference">Inferenz</a><br>
+    <a href="{{ training_pass.id }}/stop">Stop</a><br>
+    Status: {{ training_pass.status }}<br><br>
+    {% with metrics=training_pass.latest_training_step_metrics %}
+        {% if metrics == None %}
+            Noch keine Metriken vorhanden
+        {% else %}
+            Aktueller Trainingsverlust: {{ metrics.metrics_dict.training.loss|floatformat:-3 }} <br>
+            Aktueller Validierungsverlust: {{ metrics.metrics_dict.validation.loss|floatformat:-3 }} <br>
+            Aktuelle Träningsgenauigkeit: {{ metrics.metrics_dict.training.accuracy|floatformat:-3 }} <br>
+            Aktueller Validierungsgenauigkeit: {{ metrics.metrics_dict.validation.accuracy|floatformat:-3 }} <br>
+        {% endif %}
+    {% endwith %}
+
+    <br>
+    Epoche: {{ training_pass.epoche }}<br>
+    Dauer: {{ training_pass.duration_human_readable }}
+
+    <div style="width:25%; height: 25%">
+        <canvas id="trainingAndValidationLoss"></canvas>
+    </div>
+    <br>
+    <div style="width:25%; height: 25%">
+        <canvas id="trainingAndValidationAccuracy"></canvas>
+    </div>
+
+</div>
+<!--Nice colors: view-source:https://www.chartjs.org/samples/latest/utils.js -->
+<script>
+    var lossGraphCanvas = document.getElementById("trainingAndValidationLoss").getContext("2d");
+    var lossChart = new Chart(lossGraphCanvas, {
+        type: 'line',
+        data: {
+            labels: {{ x_values }},
+            datasets: [
+                {
+                    label: 'Trainingsverlust',
+                    backgroundColor: 'rgb(255, 159, 64)',  // orange
+                    borderColor: 'rgb(255, 159, 64)',
+                    fill: false,
+                    data: {{ y_values_loss_training }}
+                },
+                {
+                    label: 'Validierungsverlust',
+                    backgroundColor: 'rgb(54, 162, 235)',  // blue
+                    borderColor: 'rgb(54, 162, 235)',
+                    fill: false,
+                    data: {{ y_values_loss_validation }}
+                }
+            ],
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    })
+
+
+    var accuracyGraphCanvas = document.getElementById("trainingAndValidationAccuracy").getContext("2d");
+    var accuracyChart = new Chart(accuracyGraphCanvas, {
+        type: 'line',
+        data: {
+            labels: {{ x_values }},
+            datasets: [
+                {
+                    label: 'Trainingsgenauigkeit',
+                    backgroundColor: 'rgb(255, 159, 64)',  // orange
+                    borderColor: 'rgb(255, 159, 64)',
+                    fill: false,
+                    data: {{ y_values_accuracy_training }}
+                },
+                {
+                    label: 'Validierungsgenauigkeit',
+                    backgroundColor: 'rgb(54, 162, 235)',  // blue
+                    borderColor: 'rgb(54, 162, 235)',
+                    fill: false,
+                    data: {{ y_values_accuracy_validation }}
+                }
+            ],
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

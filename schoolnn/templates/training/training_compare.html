@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>SchoolNN</title>
+    <script src="/public/js/chart.js_2.9.4.js"></script>
+</head>
+<body>
+<h3>Vergleich von TRainingsdurchläufen</h3>
+<div>
+    Losses
+    <div style="width:100%; height: 25%">
+        <canvas id="trainingAndValidationLoss"></canvas>
+    </div>
+    Accuracies
+    <br>
+    <div style="width:100%; height: 25%">
+        <canvas id="trainingAndValidationAccuracy"></canvas>
+    </div>
+</div>
+<!--Nice colors: view-source:https://www.chartjs.org/samples/latest/utils.js -->
+<script>
+    var lossGraphCanvas = document.getElementById("trainingAndValidationLoss").getContext("2d");
+    var lossChart = new Chart(lossGraphCanvas, {
+        type: 'line',
+        data: {
+            labels: {{ x_values }},
+            datasets: [
+                {% for tpd in training_pass_details %}
+                {
+                    label: 'Training Loss {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
+                    backgroundColor: 'rgb(255, 159, 64)',  // orange
+                    borderColor: 'rgb(255, 159, 64)',
+                    fill: false,
+                    data: {{ tpd.y_values_training_loss }},
+                    borderWidth: 1,
+                    pointBorderWidth: 0,
+                },
+                {
+                    label: 'Validation Loss {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
+                    backgroundColor: 'rgb(54, 162, 235)',  // blue
+                    borderColor: 'rgb(54, 162, 235)',
+                    fill: false,
+                    data: {{ tpd.y_values_validation_loss }},
+                    borderWidth: 1,
+                    pointBorderWidth: 0,
+                },
+                {% endfor %}
+            ],
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    })
+
+
+    var accuracyGraphCanvas = document.getElementById("trainingAndValidationAccuracy").getContext("2d");
+    var accuracyChart = new Chart(accuracyGraphCanvas, {
+        type: 'line',
+        data: {
+            labels: {{ x_values }},
+            datasets: [
+                {% for tpd in training_pass_details %}
+                {
+                    label: 'Trainingsgenauigkeit {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
+                    backgroundColor: 'rgb(255, 159, 64)',  // orange
+                    borderColor: 'rgb(255, 159, 64)',
+                    fill: false,
+                    data: {{ tpd.y_values_training_accuracy }},
+                    borderWidth: 1,
+                    pointBorderWidth: 0,
+                },
+                {
+                    label: 'Validierungsgenauigkeit {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
+                    backgroundColor: 'rgb(54, 162, 235)',  // blue
+                    borderColor: 'rgb(54, 162, 235)',
+                    fill: false,
+                    data: {{ tpd.y_values_validation_accuracy }},
+                    borderWidth: 1,
+                    pointBorderWidth: 0,
+                },
+                {% endfor %}
+            ],
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    })
+    
+
+</script>
+</body>
+</html>
