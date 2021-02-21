@@ -115,6 +115,7 @@ class Architecture(TimestampedModelMixin):
     name = models.CharField(max_length=15)
     custom = models.BooleanField(default=False)
     architecture_json = models.JSONField(default=default_layers)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

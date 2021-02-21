@@ -129,7 +129,9 @@ class DatasetCreate(AuthMixin, CreateView):
 
     def form_valid(self, form: DatasetCreateForm):
         """Handle committed dataset create form."""
+        form.instance.user = self.request.user
         self.object = form.save()
+
         if self.object is None:
             raise ValueError("Failed to parse the dataset create form")
 

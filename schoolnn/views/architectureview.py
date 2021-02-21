@@ -1,11 +1,11 @@
 import json
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from schoolnn.models import Architecture
 from django.urls import reverse_lazy
 from schoolnn.resources.static.layer_list import layer_list
-from schoolnn.views.mixins import AuthMixin
+from schoolnn.views.mixins import AuthMixin, AuthenticatedCreateView
 
 
 class ArchitectureListView(AuthMixin, ListView):
@@ -31,7 +31,7 @@ class ArchitectureEditView(AuthMixin, UpdateView):
     template_name = "architectures/add.html"
 
 
-class ArchitectureCreateView(AuthMixin, CreateView):
+class ArchitectureCreateView(AuthenticatedCreateView):
     model = Architecture
     template_name = "architectures/add.html"
     fields = ["name"]
