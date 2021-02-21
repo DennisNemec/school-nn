@@ -17,8 +17,7 @@ from PIL import Image as PIL_Image, ImageOps
 from schoolnn.models import Dataset, Label, Image
 from schoolnn.views.mixins import (
     AuthMixin,
-    AuthenticatedMultipleObjectMixin,
-    AuthenticatedSingleObjectMixin,
+    AuthenticatedQuerysetMixin,
 )
 
 
@@ -36,7 +35,7 @@ class DatasetCreateForm(forms.ModelForm):
         model = Dataset
 
 
-class DatasetList(ListView, AuthenticatedMultipleObjectMixin):
+class DatasetList(AuthenticatedQuerysetMixin, ListView):
     """Lists datasets."""
 
     model = Dataset
@@ -118,7 +117,7 @@ class DatasetList(ListView, AuthenticatedMultipleObjectMixin):
         return [listing_type, json.dumps(dataset_list)]
 
 
-class DatasetDetail(DetailView, AuthenticatedSingleObjectMixin):
+class DatasetDetail(AuthenticatedQuerysetMixin, DetailView):
     """Show dataset details."""
 
     model = Dataset
@@ -185,7 +184,7 @@ class DatasetCreate(AuthMixin, CreateView):
             image_pil.save(image.path)
 
 
-class DatasetUpdate(UpdateView, AuthenticatedSingleObjectMixin):
+class DatasetUpdate(AuthenticatedQuerysetMixin, UpdateView):
     """Update an existing dataset."""
 
     model = Dataset
@@ -193,7 +192,7 @@ class DatasetUpdate(UpdateView, AuthenticatedSingleObjectMixin):
     template_name = "datasets/form.html"
 
 
-class DatasetDelete(DeleteView, AuthenticatedSingleObjectMixin):
+class DatasetDelete(AuthenticatedQuerysetMixin, DeleteView):
     """Delete an existing dataset."""
 
     model = Dataset

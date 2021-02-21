@@ -1,7 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
 
 
 class AuthMixin(LoginRequiredMixin):
@@ -10,14 +8,7 @@ class AuthMixin(LoginRequiredMixin):
     login_url = "/login"
 
 
-class AuthenticatedMultipleObjectMixin(
-    MultipleObjectMixin, LoginRequiredMixin
-):
-    def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
-
-
-class AuthenticatedSingleObjectMixin(SingleObjectMixin, LoginRequiredMixin):
+class AuthenticatedQuerysetMixin(LoginRequiredMixin):
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
 
