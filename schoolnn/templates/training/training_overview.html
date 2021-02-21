@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>SchoolNN</title>
+</head>
+<body>
+<h3>Training Übersicht</h3>
+
+<a href="training/create">Starte ein neues Training</a><br>
+<a href="training/compare">Vergleiche Trainingsdurchläufe</a><br><br>
+
+{% for training_pass in object_list %}
+    {% with last_metrics=training_pass.latest_training_step_metrics %}
+        <li>
+            <hr>
+            Training pass <a href="training/{{ training_pass.id }}">{{ training_pass.name }}</a><br>
+            Epochen: {{ training_pass.epoche }}<br>
+            Status: {{ training_pass.status }}<br><br>
+            {% if last_metrics == None %}
+                Training pass has no metrics (yet)<br>
+            {% else %}
+                Loss:
+                {{ last_metrics.metrics_dict.training.loss|floatformat:-3 }} Training / 
+                {{ last_metrics.metrics_dict.validation.loss|floatformat:-3 }} Validierung <br>
+                Accuracy:
+                {{ last_metrics.metrics_dict.training.accuracy|floatformat:-3 }} Training / 
+                {{ last_metrics.metrics_dict.validation.accuracy|floatformat:-3 }} Validierung <br>
+            {% endif %}
+            <br>
+            <a href="training/{{ training_pass.id }}/inference">Inferenz</a>
+            <br>
+        </li>
+    {% endwith %}
+    <br>
+{% endfor %}
+</body>
+</html>

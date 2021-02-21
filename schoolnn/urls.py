@@ -1,4 +1,5 @@
 from django.urls import path
+from .training import TrainingManager
 from .views.architectureview import (
     ArchitectureCreateView,
     ArchitectureDeleteView,
@@ -7,10 +8,23 @@ from .views.architectureview import (
     ArchitectureDetailView,
     ArchitectureEditorView,
 )
+from .views.training import (
+    TrainingCreateView,
+    TrainingDetailView,
+    TrainingDeleteView,
+    TrainingListView,
+    TrainingStopView,
+    TrainingCompareView,
+)
 from .views.datasets import DatasetCreate, DatasetList
 from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
 from .views.base_view import BaseView
+from .views.inference import InferenceView
+
+
+TrainingManager()  # runs once, starts unfinished trainings
+
 
 urlpatterns = [
     path("", BaseView.as_view()),
@@ -60,5 +74,40 @@ urlpatterns = [
         "architectures/<int:pk>/editor/",
         ArchitectureEditorView.as_view(),
         name="architecture-editor",
+    ),
+    path(
+        "project/<int:project_pk>/training/create",
+        TrainingCreateView.as_view(),
+        name="create-training",
+    ),
+    path(
+        "project/<int:project_pk>/training/<int:training_pk>",
+        TrainingDetailView.as_view(),
+        name="show-training",
+    ),
+    path(
+        "project/<int:project_pk>/training/compare",
+        TrainingCompareView.as_view(),
+        name="compare-training",
+    ),
+    path(
+        "project/<int:project_pk>/training/<int:training_pk>/inference",
+        InferenceView.as_view(),
+        name="inference",
+    ),
+    path(
+        "project/<int:project_pk>/training/<int:training_pk>/delete",
+        TrainingDeleteView.as_view(),
+        name="delete-training",
+    ),
+    path(
+        "project/<int:project_pk>/training/<int:training_pk>/stop",
+        TrainingStopView.as_view(),
+        name="stop-training",
+    ),
+    path(
+        "project/<int:project_pk>/training",
+        TrainingListView.as_view(),
+        name="show-trainings",
     ),
 ]

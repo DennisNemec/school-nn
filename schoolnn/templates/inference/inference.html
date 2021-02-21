@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>SchoolNN</title>
+</head>
+<body>
+<h3>Inferenz - Classify images</h3>
+<a href="../{{ training_pass.id }}">Training details</a><br>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" class="btnbtn-primary" value="submit">
+</form>
+</body>
+</html>
