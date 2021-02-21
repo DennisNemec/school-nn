@@ -9,10 +9,11 @@ from schoolnn.views.mixins import AuthMixin
 class ImageView(AuthMixin, View):
     """Get a raw jpeg image."""
 
-    @staticmethod
-    def get(*_, **kwargs):
+    def get(self, *args, **kwargs):
         """Respond to the HTTP get request."""
-        image = Image.objects.get(**kwargs)
+        image = Image.objects.filter(dataset__user=self.request.user).get(
+            **kwargs
+        )
 
         image_data = open(image.path, "rb").read()
 
