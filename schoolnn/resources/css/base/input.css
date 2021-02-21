@@ -1,0 +1,16 @@
+input, textarea {
+    @apply
+        w-4/5
+        block
+        px-4
+        py-2
+        rounded-lg
+        border-2
+        border-solid
+        border-light-gray;
+}
+
+label {
+    @apply
+        mb-2;
+}

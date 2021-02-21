@@ -14,6 +14,23 @@
 .menu-item {
   background-position: 0 0.1rem;
 }
+input, textarea {
+  --tw-border-opacity: 1;
+  border-color: rgba(241, 243, 245, var(--tw-border-opacity));
+  border-radius: 0.5rem;
+  border-style: solid;
+  border-width: 2px;
+  display: block;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 80%;
+}
+
+label {
+  margin-bottom: 0.5rem;
+}
 /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
 
 /*

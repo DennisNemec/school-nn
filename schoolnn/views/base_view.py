@@ -1,3 +1,4 @@
+
 """Basic views for template testing."""
 from django.views.generic import TemplateView
 from schoolnn.views.mixins import AuthMixin

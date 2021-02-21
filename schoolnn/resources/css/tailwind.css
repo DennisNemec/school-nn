@@ -2,5 +2,6 @@
 
 @tailwind components;
 @import "./components/menu/menu-item.css";
+@import "./base/input.css";
 
 @tailwind utilities;
