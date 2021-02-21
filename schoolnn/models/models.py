@@ -37,7 +37,9 @@ class User(AbstractUser, TimestampedModelMixin):
     """User account of students, teachers and admins."""
 
     is_workspaceadmin = models.BooleanField(default=False)
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, null=True)
+    workspace = models.ForeignKey(
+        Workspace, on_delete=models.CASCADE, null=True
+    )
 
     def __str__(self):
         return "%s" % (self.username)

@@ -15,7 +15,11 @@ from django.views.generic import ListView, DetailView
 from django.db import transaction
 from PIL import Image as PIL_Image, ImageOps
 from schoolnn.models import Dataset, Label, Image
-from schoolnn.views.mixins import AuthMixin
+from schoolnn.views.mixins import (
+    AuthMixin,
+    AuthenticatedMultipleObjectMixin,
+    AuthenticatedSingleObjectMixin,
+)
 
 
 class DatasetCreateForm(forms.ModelForm):
@@ -32,9 +36,11 @@ class DatasetCreateForm(forms.ModelForm):
         model = Dataset
 
 
-class DatasetList(AuthMixin, ListView):
+class DatasetList(ListView, AuthenticatedMultipleObjectMixin):
     """Lists datasets."""
 
+    model = Dataset
+    ordering = "-created_at"
     context_object_name = "datasets"
     template_name = "datasets/list.html"
 
@@ -112,7 +118,7 @@ class DatasetList(AuthMixin, ListView):
         return [listing_type, json.dumps(dataset_list)]
 
 
-class DatasetDetail(AuthMixin, DetailView):
+class DatasetDetail(DetailView, AuthenticatedSingleObjectMixin):
     """Show dataset details."""
 
     model = Dataset
@@ -179,7 +185,7 @@ class DatasetCreate(AuthMixin, CreateView):
             image_pil.save(image.path)
 
 
-class DatasetUpdate(AuthMixin, UpdateView):
+class DatasetUpdate(UpdateView, AuthenticatedSingleObjectMixin):
     """Update an existing dataset."""
 
     model = Dataset
@@ -187,7 +193,7 @@ class DatasetUpdate(AuthMixin, UpdateView):
     template_name = "datasets/form.html"
 
 
-class DatasetDelete(AuthMixin, DeleteView):
+class DatasetDelete(DeleteView, AuthenticatedSingleObjectMixin):
     """Delete an existing dataset."""
 
     model = Dataset
