@@ -17,7 +17,7 @@
     <div class="space-y-8 my-8">
         <section>
             <h3>Datensatz</h3>
-            <p class="mb-4">{{ project.dataset }}</p>
+            <p class="mb-4">{{ project.dataset.name }}</p>
             <a class="button-inverted" href="{% url "project-edit-dataset" project.id %}">Datensatz wählen</a>
         </section>
 
@@ -25,7 +25,7 @@
 
         <section>
             <h3>Modellarchitektur</h3>
-            <p class="mb-4">{{ project.architecture }}</p>
+            <p class="mb-4">{{ project.architecture.name }}</p>
             <a class="button-inverted" href="{% url "project-edit-architecture" project.id %}">Modellarchitektur bearbeiten</a>
         </section>
 

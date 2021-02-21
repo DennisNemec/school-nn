@@ -38,12 +38,19 @@
     {% if step == "dataset" %}
         {% include "project/partials/dataset-select-form.html" %}
     {% elif step == "architecture" %}
-        <input type="hidden" value="{{ architecture_data.0 }}" name="django_provided_layer_list" />
-        <input type="hidden" value="{{ architecture_data.1 }}" name="django_selected_layer_list" />
-
-        <div id="app"></div>
-        <script src="{% static '/js/editor.chunk-vendors.js' %}"></script>
-        <script src="{% static '/js/editor.app.js' %}"></script>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="custom_architecture">Architektur</label>
+            <select class="block mb-8" name="custom_architecture" id="custom_architecture">
+                <option disabled selected value> -- Auswählen -- </option>
+                {% for architecture in architectures %}
+                    <option value="{{ architecture.id }}">{{ architecture.name }}</option>
+                {% endfor %}
+            </select>
+            <input class="button-standard w-auto" type="submit" value="Architektur laden"/>
+        </form>
+        <hr class="my-6">
+        {% include "editor/partials/editor.html" %}
     {% elif step == "parameters" %}
         {% include "project/partials/parameter-form.html" %}
     {% else %}
