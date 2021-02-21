@@ -29,6 +29,8 @@ ALLOWED_HOSTS: List[str] = []
 
 LOGIN_REDIRECT_URL = "/"
 
+AUTH_USER_MODEL = "schoolnn.User"
+
 # Application definition
 
 INSTALLED_APPS = [

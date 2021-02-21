@@ -2,6 +2,7 @@
 
 import os
 from typing import Optional
+from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -32,18 +33,11 @@ class Workspace(TimestampedModelMixin):
         return "%s" % (self.name)
 
 
-class User(TimestampedModelMixin):
+class User(AbstractUser, TimestampedModelMixin):
     """User account of students, teachers and admins."""
 
-    password = models.CharField(max_length=50)
-    last_login = models.DateTimeField()
-    is_active = models.BooleanField(default=False)
-    username = models.CharField(max_length=15)
-    first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=15)
-    is_superadmin = models.BooleanField(default=False)
     is_workspaceadmin = models.BooleanField(default=False)
-    workspace_id = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return "%s" % (self.username)
