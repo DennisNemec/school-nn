@@ -39,7 +39,7 @@
         <br />
       </div>
 
-    <button v-on:click="$emit('on-save')" class="border-2 text-white bg-selected border-selected hover:bg-white hover:text-selected rounded-md p-2 disabled:opacity-0" :disabled="invalidState === true">Speichern</button>
+    <button v-on:click="$emit('on-save')" class="button-standard disabled:opacity-0" :disabled="invalidState === true">Speichern</button>
   </div>
 </template>
 
