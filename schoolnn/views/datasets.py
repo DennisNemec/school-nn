@@ -330,7 +330,7 @@ class DatasetClassify(FormView):
             self.remove_label(image)
 
         messages.success(
-            self.request, "Bild erfolgriech aus der Klasse gelöscht."
+            self.request, "Bild erfolgreich aus der Klasse gelöscht."
         )
 
         return redirect
