@@ -131,7 +131,7 @@ urlpatterns += [
     path(
         "project/<int:pk>/edit/",
         ProjectEditView.as_view(),
-        name="project-edit",
+        name="project-edit-settings",
     ),
     path(
         "project/<int:pk>/edit/dataset/",
@@ -142,6 +142,11 @@ urlpatterns += [
         "project/<int:pk>/edit/architecture/",
         ProjectEditView.as_view(),
         name="project-edit-architecture",
+    ),
+    path(
+        "project/<int:pk>/edit/architecture/load/",
+        ProjectEditView.as_view(),
+        name="project-edit-load_architecture",
     ),
     path(
         "project/<int:pk>/edit/parameters/",

@@ -1,0 +1,13 @@
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="custom_architecture">Eigene Architektur laden</label>
+    <select class="block mb-8" name="custom_architecture" id="custom_architecture">
+        <option disabled selected value> -- Auswählen -- </option>
+        {% for architecture in architectures %}
+            <option value="{{ architecture.id }}">{{ architecture.name }}</option>
+        {% endfor %}
+    </select>
+
+    <a class="button-inverted" href="{% url "project-edit-architecture" project.id %}">&larr; Abbrechen</a>
+    <input class="button-standard w-auto" type="submit" value="Architektur laden"/>
+</form>

@@ -10,50 +10,49 @@
     {% url "project-details" project.id as detail_url %}
     {% breadcrumb project.name detail_url %}
 
-    {% if step == "dataset" %}
+    {% if step == "settings" %}
+        {% url "project-edit-settings" project.id as edit_url %}
+        {% breadcrumb "Projekteinstellungen" edit_url %}
+    {% elif step == "dataset" %}
         {% breadcrumb "Datensatz wählen" %}
+    {% elif step == "load_architecture" %}
+        {% breadcrumb "Modellarchitektur laden" %}
     {% elif step == "architecture" %}
         {% breadcrumb "Modellarchitektur bearbeiten" %}
     {% elif step == "parameters" %}
         {% breadcrumb "Trainings-Parameter bearbeiten" %}
-    {% else %}
-        {% url "project-edit" project.id as edit_url %}
-        {% breadcrumb "Projekteinstellungen" edit_url %}
     {% endif %}
 {% endblock %}
 
 {% block top %}
-    {% if step == "dataset" %}
+    {% if step == "settings" %}
+        <h1>Projekteinstellungen</h1>
+    {% elif step == "dataset" %}
         <h1>Datensatz wählen</h1>
+        <a class="button-standard-add" href="{% url "dataset-add" %}">Neuen Datensatz erstellen</a>
+    {% elif step == "load_architecture" %}
+        <h1>Modellarchitektur wählen</h1>
     {% elif step == "architecture" %}
         <h1>Modellarchitektur bearbeiten</h1>
+        <a class="button-standard" href="{% url "project-edit-load_architecture" project.id %}">Eigene Modellarchitektur laden</a>
     {% elif step == "parameters" %}
         <h1>Trainings-Parameter bearbeiten</h1>
-    {% else %}
-        <h1>Projekteinstellungen</h1>
     {% endif %}
 {% endblock %}
 
 {% block main %}
-    {% if step == "dataset" %}
-        {% include "project/partials/dataset-select-form.html" %}
-    {% elif step == "architecture" %}
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="custom_architecture">Architektur</label>
-            <select class="block mb-8" name="custom_architecture" id="custom_architecture">
-                <option disabled selected value> -- Auswählen -- </option>
-                {% for architecture in architectures %}
-                    <option value="{{ architecture.id }}">{{ architecture.name }}</option>
-                {% endfor %}
-            </select>
-            <input class="button-standard w-auto" type="submit" value="Architektur laden"/>
-        </form>
-        <hr class="my-6">
-        {% include "editor/partials/editor.html" %}
-    {% elif step == "parameters" %}
-        {% include "project/partials/parameter-form.html" %}
-    {% else %}
+    {% if step == "settings" %}
         {% include "project/partials/project-settings-form.html" %}
+    {% elif step == "dataset" %}
+        {% include "project/partials/dataset-select-form.html" %}
+    {% elif step == "load_architecture" %}
+        {% include "project/partials/architecture-select-form.html" %}
+    {% elif step == "architecture" %}
+        <a class="button-inverted mb-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
+        {% include "editor/partials/editor.html" %}
+        <a class="button-inverted mt-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
+    {% elif step == "parameters" %}
+        {{ project.training_parameter_json }}
+        {% include "project/partials/parameter-form.html" %}
     {% endif %}
 {% endblock %}
