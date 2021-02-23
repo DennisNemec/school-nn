@@ -16,7 +16,9 @@
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form }}
-        <!-- TODO: Knopf übersetzen -->
-        <input type="submit" class="" value="Projekt anlegen">
+        <div class="space-x-4 mt-8">
+            <a class="button-inverted" href="{% url "project-list" %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto" type="submit" value="Projekt erstellen"/>
+        </div>
     </form>
 {% endblock %}

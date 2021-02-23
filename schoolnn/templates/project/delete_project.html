@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block top %}
-    <h1 class="mb-6">Projekt „{{ project.name }}“ löschen</h1>
+    <h1>Projekt „{{ project.name }}“ löschen</h1>
 {% endblock %}
 
 {% block main %}
@@ -21,7 +21,7 @@
         {% csrf_token %}
         <div class="space-x-4">
             <a class="button-inverted" href="{% url "project-details" project.id %}">&larr; Abbrechen</a>
-            <input class="button-standard w-auto" type="submit" value="Projekt löschen"/>
+            <input class="button-standard w-auto border-red bg-red" type="submit" value="Projekt löschen"/>
         </div>
     </form>
 {% endblock %}

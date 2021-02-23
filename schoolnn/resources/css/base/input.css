@@ -1,6 +1,6 @@
 input, textarea {
     @apply
-        w-4/5
+        w-3/5
         block
         px-4
         py-2
@@ -12,6 +12,8 @@ input, textarea {
 
 label {
     @apply
+        font-semibold
+        block
         mb-2;
 }
 
