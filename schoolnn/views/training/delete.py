@@ -5,9 +5,10 @@ from schoolnn.models import (
     Project,
     TrainingPass,
 )
+from schoolnn.views.mixins import UserIsProjectOwnerMixin
 
 
-class TrainingDeleteView(View):
+class TrainingDeleteView(UserIsProjectOwnerMixin, View):
     """Delete a training pass."""
 
     def get(self, request, project_pk: int = 0, training_pk: int = 0):

@@ -7,7 +7,7 @@ from schoolnn.models import (
     TrainingPass,
     TrainingStepMetrics,
 )
-
+from schoolnn.views.mixins import UserIsProjectOwnerMixin
 
 TrainingPassGraphDetails = namedtuple(
     "TrainingPassGraphDetails",
@@ -50,7 +50,7 @@ def _training_pass_to_training_pass_graph_details(
     )
 
 
-class TrainingCompareView(View):
+class TrainingCompareView(UserIsProjectOwnerMixin, View):
     """Get a comparison over all trainings passed."""
 
     def get(self, request, project_pk: int):

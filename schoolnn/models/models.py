@@ -130,14 +130,14 @@ class Project(TimestampedModelMixin):
     """One project a user/student works on."""
 
     name = models.CharField(max_length=15)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
 
     def __str__(self):
-        return "%s" % (self.name)
+        return self.name
 
     @property
     def training_parameter(self) -> TrainingParameter:
@@ -158,7 +158,7 @@ class TrainingPass(models.Model):
     end_datetime = models.DateTimeField()
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     model_weights = models.BinaryField()
     status = models.CharField(max_length=15)

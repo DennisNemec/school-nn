@@ -2,9 +2,10 @@
 from django.views.generic import ListView
 from django.db.models.query import QuerySet
 from schoolnn.models import TrainingPass
+from schoolnn.views.mixins import UserIsProjectOwnerMixin
 
 
-class TrainingListView(ListView):
+class TrainingListView(UserIsProjectOwnerMixin, ListView):
     """Get a list of all done training passes."""
 
     template_name = "training/training_overview.html"
