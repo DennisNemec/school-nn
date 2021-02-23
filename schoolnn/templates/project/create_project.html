@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+
+{% block title %}Projekt erstellen{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% breadcrumb "Projekt erstellen" %}
+{% endblock %}
+
+{% block top %}
+    <h1>Projekt erstellen</h1>
+{% endblock %}
+
+{% block main %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <div class="space-x-4 mt-8">
+            <a class="button-inverted" href="{% url "project-list" %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto" type="submit" value="Projekt erstellen"/>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Projekt „{{ project.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Projekt „{{ project.name }}“</h1>
+    <div class="space-x-4">
+        <a class="button-standard" href="{% url "project-edit-settings" project.id %}">Projekteinstellungen</a>
+        <a class="button-inverted border-red text-red" href="{% url "project-delete" project.id %}">Projekt löschen</a>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="space-y-8 my-8">
+        <section class="card">
+            <div class="flex items-center space-x-4">
+                <img class="h-6 w-6" src="{% static "assets/icons/datasets.svg" %}">
+                <h3>Datensatz</h3>
+            </div>
+            {% if not project.dataset %}
+                <p>Noch kein Datensatz gewählt.</p>
+                <p class="mb-4 text-yellow">Um ein Training starten zu können, muss ein Datensatz gewählt werden.</p>
+            {% else %}
+                <p class="mb-4">Gewählter Datensatz: <a href="{% url "dataset-detail" project.dataset.id %}"><span class="underline">{{ project.dataset.name }}</span></a></p>
+            {% endif %}
+            <a class="button-inverted" href="{% url "project-edit-dataset" project.id %}">Datensatz wählen</a>
+        </section>
+
+        <section class="card">
+            <div class="flex items-center space-x-4">
+                <img class="h-6 w-6" src="{% static "assets/icons/architectures.svg" %}">
+                <h3>Modellarchitektur</h3>
+            </div>
+            {% if project.architecture.created_at|date:"U" == project.architecture.updated_at|date:"U" %}
+                <p class="mb-4">Standardeinstellung noch nie bearbeitet.</p>
+            {% else %}
+                <p class="mb-4">Zuletzt bearbeitet am: {{ project.architecture.updated_at | date:"d.m.Y H:i:s" }}</p>
+            {% endif %}
+            <a class="button-inverted" href="{% url "project-edit-architecture" project.id %}">Modellarchitektur bearbeiten</a>
+        </section>
+
+        <section class="card">
+            <div class="flex items-center space-x-4">
+                <img class="h-6 w-6" src="{% static "assets/icons/parameters.svg" %}">
+                <h3>Trainingsparameter</h3>
+            </div>
+            {% if project.training_parameter_json.created_at|date:"U" == project.training_parameter_json.updated_at|date:"U" %}
+                <p class="mb-4">Standardeinstellung noch nie bearbeitet.</p>
+            {% else %}
+                <p class="mb-4">Zuletzt bearbeitet am: {{ project.training_parameter_json.updated_at | date:"d.m.Y H:i:s" }}</p>
+            {% endif %}
+            <a class="button-inverted" href="{% url "project-edit-parameters" project.id %}">Trainingsparameter bearbeiten</a>
+        </section>
+
+        <section class="card">
+            <div class="flex items-center space-x-4">
+                <img class="h-6 w-6" src="{% static "assets/icons/play.svg" %}">
+                <h3>Training</h3>
+            </div>
+            <p class="mb-4">Hier können Trainingsdurchläufe gestartet, verwaltet und verglichen werden.</p>
+            <a class="button-inverted" href="{% url "project-details" project.id %}train">Trainingsdurchläufe verwalten</a>
+        </section>
+
+        <hr>
+    </div>
+
+{% endblock %}
