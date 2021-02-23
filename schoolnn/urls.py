@@ -1,5 +1,4 @@
 from django.urls import path
-from .training import TrainingManager
 from .views.architectureview import (
     ArchitectureCreateView,
     ArchitectureDeleteView,
@@ -29,7 +28,7 @@ from .views.projects import (
     ProjectDeleteView,
 )
 
-TrainingManager()  # runs once, starts unfinished trainings
+# TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
     path("", BaseView.as_view(), name="home"),
