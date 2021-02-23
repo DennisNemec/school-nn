@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block main %}
+    <div class="p-10">
+        <h3 class="font-bold text-2xl">Bild dem Label {{label.name}} hinzufügen</h3>
+
+        <div class="mt-6">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <input type="hidden" name="label" value="{{label.id}}">
+                    <input type="hidden" name="dataset" value="{{dataset.id}}">
+                    {{form}}
+                </div>
+
+                <a href="{% url 'label-detail' pk=label.id %}">
+                    Zurück
+                </a>
+                <input type="submit" value="Bild hochladen" />
+            </form>
+        </div>
+    </div>
+{% endblock %}

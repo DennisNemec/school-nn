@@ -8,22 +8,54 @@ from .views.architectureview import (
     ArchitectureEditorView,
 )
 from .views.datasets import DatasetCreate, DatasetList
-from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
+from .views.datasets import (
+    DatasetDetail,
+    DatasetUpdate,
+    DatasetDelete,
+    DatasetClassify,
+)
 from .views.images import ImageView
 from .views.base_view import BaseView
+from .views.labels import (
+    LabelDetailView,
+    LabelUpdateView,
+    LabelCreateView,
+    LabelCreateImageView,
+)
 
 urlpatterns = [
     path("", BaseView.as_view()),
-    path("datasets/list/", DatasetList.as_view(), name="dataset-list"),
-    path(
-        "datasets/list/<str:listing_type>/",
-        DatasetList.as_view(),
-        name="dataset-list",
-    ),
+    path("datasets/", DatasetList.as_view(), name="dataset-list"),
     path("datasets/<int:pk>/", DatasetDetail.as_view(), name="dataset-detail"),
+    path(
+        "datasets/create/image",
+        LabelCreateImageView.as_view(),
+        name="label-addimage",
+    ),
     path("datasets/add/", DatasetCreate.as_view(), name="dataset-add"),
     path(
         "datasets/<int:pk>/edit/", DatasetUpdate.as_view(), name="dataset-edit"
+    ),
+    path(
+        "datasets/<int:pk>/label",
+        DatasetClassify.as_view(),
+        name="dataset-label",
+    ),
+    path(
+        "datasets/label/<int:pk>/",
+        LabelDetailView.as_view(),
+        name="label-detail",
+    ),
+    path("datasets/label/", LabelDetailView.as_view(), name="label-detail"),
+    path(
+        "datasets/<int:pk>/create/label/",
+        LabelCreateView.as_view(),
+        name="label-create",
+    ),
+    path(
+        "datasets/label/<int:pk>/edit",
+        LabelUpdateView.as_view(),
+        name="label-edit",
     ),
     path(
         "datasets/<int:pk>/delete/",

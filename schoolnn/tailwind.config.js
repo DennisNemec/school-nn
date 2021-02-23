@@ -20,7 +20,8 @@ module.exports = {
         "icon-gray": "#90A0B7",
         "selected": "#109CF1",
         "green": "#2ED47A",
-        "yellow": "#FFB946"
+        "yellow": "#FFB946",
+        "red": "#F7685B",
       },
 
       spacing: {

@@ -6,15 +6,23 @@ import json
 from typing import Optional
 
 from django import forms
+from django.urls import reverse
 from django.core.validators import FileExtensionValidator
 from django.http import HttpResponseRedirect
 from django.http import Http404
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import (
+    CreateView,
+    UpdateView,
+    DeleteView,
+    FormView,
+)
 from django.views.generic import ListView, DetailView
 from django.db import transaction
 from PIL import Image as PIL_Image, ImageOps
 from schoolnn.models import Dataset, Label, Image
+
+from .widgets import ImageCheckboxWidget
 
 
 class DatasetCreateForm(forms.ModelForm):
@@ -29,6 +37,16 @@ class DatasetCreateForm(forms.ModelForm):
 
         fields = ["file", "name"]
         model = Dataset
+
+
+class DatasetClassifyForm(forms.Form):
+    """Dataset form that contains an additional file field."""
+
+    image_id_list = forms.ModelMultipleChoiceField(
+        queryset=Image.objects.filter(label__isnull=True),
+        widget=ImageCheckboxWidget,
+        label="",
+    )
 
 
 class DatasetList(ListView):
@@ -59,8 +77,8 @@ class DatasetList(ListView):
         datasets = None
         dataset_list = []
 
-        if "listing_type" in self.kwargs:
-            listing_type = self.kwargs["listing_type"]
+        if "type" in self.request.GET:
+            listing_type = self.request.GET["type"]
 
         # check url location
         if listing_type == "own" or listing_type == "":
@@ -109,7 +127,6 @@ class DatasetList(ListView):
 
             dataset_list.append(dataset_dict)
 
-        
         return [listing_type, json.dumps(dataset_list)]
 
 
@@ -119,12 +136,46 @@ class DatasetDetail(DetailView):
     model = Dataset
     template_name = "datasets/detail.html"
 
+    def get_unlabeled_count(self):
+        """
+        Returns the amount of unclassified images of \
+        a specific dataset.
+        """
+
+        return (
+            Dataset.objects.get(id=self.kwargs["pk"])
+            .image_set.filter(label__isnull=True)
+            .count()
+        )
+
+    def get_unlabeled_images(self):
+        """
+        Returns the unclassified images of a specific dataset \
+        as an Image object.
+        """
+
+        return Dataset.objects.get(id=self.kwargs["pk"]).image_set.filter(
+            label__isnull=True
+        )
+
+    def get_context_data(self, **kwargs):
+        """
+        Sets needed context data for use within the template.
+        """
+
+        context = super().get_context_data(**kwargs)
+
+        context["unlabeled_count"] = self.get_unlabeled_count()
+        context["unlabeled_images"] = self.get_unlabeled_images()
+
+        return context
+
 
 class DatasetCreate(CreateView):
     """Handles creation of datasets."""
 
     form_class = DatasetCreateForm
-    template_name = "datasets/form.html"
+    template_name = "datasets/create.html"
 
     object: Optional[Dataset] = None
 
@@ -184,6 +235,92 @@ class DatasetUpdate(UpdateView):
     model = Dataset
     fields = ["name"]
     template_name = "datasets/form.html"
+
+    def get_unlabeled_count(self):
+        """
+        Returns the amount of unclassified images of a specific dataset.
+        """
+
+        return (
+            Dataset.objects.get(id=self.kwargs["pk"])
+            .image_set.filter(label__isnull=True)
+            .count()
+        )
+
+    def get_unlabeled_images(self):
+        """
+        Returns the unclassified images of a \
+        specific dataset as an Image object. \
+        """
+
+        return Dataset.objects.get(id=self.kwargs["pk"]).image_set.filter(
+            label__isnull=True
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["unlabeled_count"] = self.get_unlabeled_count()
+        context["unlabeled_images"] = self.get_unlabeled_images()
+        context["dataset_id"] = self.kwargs["pk"]
+        context["labels"] = Label.objects.filter(dataset=self.kwargs["pk"])
+        context["classify_form"] = DatasetClassifyForm()
+
+        return context
+
+
+class DatasetClassify(FormView):
+    """ Classifies unlabeled images of an existing dataset. """
+
+    form_class = DatasetClassifyForm
+    template_name = "datasets/labelform.html"
+    model = Image
+
+    def set_label(self, image_id, label_id):
+        """ Classifiy an image with an specific label. """
+
+        Image.objects.filter(pk=image_id).update(label=label_id)
+
+    def remove_label(self, image_id):
+        """ Removes a label of a given image. """
+
+        Image.objects.filter(pk=image_id).update(label=None)
+
+    def form_invalid(self, form):
+        """Handling request of invalid form.
+        Occurs if the given id is invalid.
+
+        Used for label deletion.
+        """
+        redirect = HttpResponseRedirect(
+            reverse("dataset-edit", kwargs=self.kwargs)
+        )
+
+        if "id" not in form.data:
+            return redirect
+
+        image_ids = form.data.getlist("image_id_list")
+
+        for image in image_ids:
+            self.remove_label(image)
+
+        return redirect
+
+    def form_valid(self, form):
+        """Handling request of valid form.
+        Occurs if the user want to label images.
+
+        Used for label deletion.
+        """
+
+        image_ids = form.data.getlist("image_id_list")
+        label_id = form.data["label"]
+
+        for image in image_ids:
+            self.set_label(image, label_id)
+
+        return HttpResponseRedirect(
+            reverse("dataset-edit", kwargs=self.kwargs)
+        )
 
 
 class DatasetDelete(DeleteView):

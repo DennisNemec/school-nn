@@ -1,0 +1,9 @@
+{% for optgroup in widget.optgroups %}
+    <div class="inline-block animated-checkbox-container">
+      <input type="checkbox" id="image-{{ optgroup.1.0.value }}" name="{{ optgroup.1.0.name }}" value="{{ optgroup.1.0.value }}">
+      <label class="relative inline-block cursor-pointer" for="image-{{ optgroup.1.0.value }}">
+          <img class="w-32 h-32 shadow-md" src="{% url 'image-show' pk=optgroup.1.0.value %}" loading=lazy>
+      </label>
+    </div>
+{% endfor %}
+

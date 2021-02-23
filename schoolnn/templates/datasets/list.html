@@ -9,12 +9,12 @@
         <div class="w-1/3">
             <p class="inline-block mr-2 font-bold">Anzeigen: </p>
             <select class="rounded-xl p-4 font-bold shadow-md" onchange="location = this.value;">
-                <option value="/datasets/list/own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
-                <option value="/datasets/list/shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
+                <option value="/datasets/?type=own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
+                <option value="/datasets/?type=shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
             </select>
         </div>
 
-        <a href="/datasets/add" class="flex mr-10 items-center bg-selected p-3 pl-6 pr-6 rounded-xl text-white border-selected border-2 hover:border-selected hover:bg-white hover:text-selected shadow-md">
+        <a href="/datasets/add" class="flex items-center bg-selected p-3 pl-6 pr-6 rounded-xl text-white border-selected border-2 hover:border-selected hover:bg-white hover:text-selected shadow-md">
             <svg class="mr-2" width="30" height="30" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
