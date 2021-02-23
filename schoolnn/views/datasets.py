@@ -97,6 +97,9 @@ class DatasetCreate(CreateView):
     ):
         """Save images center cropped."""
         for entry in os.scandir(path):
+            if entry.name == ".DS_Store":
+                continue
+
             image = Image.objects.create(dataset=dataset, label=label)
             image_pil = PIL_Image.open(entry.path)
             width, height = image_pil.size
