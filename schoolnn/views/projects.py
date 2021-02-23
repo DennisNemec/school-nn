@@ -41,7 +41,9 @@ class ProjectCreateView(CreateView):
         self.object.architecture = new_architecture
         self.object.save()
 
-        messages.success(self.request, f"Projekt „{self.object.name}“ erfolgreich erstellt.")
+        messages.success(
+            self.request, f"Projekt „{self.object.name}“ erfolgreich erstellt."
+        )
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -65,12 +67,12 @@ class ProjectEditView(View):
     """Responsible for editing all the data of a project."""
 
     template_name: str = "project/edit_project.html"
-    valid_steps: dict = [
+    valid_steps: list = [
         "settings",
         "dataset",
         "architecture",
         "load_architecture",
-        "parameters"
+        "parameters",
     ]
 
     def get(self, request, *args, **kwargs):
@@ -124,24 +126,20 @@ class ProjectEditView(View):
 
     def _get_step_context(self):
         if self.step == "dataset":
-            return {
-                "datasets": Dataset.objects.all()
-            }
+            return {"datasets": Dataset.objects.all()}
         elif self.step == "architecture":
-            return{
+            return {
                 "layer_list": layer_list,
                 "architecture_json": json.dumps(
                     self.project.architecture.architecture_json
-                )
+                ),
             }
         elif self.step == "load_architecture":
             return {
                 "architectures": Architecture.objects.exclude(custom=False)
             }
         elif self.step == "parameters":
-            return {
-                "parameter_form": TrainingParameterForm()
-            }
+            return {"parameter_form": TrainingParameterForm()}
         else:
             return {}
 
@@ -153,7 +151,7 @@ class ProjectEditView(View):
             return self.default_redirect
 
         self.project.name = name
-        messages.success(self.request, f"Projekteinstellungen gespeichert.")
+        messages.success(self.request, "Projekteinstellungen gespeichert.")
 
         return self.default_redirect
 
@@ -167,11 +165,16 @@ class ProjectEditView(View):
         dataset = Dataset.objects.filter(pk=dataset_id).first()
 
         if dataset is None:
-            messages.error(self.request, "Der gewählte Datensatz konnte nicht gefunden werden.")
+            messages.error(
+                self.request,
+                "Der gewählte Datensatz konnte nicht gefunden werden.",
+            )
             return self.default_redirect
 
         self.project.dataset = dataset
-        messages.success(self.request, f"Datensatz „{dataset.name}“ erfolgreich gewählt.")
+        messages.success(
+            self.request, f"Datensatz „{dataset.name}“ erfolgreich gewählt."
+        )
 
         return self.default_redirect
 
@@ -183,10 +186,14 @@ class ProjectEditView(View):
             raise ValueError("Architektur-JSON nicht angegeben.")
 
         # Todo: Check if json is valid
-        self.project.architecture.architecture_json = json.loads(architecture_json)
+        self.project.architecture.architecture_json = json.loads(
+            architecture_json
+        )
         self.project.architecture.save()
 
-        messages.success(self.request, "Die Änderungen wurden erfolgreich gespeichert.")
+        messages.success(
+            self.request, "Die Änderungen wurden erfolgreich gespeichert."
+        )
 
         return redirect("project-edit-architecture", self.kwargs["pk"])
 
@@ -200,7 +207,10 @@ class ProjectEditView(View):
         architecture = Architecture.objects.filter(pk=architecture_id).first()
 
         if architecture is None:
-            messages.error(self.request, "Die gewählte Architektur konnte nicht gefunden werden.")
+            messages.error(
+                self.request,
+                "Die gewählte Architektur konnte nicht gefunden werden.",
+            )
             return redirect("project-edit-architecture", self.kwargs["pk"])
 
         # Duplicate selected architecture
@@ -213,7 +223,10 @@ class ProjectEditView(View):
         # Delete old architecture and replace with new one
         self.project.architecture.delete()
         self.project.architecture = architecture
-        messages.success(self.request, f"Architektur „{architecture_name}“ erfolgreich geladen.")
+        messages.success(
+            self.request,
+            f"Architektur „{architecture_name}“ erfolgreich geladen.",
+        )
 
         return redirect("project-edit-architecture", self.kwargs["pk"])
 
@@ -224,10 +237,14 @@ class ProjectEditView(View):
 
 
 class TrainingParameterForm(forms.Form):
-    validation_split = forms.FloatField(min_value=0.0, max_value=0.01,)
+    validation_split = forms.FloatField(
+        min_value=0.0,
+        max_value=0.01,
+    )
     learning_rate = forms.FloatField(min_value=0.001, max_value=0.2)
-    termination_condition_seconds = forms.IntegerField(min_value=1,
-                                                       max_value=86400)
+    termination_condition_seconds = forms.IntegerField(
+        min_value=1, max_value=86400
+    )
 
 
 class ProjectDeleteView(DeleteView):

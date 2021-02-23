@@ -9,8 +9,9 @@ from django.urls import reverse
 from json import loads
 from .training import TrainingParameter
 from schoolnn.resources.static.layer_list import default_layers
-from schoolnn.resources.static.default_training_parameters import \
-    default_training_parameters
+from schoolnn.resources.static.default_training_parameters import (
+    default_training_parameters,
+)
 
 
 class TimestampedModelMixin(models.Model):
@@ -141,7 +142,9 @@ class Project(TimestampedModelMixin):
     architecture = models.ForeignKey(
         Architecture, on_delete=models.CASCADE, null=True
     )
-    training_parameter_json = models.JSONField(null=True, default=default_training_parameters)
+    training_parameter_json = models.JSONField(
+        null=True, default=default_training_parameters
+    )
 
     def __str__(self):
         return "%s" % (self.name)
