@@ -5,9 +5,10 @@ from schoolnn.models import (
     TrainingPass,
     TrainingStepMetrics,
 )
+from schoolnn.views.mixins import UserIsProjectOwnerMixin
 
 
-class TrainingDetailView(View):
+class TrainingDetailView(UserIsProjectOwnerMixin, View):
     """Get an overview over a training."""
 
     template_name = "training/training_details.html"

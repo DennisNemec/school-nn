@@ -1,4 +1,7 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path
+
+from .training import TrainingManager
 from .views.architectureview import (
     ArchitectureCreateView,
     ArchitectureDeleteView,
@@ -15,6 +18,7 @@ from .views.training import (
     TrainingStopView,
     TrainingCompareView,
 )
+from .views.auth import AuthLoginView
 from .views.datasets import DatasetCreate, DatasetList
 from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
@@ -28,7 +32,7 @@ from .views.projects import (
     ProjectDeleteView,
 )
 
-# TrainingManager()  # runs once, starts unfinished trainings
+TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
     path("", BaseView.as_view(), name="home"),
@@ -114,6 +118,12 @@ urlpatterns = [
         TrainingListView.as_view(),
         name="show-trainings",
     ),
+    path(
+        "login/",
+        AuthLoginView.as_view(),
+        name="auth-login",
+    ),
+    path("logout/", LogoutView.as_view(), name="auth-logout"),
 ]
 
 # Project routes

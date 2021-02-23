@@ -2,6 +2,7 @@
 
 import os
 from typing import Optional
+from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -35,18 +36,13 @@ class Workspace(TimestampedModelMixin):
         return "%s" % (self.name)
 
 
-class User(TimestampedModelMixin):
+class User(AbstractUser, TimestampedModelMixin):
     """User account of students, teachers and admins."""
 
-    password = models.CharField(max_length=50)
-    last_login = models.DateTimeField()
-    is_active = models.BooleanField(default=False)
-    username = models.CharField(max_length=15)
-    first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=15)
-    is_superadmin = models.BooleanField(default=False)
     is_workspaceadmin = models.BooleanField(default=False)
-    workspace_id = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+    workspace = models.ForeignKey(
+        Workspace, on_delete=models.CASCADE, null=True
+    )
 
     def __str__(self):
         return "%s" % (self.username)
@@ -124,6 +120,7 @@ class Architecture(TimestampedModelMixin):
     name = models.CharField(max_length=15, null=True)
     custom = models.BooleanField(default=False)
     architecture_json = models.JSONField(default=default_layers)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -136,7 +133,7 @@ class Project(TimestampedModelMixin):
     """One project a user/student works on."""
 
     name = models.CharField(max_length=15)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, null=True)
     architecture = models.ForeignKey(
@@ -147,7 +144,7 @@ class Project(TimestampedModelMixin):
     )
 
     def __str__(self):
-        return "%s" % (self.name)
+        return self.name
 
     def get_absolute_url(self):
         """Direct URL to this project"""
@@ -172,7 +169,7 @@ class TrainingPass(models.Model):
     end_datetime = models.DateTimeField()
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     model_weights = models.BinaryField()
     status = models.CharField(max_length=15)

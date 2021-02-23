@@ -13,7 +13,7 @@ from schoolnn.models import (
     Optimizer,
     TerminationCondition,
 )
-
+from schoolnn.views.mixins import UserIsProjectOwnerMixin
 
 _LOSS_CHOICES = [
     (LossFunction.CATEGORICAL_CROSSENTROPY.value, "Categorical Crossentropy"),
@@ -91,7 +91,7 @@ class TrainingStartForm(forms.Form):
     )
 
 
-class TrainingCreateView(View):
+class TrainingCreateView(UserIsProjectOwnerMixin, View):
     """Handle creation of datasets."""
 
     template_name = "training/create_training.html"

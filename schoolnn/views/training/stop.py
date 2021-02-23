@@ -6,9 +6,10 @@ from schoolnn.models import (
     TrainingPass,
     TrainingPassState,
 )
+from schoolnn.views.mixins import UserIsProjectOwnerMixin
 
 
-class TrainingStopView(View):
+class TrainingStopView(UserIsProjectOwnerMixin, View):
     """Stop a training pass."""
 
     def get(self, request, project_pk: int = 0, training_pk: int = 0):

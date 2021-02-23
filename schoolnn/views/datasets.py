@@ -15,6 +15,10 @@ from django.views.generic import ListView, DetailView
 from django.db import transaction
 from PIL import Image as PIL_Image, ImageOps
 from schoolnn.models import Dataset, Label, Image
+from schoolnn.views.mixins import (
+    AuthMixin,
+    AuthenticatedQuerysetMixin,
+)
 
 
 class DatasetCreateForm(forms.ModelForm):
@@ -31,9 +35,11 @@ class DatasetCreateForm(forms.ModelForm):
         model = Dataset
 
 
-class DatasetList(ListView):
+class DatasetList(AuthenticatedQuerysetMixin, ListView):
     """Lists datasets."""
 
+    model = Dataset
+    ordering = "-created_at"
     context_object_name = "datasets"
     template_name = "datasets/list.html"
 
@@ -111,14 +117,14 @@ class DatasetList(ListView):
         return [listing_type, json.dumps(dataset_list)]
 
 
-class DatasetDetail(DetailView):
+class DatasetDetail(AuthenticatedQuerysetMixin, DetailView):
     """Show dataset details."""
 
     model = Dataset
     template_name = "datasets/detail.html"
 
 
-class DatasetCreate(CreateView):
+class DatasetCreate(AuthMixin, CreateView):
     """Handles creation of datasets."""
 
     form_class = DatasetCreateForm
@@ -128,7 +134,9 @@ class DatasetCreate(CreateView):
 
     def form_valid(self, form: DatasetCreateForm):
         """Handle committed dataset create form."""
+        form.instance.user = self.request.user
         self.object = form.save()
+
         if self.object is None:
             raise ValueError("Failed to parse the dataset create form")
 
@@ -184,7 +192,7 @@ class DatasetCreate(CreateView):
             image_pil.save(image.path)
 
 
-class DatasetUpdate(UpdateView):
+class DatasetUpdate(AuthenticatedQuerysetMixin, UpdateView):
     """Update an existing dataset."""
 
     model = Dataset
@@ -192,7 +200,7 @@ class DatasetUpdate(UpdateView):
     template_name = "datasets/form.html"
 
 
-class DatasetDelete(DeleteView):
+class DatasetDelete(AuthenticatedQuerysetMixin, DeleteView):
     """Delete an existing dataset."""
 
     model = Dataset
