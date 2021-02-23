@@ -11,6 +11,7 @@ from schoolnn.models import Dataset, Label, Image
 from .widgets import ImageCheckboxWidget
 from django.urls import reverse
 
+
 class LabelEditForm(forms.ModelForm):
     """Label form for editing a label."""
 
@@ -136,7 +137,12 @@ class LabelCreateImageView(FormView):
     def form_invalid(self, form: LabelCreateImageForm):
         """ Return to the label page if the form is invalid """
 
-        return HttpResponseRedirect(reverse("label-detail", kwargs={"pk": self.get_context_data()["label"].id}))
+        return HttpResponseRedirect(
+            reverse(
+                "label-detail",
+                kwargs={"pk": self.get_context_data()["label"].id},
+            )
+        )
 
     def form_valid(self, form: LabelCreateImageForm):
         """ validate the form and create a new image """
@@ -146,4 +152,9 @@ class LabelCreateImageView(FormView):
         image = self.create_image_entry(label, dataset)
         self.copy_file(self.request.FILES["file"], image.path)
 
-        return HttpResponseRedirect(reverse("label-detail", kwargs={"pk": self.get_context_data()["label"].id}))
+        return HttpResponseRedirect(
+            reverse(
+                "label-detail",
+                kwargs={"pk": self.get_context_data()["label"].id},
+            )
+        )
