@@ -5,6 +5,7 @@ import zipfile
 import json
 from typing import Optional
 
+from django.contrib import messages
 from django import forms
 from django.urls import reverse
 from django.core.validators import FileExtensionValidator
@@ -17,10 +18,15 @@ from django.views.generic.edit import (
     DeleteView,
     FormView,
 )
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, DetailView
 from django.db import transaction
 from PIL import Image as PIL_Image, ImageOps
 from schoolnn.models import Dataset, Label, Image
+from schoolnn.views.mixins import (
+    AuthMixin,
+    AuthenticatedQuerysetMixin,
+)
 
 from .widgets import ImageCheckboxWidget
 
@@ -49,11 +55,13 @@ class DatasetClassifyForm(forms.Form):
     )
 
 
-class DatasetList(ListView):
+class DatasetList(AuthenticatedQuerysetMixin, ListView):
     """Lists datasets."""
 
+    model = Dataset
+    ordering = "-created_at"
     context_object_name = "datasets"
-    template_name = "datasets/list.html"
+    template_name = "datasets/dataset_overview.html"
 
     def get_label_of_datasets(self, dataset):
         """ Extract labels of a dataset. """
@@ -130,11 +138,11 @@ class DatasetList(ListView):
         return [listing_type, json.dumps(dataset_list)]
 
 
-class DatasetDetail(DetailView):
+class DatasetDetail(AuthenticatedQuerysetMixin, DetailView):
     """Show dataset details."""
 
     model = Dataset
-    template_name = "datasets/detail.html"
+    template_name = "datasets/dataset_details.html"
 
     def get_unlabeled_count(self):
         """
@@ -171,17 +179,22 @@ class DatasetDetail(DetailView):
         return context
 
 
-class DatasetCreate(CreateView):
+class DatasetCreate(AuthMixin, CreateView):
     """Handles creation of datasets."""
 
     form_class = DatasetCreateForm
-    template_name = "datasets/create.html"
+    template_name = "datasets/create_dataset.html"
 
     object: Optional[Dataset] = None
 
+    def form_invalid(self, form):
+        raise ValueError("Failed to parse the dataset create form")
+
     def form_valid(self, form: DatasetCreateForm):
         """Handle committed dataset create form."""
+        form.instance.user = self.request.user
         self.object = form.save()
+
         if self.object is None:
             raise ValueError("Failed to parse the dataset create form")
 
@@ -190,6 +203,8 @@ class DatasetCreate(CreateView):
 
         shutil.rmtree(self.object.extract_dir)
         os.remove(self.object.upload_file)
+
+        messages.success(self.request, "Datensatz erfolgreich erstellt.")
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -207,8 +222,13 @@ class DatasetCreate(CreateView):
     def create_tags(self, dataset: Dataset):
         """Create labels."""
         os.makedirs(os.path.join(dataset.dir), exist_ok=True)
+        dir_name = dataset.extract_dir
+        entries = os.listdir(dir_name)
 
-        for entry in os.scandir(dataset.extract_dir):
+        if len(entries) == 1:
+            dir_name = os.path.join(dataset.extract_dir, entries[0])
+
+        for entry in os.scandir(dir_name):
             if entry.is_dir():
                 label = Label.objects.create(name=entry.name, dataset=dataset)
                 self.process_images(entry, label, dataset)
@@ -219,6 +239,9 @@ class DatasetCreate(CreateView):
     ):
         """Save images center cropped."""
         for entry in os.scandir(path):
+            if entry.name == ".DS_Store":
+                continue
+
             image = Image.objects.create(dataset=dataset, label=label)
             image_pil = PIL_Image.open(entry.path)
             width, height = image_pil.size
@@ -229,12 +252,15 @@ class DatasetCreate(CreateView):
             image_pil.save(image.path)
 
 
-class DatasetUpdate(UpdateView):
+class DatasetUpdate(
+    SuccessMessageMixin, AuthenticatedQuerysetMixin, UpdateView
+):
     """Update an existing dataset."""
 
     model = Dataset
     fields = ["name"]
-    template_name = "datasets/form.html"
+    template_name = "datasets/edit_dataset.html"
+    success_message = "Datensatz erfolgreich bearbeitet."
 
     def get_unlabeled_count(self):
         """
@@ -272,7 +298,7 @@ class DatasetClassify(FormView):
     """ Classifies unlabeled images of an existing dataset. """
 
     form_class = DatasetClassifyForm
-    template_name = "datasets/labelform.html"
+    template_name = "datasets/partials/dataset_classify_form.html"
     model = Image
 
     def set_label(self, image_id, label_id):
@@ -303,13 +329,15 @@ class DatasetClassify(FormView):
         for image in image_ids:
             self.remove_label(image)
 
+        messages.success(
+            self.request, "Bild erfolgriech aus der Klasse gelöscht."
+        )
+
         return redirect
 
     def form_valid(self, form):
         """Handling request of valid form.
         Occurs if the user want to label images.
-
-        Used for label deletion.
         """
 
         image_ids = form.data.getlist("image_id_list")
@@ -318,14 +346,24 @@ class DatasetClassify(FormView):
         for image in image_ids:
             self.set_label(image, label_id)
 
+        messages.success(self.request, "Klasse erfolgreich zugeordnet.")
+
         return HttpResponseRedirect(
             reverse("dataset-edit", kwargs=self.kwargs)
         )
 
 
-class DatasetDelete(DeleteView):
+class DatasetDelete(AuthenticatedQuerysetMixin, DeleteView):
     """Delete an existing dataset."""
 
     model = Dataset
     success_url = reverse_lazy("dataset-list")
-    template_name = "datasets/delete.html"
+    template_name = "datasets/delete_dataset.html"
+
+    def delete(self, request, *args, **kwargs):
+        dataset = self.get_object()
+        shutil.rmtree(dataset.dir)
+
+        messages.success(self.request, "Datensatz erfolgreich gelöscht.")
+
+        return super().delete(request, args, kwargs)

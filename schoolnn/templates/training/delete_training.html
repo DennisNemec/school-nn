@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>SchoolNN</title>
+</head>
+<body>
+<h3>Training löschen</h3>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    Sicher dass du Trainingsdurclauf {{ trainning_pass.name }} löschen möchtest?
+    <input type="submit" class="btnbtn-primary" value="submit">
+</form>
+</body>
+</html>

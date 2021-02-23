@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% load breadcrumbs %}
+
+{% block title %}Datensatz {{dataset.name}}  löschen{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-detail" dataset.id as detail_url %}
+    {% url "dataset-delete" dataset.id as delete_url %}
+    {% breadcrumb dataset.name detail_url %}
+    {% breadcrumb "Löschen" delete_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
+{% endblock %}
+
+{% block main %}
+    <form method="POST">
+        {% csrf_token %}
+        <input class="w-48 button-standard" type="submit" value="Datensatz löschen"/>
+        <a class="button-standard" href="{% url 'dataset-edit' pk=dataset.id %}">Zurück</a>
+    </form>
+{% endblock %}

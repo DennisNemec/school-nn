@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+
+{% block title %}Projekte{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+{% endblock %}
+
+{% block top %}
+    <h1>Projekte</h1>
+    <a class="button-standard-add" href="{% url "project-create" %}">Projekt erstellen</a>
+{% endblock %}
+
+{% block main %}
+    <div class="space-y-4">
+        {% for project in projects %}
+            <article class="card flex items-center justify-between">
+                <h3>{{ project.name }}</h3>
+                <div>
+                    <a class="text-text-gray" href="{% url "project-details" project.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "project-edit-settings" project.id %}">Einstellungen</a> &bullet;
+                    <a class="text-red" href="{% url "project-delete" project.id %}">Löschen</a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+
+    {% if not projects %}
+        <article class="card">
+            <h3>Oh wow!</h3>
+            <p>Es wurden noch keine Projekte angelegt. Klicke oben auf den Button „Projekt anlegen“, um ein neues Projekt anzulegen.</p>
+        </article>
+    {% endif %}
+{% endblock %}

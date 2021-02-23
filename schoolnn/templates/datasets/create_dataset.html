@@ -1,0 +1,28 @@
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+{% load static %}
+
+{% block title %}Datensatz erstellen{% endblock %}
+
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-add" as dataset_create_url %}
+    {% breadcrumb "Datensätze erstellen" dataset_create_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Datensatz erstellen</h1>
+{% endblock %}
+
+{% block main %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-4">
+            {{ form.as_p }}
+        </div>
+
+        <input class="mr-4 cursor-pointer bg-green p-3 pl-6 pr-6 rounded-xl text-white border-green border-2 hover:red-selected hover:bg-white hover:text-green shadow-md" type="submit" value="Datensatz erstellen"/>
+    </form>
+{% endblock %}

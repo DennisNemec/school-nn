@@ -1,12 +1,23 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Bild der Klasse {{label.name}} hinzufügen{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-detail" dataset.id as detail_url %}
+    {% url "dataset-edit" dataset.id as edit_url %}
+    {% breadcrumb dataset.name detail_url %}
+    {% breadcrumb "Bearbeiten" edit_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Bild der Klasse {{label.name}} hinzufügen</h1>
+{% endblock %}
 
 {% block main %}
-    <div class="p-10">
-        <h3 class="font-bold text-2xl">Bild dem Label {{label.name}} hinzufügen</h3>
-
-        <div class="mt-6">
-            <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-4">
                     <input type="hidden" name="label" value="{{label.id}}">
@@ -14,11 +25,9 @@
                     {{form}}
                 </div>
 
-                <a href="{% url 'label-detail' pk=label.id %}">
+                <a class="button-standard" href="{% url 'label-detail' pk=label.id %}">
                     Zurück
                 </a>
-                <input type="submit" value="Bild hochladen" />
-            </form>
-        </div>
-    </div>
+                <input type="submit" class="w-44 button-standard" value="Bild hochladen" />
+    </form>
 {% endblock %}

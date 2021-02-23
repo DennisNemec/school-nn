@@ -1,0 +1,13 @@
+{% load static %}
+
+<form method="POST" enctype="multipart/form-data" id="architecture_form">
+    {% csrf_token %}
+
+    <input type="hidden" value="{{ layer_list }}" name="django_provided_layer_list"/>
+    <input type="hidden" value="{{ architecture_json }}" name="architecture_json"/>
+</form>
+
+<div id="app"></div>
+
+<script src="{% static '/js/editor.chunk-vendors.js' %}"></script>
+<script src="{% static '/js/editor.app.js' %}"></script>

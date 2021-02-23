@@ -23,6 +23,10 @@ class LossFunction(Enum):
 
     CATEGORICAL_CROSSENTROPY = "categorical_crossentropy"
 
+    @classmethod
+    def to_array(cls):
+        return [e.value for e in cls]
+
 
 class Optimizer(Enum):
     """Enumeration of the optimizer."""
@@ -33,6 +37,10 @@ class Optimizer(Enum):
     NADAM = "nadam"
     ADADELTA = "adadelta"
     ADAMAX = "adamax"
+
+    @classmethod
+    def to_array(cls):
+        return [e.value for e in cls]
 
 
 class TerminationCondition:

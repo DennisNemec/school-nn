@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>SchoolNN</title>
+</head>
+<body>
+<h3>Inferenz - Classify images</h3>
+<a href="../{{ training_pass.id }}">Training details</a><br>
+Predictions:
+<div>
+{% for image_b64_classification in image_predictions %}
+    Classified as: {{ image_b64_classification.1 }}
+    <br>
+    <img width="10%" height="10%", src="data:image/jpeg;base64,{{ image_b64_classification.0 }}">
+    <br>
+{% endfor %}
+</div>
+</body>
+</html>

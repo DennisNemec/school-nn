@@ -1,13 +1,18 @@
 """All ORM models."""
 
 import os
-
+from typing import Optional
+from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
+from json import loads
 from .training import TrainingParameter
 from schoolnn.resources.static.layer_list import default_layers
+from schoolnn.resources.static.default_training_parameters import (
+    default_training_parameters,
+)
 
 
 class TimestampedModelMixin(models.Model):
@@ -31,18 +36,13 @@ class Workspace(TimestampedModelMixin):
         return "%s" % (self.name)
 
 
-class User(TimestampedModelMixin):
+class User(AbstractUser, TimestampedModelMixin):
     """User account of students, teachers and admins."""
 
-    password = models.CharField(max_length=50)
-    last_login = models.DateTimeField()
-    is_active = models.BooleanField(default=False)
-    username = models.CharField(max_length=15)
-    first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=15)
-    is_superadmin = models.BooleanField(default=False)
     is_workspaceadmin = models.BooleanField(default=False)
-    workspace_id = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+    workspace = models.ForeignKey(
+        Workspace, on_delete=models.CASCADE, null=True
+    )
 
     def __str__(self):
         return "%s" % (self.username)
@@ -120,11 +120,12 @@ class Image(models.Model):
 
 
 class Architecture(TimestampedModelMixin):
-    """One sequential neural network architecure."""
+    """One sequential neural network architecture."""
 
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=15, null=True)
     custom = models.BooleanField(default=False)
     architecture_json = models.JSONField(default=default_layers)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -137,14 +138,22 @@ class Project(TimestampedModelMixin):
     """One project a user/student works on."""
 
     name = models.CharField(max_length=15)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     custom = models.BooleanField(default=False)
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
-    training_parameter_json = models.JSONField()
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, null=True)
+    architecture = models.ForeignKey(
+        Architecture, on_delete=models.CASCADE, null=True
+    )
+    training_parameter_json = models.JSONField(
+        null=True, default=default_training_parameters
+    )
 
     def __str__(self):
-        return "%s" % (self.name)
+        return self.name
+
+    def get_absolute_url(self):
+        """Direct URL to this project"""
+        return reverse("project-details", kwargs={"pk": self.pk})
 
     @property
     def training_parameter(self) -> TrainingParameter:
@@ -165,7 +174,7 @@ class TrainingPass(models.Model):
     end_datetime = models.DateTimeField()
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
     model_weights = models.BinaryField()
     status = models.CharField(max_length=15)
@@ -182,12 +191,42 @@ class TrainingPass(models.Model):
         """Assign training parameter object and save json representation."""
         self.training_parameter_json = training_parameter.to_json()
 
+    @property
+    def duration_human_readable(self) -> str:
+        """Get training duration readable for humans."""
+        duration = self.end_datetime - self.start_datetime
+        result = ""
+        if duration.days:
+            result += "{} {} ".format(duration.days, "Tage")
+        result += "{:02}:{:02}:{:02}h".format(
+            int(duration.seconds / 3600),
+            int(duration.seconds / 60) % 60,
+            int(duration.seconds) % 60,
+        )
+        return result
+
+    @property
+    def latest_training_step_metrics(self) -> Optional["TrainingStepMetrics"]:
+        """Get latest training step of this training pass."""
+        last = TrainingStepMetrics.objects.filter(training_pass=self).order_by(
+            "-id"
+        )[:1]
+        # last is array
+        if last:
+            return last[0]
+        return None
+
 
 class TrainingStepMetrics(models.Model):
     """Training and validation metrics of a training block/step."""
 
     training_pass = models.ForeignKey(TrainingPass, on_delete=models.CASCADE)
     metrics_json = models.JSONField()
+
+    @property
+    def metrics_dict(self) -> dict:
+        """Obtain metrics as dictionary."""
+        return loads(self.metrics_json)
 
 
 class Note(TimestampedModelMixin):

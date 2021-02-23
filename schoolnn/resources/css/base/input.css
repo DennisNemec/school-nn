@@ -1,0 +1,23 @@
+input, textarea {
+    @apply
+        w-3/5
+        block
+        px-4
+        py-2
+        rounded-lg
+        border-2
+        border-solid
+        border-light-gray;
+}
+
+label {
+    @apply
+        font-semibold
+        block
+        mb-2;
+}
+
+select {
+    @apply
+        rounded-xl p-4 font-bold shadow-md;
+}

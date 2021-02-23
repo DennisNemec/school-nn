@@ -1,7 +1,10 @@
-@tailwind base;
+@import "~tailwindcss/base.css";
+@import "./base/typography.css";
+@import "./base/input.css";
 
-@tailwind components;
+@import "~tailwindcss/components.css";
 @import "./components/menu/menu-item.css";
+@import "./components/buttons.css";
 
 @tailwind utilities;
 
@@ -44,3 +47,5 @@
         z-index: -1;
     }
 }
+@import "~tailwindcss/utilities.css";
+@import "./utilities/card.css";

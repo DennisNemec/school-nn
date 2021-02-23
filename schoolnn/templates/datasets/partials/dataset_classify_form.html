@@ -3,12 +3,12 @@
         <form class="w-full" action="/datasets/{{dataset_id}}/label" method="post">
             {% csrf_token %}
                 
-            <div class="mb-8">
+            <div class="mb-2">
                 {{ form }}
             </div>
 
-            <div class="flex flex-wrap w-1/6">
-                <label for="provided-label" class="w-1/6">Label: </label>
+            <div class="flex flex-wrap items-center w-1/6">
+                <label for="provided-label" class="w-1/6 mr-4">Klasse: </label>
                 <select class="block mb-4 w-3/6" id="provided-label" name="label">
                     {% for label in labels %}
                         <option value="{{label.id}}">{{label.name}}</option>
@@ -16,7 +16,7 @@
                 </select>
             </div>
 
-            <input class="" type="submit" value="Speichern">
+            <input type="submit" class="w-32 button-standard" value="Zuordnen">
         </form>
     </div>
 {% else %}

@@ -3,15 +3,17 @@ from django.http import HttpResponse
 from django.views import View
 
 from schoolnn.models import Image
+from schoolnn.views.mixins import AuthMixin
 
 
-class ImageView(View):
+class ImageView(AuthMixin, View):
     """Get a raw jpeg image."""
 
-    @staticmethod
-    def get(*_, **kwargs):
-        """Repond to the HTTP get request."""
-        image = Image.objects.get(**kwargs)
+    def get(self, *args, **kwargs):
+        """Respond to the HTTP get request."""
+        image = Image.objects.filter(dataset__user=self.request.user).get(
+            **kwargs
+        )
 
         image_data = open(image.path, "rb").read()
 

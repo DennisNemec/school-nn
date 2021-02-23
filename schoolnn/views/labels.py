@@ -6,10 +6,13 @@ from django.views.generic.edit import (
     CreateView,
     UpdateView,
     FormView,
+    DeleteView,
 )
+from django.contrib.messages.views import SuccessMessageMixin
 from schoolnn.models import Dataset, Label, Image
 from .widgets import ImageCheckboxWidget
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib import messages
 
 
 class LabelEditForm(forms.ModelForm):
@@ -79,20 +82,36 @@ class LabelDetailView(UpdateView):
         return kwargs
 
 
-class LabelCreateView(CreateView):
+class LabelCreateView(SuccessMessageMixin, CreateView):
     """ Label creation view with a form. """
 
     model = Label
     form_class = LabelCreateForm
     template_name = "label/create.html"
+    success_message = "Klasse erfolgreich erstellt."
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy("dataset-edit", kwargs=self.kwargs)
+
+    def get_context_data(self, **kwargs):
+        """ Retrieve required information for template """
+        context = super().get_context_data(**kwargs)
+        context["dataset"] = Dataset.objects.get(pk=self.kwargs["pk"])
+
+        return context
 
 
-class LabelUpdateView(UpdateView):
+class LabelUpdateView(SuccessMessageMixin, UpdateView):
     """Update an existing label."""
 
     model = Label
     form_class = LabelEditForm
     template_name = "label/edit.html"
+
+    success_message = "Klasse erfolgreich bearbeitet."
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy("label-detail", kwargs=self.kwargs)
 
 
 class LabelCreateImageView(FormView):
@@ -137,6 +156,10 @@ class LabelCreateImageView(FormView):
     def form_invalid(self, form: LabelCreateImageForm):
         """ Return to the label page if the form is invalid """
 
+        messages.error(
+            self.request, "Das Bild konnte nicht hochgeladen werden."
+        )
+
         return HttpResponseRedirect(
             reverse(
                 "label-detail",
@@ -152,9 +175,26 @@ class LabelCreateImageView(FormView):
         image = self.create_image_entry(label, dataset)
         self.copy_file(self.request.FILES["file"], image.path)
 
+        messages.success(self.request, "Bild erfolgreich hochgeladen.")
+
         return HttpResponseRedirect(
             reverse(
                 "label-detail",
                 kwargs={"pk": self.get_context_data()["label"].id},
             )
         )
+
+
+class LabelDeleteView(DeleteView):
+    model = Label
+    template_name = "label/delete.html"
+
+    def delete(self, request, *args, **kwargs):
+        label = self.get_object()
+        self.success_url = reverse_lazy(
+            "dataset-edit", kwargs={"pk": label.dataset.id}
+        )
+
+        messages.success(self.request, "Klasse erfolgreich gelöscht.")
+
+        return super().delete(request, args, kwargs)

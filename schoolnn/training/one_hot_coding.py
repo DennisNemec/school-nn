@@ -18,9 +18,10 @@ def get_one_hot_encoder(dataset: Dataset) -> Callable:
 
 def get_one_hot_decoder(dataset: Dataset) -> Callable:
     """Make hot encoded array to a label."""
-    label_list = Label.objects.get(dataset_id=dataset.id).order_by("id")
+    label_list = Label.objects.filter(dataset_id=dataset.id).order_by("id")
 
     def decoder(array: List[int]) -> Label:
+        print("DEC", array)
         max_value = array[0]
         matched_label = label_list[0]
 
