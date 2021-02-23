@@ -154,8 +154,13 @@ class DatasetCreate(CreateView):
     def create_tags(self, dataset: Dataset):
         """Create labels."""
         os.makedirs(os.path.join(dataset.dir), exist_ok=True)
+        dir_name = dataset.extract_dir
+        entries = os.listdir(dir_name)
 
-        for entry in os.scandir(dataset.extract_dir):
+        if len(entries) == 1:
+            dir_name = os.path.join(dataset.extract_dir, entries[0])
+
+        for entry in os.scandir(dir_name):
             if entry.is_dir():
                 label = Label.objects.create(name=entry.name, dataset=dataset)
                 self.process_images(entry, label, dataset)
@@ -166,6 +171,9 @@ class DatasetCreate(CreateView):
     ):
         """Save images center cropped."""
         for entry in os.scandir(path):
+            if entry.name == ".DS_Store":
+                continue
+
             image = Image.objects.create(dataset=dataset, label=label)
             image_pil = PIL_Image.open(entry.path)
             width, height = image_pil.size
@@ -190,3 +198,9 @@ class DatasetDelete(DeleteView):
     model = Dataset
     success_url = reverse_lazy("dataset-list")
     template_name = "datasets/delete.html"
+
+    def delete(self, request, *args, **kwargs):
+        dataset = self.get_object()
+        shutil.rmtree(dataset.dir)
+
+        return super().delete(request, args, kwargs)
