@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+
+{% block title %}Projekt „{{ project.name }}“ löschen{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+    {% breadcrumb "Projekt löschen" %}
+{% endblock %}
+
+{% block top %}
+    <h1>Projekt „{{ project.name }}“ löschen</h1>
+{% endblock %}
+
+{% block main %}
+    <p class="my-12">Möchtest du das Projekt „{{ project.name }} wirklich löschen?“</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="space-x-4">
+            <a class="button-inverted" href="{% url "project-details" project.id %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto border-red bg-red" type="submit" value="Projekt löschen"/>
+        </div>
+    </form>
+{% endblock %}

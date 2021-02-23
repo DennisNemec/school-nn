@@ -1,0 +1,58 @@
+{% extends "base/base.html" %}
+
+{% load breadcrumbs static %}
+
+{% block title %}Projekt bearbeiten{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+
+    {% if step == "settings" %}
+        {% url "project-edit-settings" project.id as edit_url %}
+        {% breadcrumb "Projekteinstellungen" edit_url %}
+    {% elif step == "dataset" %}
+        {% breadcrumb "Datensatz wählen" %}
+    {% elif step == "load_architecture" %}
+        {% breadcrumb "Modellarchitektur laden" %}
+    {% elif step == "architecture" %}
+        {% breadcrumb "Modellarchitektur bearbeiten" %}
+    {% elif step == "parameters" %}
+        {% breadcrumb "Trainings-Parameter bearbeiten" %}
+    {% endif %}
+{% endblock %}
+
+{% block top %}
+    {% if step == "settings" %}
+        <h1>Projekteinstellungen</h1>
+    {% elif step == "dataset" %}
+        <h1>Datensatz wählen</h1>
+        <a class="button-standard-add" href="{% url "dataset-add" %}">Neuen Datensatz erstellen</a>
+    {% elif step == "load_architecture" %}
+        <h1>Modellarchitektur wählen</h1>
+    {% elif step == "architecture" %}
+        <h1>Modellarchitektur bearbeiten</h1>
+        <a class="button-standard" href="{% url "project-edit-load_architecture" project.id %}">Eigene Modellarchitektur laden</a>
+    {% elif step == "parameters" %}
+        <h1>Trainings-Parameter bearbeiten</h1>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    {% if step == "settings" %}
+        {% include "project/partials/project-settings-form.html" %}
+    {% elif step == "dataset" %}
+        {% include "project/partials/dataset-select-form.html" %}
+    {% elif step == "load_architecture" %}
+        {% include "project/partials/architecture-select-form.html" %}
+    {% elif step == "architecture" %}
+        <a class="button-inverted mb-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
+        {% include "editor/partials/editor.html" %}
+        <a class="button-inverted mt-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
+    {% elif step == "parameters" %}
+        {{ project.training_parameter_json }}
+        {% include "project/partials/parameter-form.html" %}
+    {% endif %}
+{% endblock %}

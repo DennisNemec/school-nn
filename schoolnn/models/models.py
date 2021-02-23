@@ -9,6 +9,9 @@ from django.urls import reverse
 from json import loads
 from .training import TrainingParameter
 from schoolnn.resources.static.layer_list import default_layers
+from schoolnn.resources.static.default_training_parameters import (
+    default_training_parameters,
+)
 
 
 class TimestampedModelMixin(models.Model):
@@ -116,9 +119,9 @@ class Image(models.Model):
 
 
 class Architecture(TimestampedModelMixin):
-    """One sequential neural network architecure."""
+    """One sequential neural network architecture."""
 
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=15, null=True)
     custom = models.BooleanField(default=False)
     architecture_json = models.JSONField(default=default_layers)
 
@@ -133,14 +136,22 @@ class Project(TimestampedModelMixin):
     """One project a user/student works on."""
 
     name = models.CharField(max_length=15)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     custom = models.BooleanField(default=False)
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    architecture = models.ForeignKey(Architecture, on_delete=models.CASCADE)
-    training_parameter_json = models.JSONField()
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, null=True)
+    architecture = models.ForeignKey(
+        Architecture, on_delete=models.CASCADE, null=True
+    )
+    training_parameter_json = models.JSONField(
+        null=True, default=default_training_parameters
+    )
 
     def __str__(self):
         return "%s" % (self.name)
+
+    def get_absolute_url(self):
+        """Direct URL to this project"""
+        return reverse("project-details", kwargs={"pk": self.pk})
 
     @property
     def training_parameter(self) -> TrainingParameter:

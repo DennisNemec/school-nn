@@ -1,5 +1,4 @@
 from django.urls import path
-from .training import TrainingManager
 from .views.architectureview import (
     ArchitectureCreateView,
     ArchitectureDeleteView,
@@ -21,13 +20,18 @@ from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
 from .views.images import ImageView
 from .views.base_view import BaseView
 from .views.inference import InferenceView
+from .views.projects import (
+    ProjectCreateView,
+    ProjectListView,
+    ProjectDetailView,
+    ProjectEditView,
+    ProjectDeleteView,
+)
 
-
-TrainingManager()  # runs once, starts unfinished trainings
-
+# TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
-    path("", BaseView.as_view()),
+    path("", BaseView.as_view(), name="home"),
     path("datasets/list/", DatasetList.as_view(), name="dataset-list"),
     path(
         "datasets/list/<str:listing_type>/",
@@ -109,5 +113,48 @@ urlpatterns = [
         "project/<int:project_pk>/training",
         TrainingListView.as_view(),
         name="show-trainings",
+    ),
+]
+
+# Project routes
+urlpatterns += [
+    path("project/", ProjectListView.as_view(), name="project-list"),
+    path(
+        "project/create/", ProjectCreateView.as_view(), name="project-create"
+    ),
+    path(
+        "project/<int:pk>/",
+        ProjectDetailView.as_view(),
+        name="project-details",
+    ),
+    path(
+        "project/<int:pk>/edit/",
+        ProjectEditView.as_view(),
+        name="project-edit-settings",
+    ),
+    path(
+        "project/<int:pk>/edit/dataset/",
+        ProjectEditView.as_view(),
+        name="project-edit-dataset",
+    ),
+    path(
+        "project/<int:pk>/edit/architecture/",
+        ProjectEditView.as_view(),
+        name="project-edit-architecture",
+    ),
+    path(
+        "project/<int:pk>/edit/architecture/load/",
+        ProjectEditView.as_view(),
+        name="project-edit-load_architecture",
+    ),
+    path(
+        "project/<int:pk>/edit/parameters/",
+        ProjectEditView.as_view(),
+        name="project-edit-parameters",
+    ),
+    path(
+        "project/<int:pk>/delete",
+        ProjectDeleteView.as_view(),
+        name="project-delete",
     ),
 ]

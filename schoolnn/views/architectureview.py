@@ -35,6 +35,10 @@ class ArchitectureCreateView(CreateView):
     template_name = "architectures/add.html"
     fields = ["name"]
 
+    def form_valid(self, form):
+        form.instance.custom = True
+        return super(ArchitectureCreateView, self).form_valid(form)
+
 
 class ArchitectureEditorView(UpdateView):
     model = Architecture

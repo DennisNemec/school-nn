@@ -1,0 +1,10 @@
+<form method="POST"enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="name">Projektname</label>
+    <input class="mb-8" type="text" value="{{ project.name }}" name="name" id="name">
+
+    <div class="space-x-4">
+        <a class="button-inverted" href="{% url "project-details" project.id %}">&larr; Abbrechen</a>
+        <input class="button-standard w-auto" type="submit" value="Projekteinstellungen speichern"/>
+    </div>
+</form>

@@ -1,0 +1,37 @@
+h1, h2, h3 {
+    @apply font-medium;
+}
+
+h1 {
+    @apply text-2xl;
+}
+
+h2 {
+    @apply text-xl;
+}
+
+h3, h4 {
+    @apply text-lg;
+}
+
+p {
+    @apply min-h-4;
+}
+
+p:not(:first-child) {
+    @apply mt-3;
+}
+
+@screen md {
+    h1 {
+        @apply text-3xl;
+    }
+
+    h2 {
+        @apply text-2xl;
+    }
+
+    h3, h4 {
+        @apply text-xl;
+    }
+}
