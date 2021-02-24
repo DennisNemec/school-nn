@@ -42,24 +42,26 @@
         data: {
             labels: {{ x_values }},
             datasets: [
-                {% for tpd in training_pass_details %}
+                {% for tpd_color in training_pass_details_and_colors %}
                 {
-                    label: 'Training Loss {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
-                    backgroundColor: 'rgb(255, 159, 64)',  // orange
-                    borderColor: 'rgb(255, 159, 64)',
+                    label: 'Training Loss {{tpd_color.0.training_pass.name}} #{{tpd_color.0.training_pass.id}}',
+                    backgroundColor: '{{ tpd_color.1 }}',
+                    borderColor: '{{ tpd_color.1 }}',
                     fill: false,
-                    data: {{ tpd.y_values_training_loss }},
+                    data: {{ tpd_color.0.y_values_training_loss }},
                     borderWidth: 1,
                     pointBorderWidth: 0,
+                    pointRadius: 1,
                 },
                 {
-                    label: 'Validation Loss {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
-                    backgroundColor: 'rgb(54, 162, 235)',  // blue
-                    borderColor: 'rgb(54, 162, 235)',
+                    label: 'Validation Loss {{tpd_color.0.training_pass.name}} #{{tpd_color.0.training_pass.id}}',
+                    backgroundColor: '{{ tpd_color.1 }}',
+                    borderColor: '{{ tpd_color.1 }}',
                     fill: false,
-                    data: {{ tpd.y_values_validation_loss }},
+                    data: {{ tpd_color.0.y_values_validation_loss }},
                     borderWidth: 1,
                     pointBorderWidth: 0,
+                    pointRadius: 1,
                 },
                 {% endfor %}
             ],
@@ -80,24 +82,26 @@
         data: {
             labels: {{ x_values }},
             datasets: [
-                {% for tpd in training_pass_details %}
+                {% for tpd_color in training_pass_details_and_colors %}
                 {
-                    label: 'Trainingsgenauigkeit {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
-                    backgroundColor: 'rgb(255, 159, 64)',  // orange
-                    borderColor: 'rgb(255, 159, 64)',
+                    label: 'Trainingsgenauigkeit {{tpd_color.0.training_pass.name}} #{{tpd_color.0.training_pass.id}}',
+                    backgroundColor: '{{ tpd_color.1 }}',
+                    borderColor: '{{ tpd_color.1 }}',
                     fill: false,
-                    data: {{ tpd.y_values_training_accuracy }},
+                    data: {{ tpd_color.0.y_values_training_accuracy }},
                     borderWidth: 1,
                     pointBorderWidth: 0,
+                    pointRadius: 1,
                 },
                 {
-                    label: 'Validierungsgenauigkeit {{tpd.training_pass.name}} #{{tpd.training_pass.id}}',
-                    backgroundColor: 'rgb(54, 162, 235)',  // blue
-                    borderColor: 'rgb(54, 162, 235)',
+                    label: 'Validierungsgenauigkeit {{tpd_color.0.training_pass.name}} #{{tpd_color.0.training_pass.id}}',
+                    backgroundColor: '{{ tpd_color.1 }}',
+                    borderColor: '{{ tpd_color.1 }}',
                     fill: false,
-                    data: {{ tpd.y_values_validation_accuracy }},
+                    data: {{ tpd_color.0.y_values_validation_accuracy }},
                     borderWidth: 1,
                     pointBorderWidth: 0,
+                    pointRadius: 1,
                 },
                 {% endfor %}
             ],
