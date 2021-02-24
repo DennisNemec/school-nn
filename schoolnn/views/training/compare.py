@@ -23,11 +23,11 @@ TrainingPassGraphDetails = namedtuple(
 
 # https://coolors.co/0892a5-06908f-0ca4a5-dbb68f-bb7e5d
 _COLORLIST = [
-    'rgb(8, 146, 165)',
-    'rgb(6, 144, 143)',
-    'rgb(12, 164, 165)',
-    'rgb(219, 182, 143)',
-    'rgb(187, 126, 93)',
+    "rgb(8, 146, 165)",
+    "rgb(6, 144, 143)",
+    "rgb(12, 164, 165)",
+    "rgb(219, 182, 143)",
+    "rgb(187, 126, 93)",
 ]
 
 
@@ -79,9 +79,11 @@ class TrainingCompareView(View):
         training_pass_details_and_colors = []
         for i in range(len(training_pass_graph_details)):
             training_pass_details_and_colors.append(
-                (training_pass_graph_details[i], _COLORLIST[i % len(_COLORLIST)])
+                (
+                    training_pass_graph_details[i],
+                    _COLORLIST[i % len(_COLORLIST)],
+                )
             )
-
 
         context = {
             "request": request,
