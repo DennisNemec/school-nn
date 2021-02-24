@@ -1,0 +1,70 @@
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+
+{% block title %}Architecture: {{ architecture.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Architekturen" "architecture-list" %}
+    {% url "architecture-create" as arch_create_url %}
+    {% breadcrumb architecture.name %}
+{% endblock %}
+
+{% block top %}
+    <h1>Architecture: {{ architecture.name }}</h1>
+    <a href="{% url 'architecture-edit' architecture.id %}" class="button-standard">Bearbeiten</a>
+{% endblock %}
+
+{% block main %}
+<div class="mb-4">
+    <div class="mb-2">
+        <h2>Allgemeines</h2>
+    </div>
+
+    <div class="w-1/4">
+        <div class="flex flex-wrap justify-between">
+            <div>ID:</div>
+            <div class="w-1/2">
+                <p class="text-left">{{architecture.id }}</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap justify-between">
+            <div>Ersteller: </div>
+            <div class="w-1/2">
+                <p class="text-left">{{architecture.user.name }}</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap justify-between">
+            <div>Erstellt am: </div>
+            <div class="w-1/2">
+                <p class="text-left">{{architecture.created_at }}</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap justify-between">
+            <div>Geändert am: </div>
+            <div class="w-1/2">
+                <p class="text-left">{{architecture.updated_at }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="mt-4">
+    <div class="mb-4">
+        <h2>
+            Modell
+        </h2>
+        <p>
+            Drücke auf Editor, um die Architektur <b>{{ architecture.name }}</b> einzusehen.
+        </p>
+    </div>
+
+    <div class="mb-4">
+        <a href="{% url 'architecture-editor' architecture.id %}" class="button-standard">Editor</a>
+    </div>
+</div>
+{% endblock %}
