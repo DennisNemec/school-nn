@@ -1,5 +1,5 @@
 """Contains tests for ArchitectureWrapper."""
-from keras import Model, Sequential, layers
+from tensorflow.keras import Model, Sequential, layers
 from schoolnn.training.architecturewrapper import (
     # ModelNotSupportedException,
     # DictionaryRepresentationException,

@@ -1,6 +1,6 @@
 """Runs one block of training for a few seconds."""
 from io import BytesIO
-from keras import models
+from tensorflow.keras import models
 from django.db import transaction
 from datetime import datetime
 from schoolnn_app.settings import (
