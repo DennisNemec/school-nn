@@ -1,42 +1,73 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <title>SchoolNN</title>
-    <script src="/public/js/chart.js_2.9.4.js"></script>
-</head>
-<body>
-<h3>Training {{ training_pass.name }}</h3>
-<div>
-    <a href="../training">Übersicht</a><br>
-    <a href="{{ training_pass.id }}/inference">Inferenz</a><br>
-    <a href="{{ training_pass.id }}/stop">Stop</a><br>
-    Status: {{ training_pass.status }}<br><br>
-    {% with metrics=training_pass.latest_training_step_metrics %}
-        {% if metrics == None %}
-            Noch keine Metriken vorhanden
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Training „{{ training_pass.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+    {% url "show-trainings" project.id as training_url %}
+    {% breadcrumb "Training" training_url %}
+    {% url "show-training" project.id training_pass.id as show_training_url %}
+    {% breadcrumb training_pass.name show_training_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Training „{{ training_pass.name }}“ </h1>
+    <div class="space-x-4">
+        <a class="button-standard" href="{% url "inference" project.id training_pass.id%}">Inferenze</a>
+        {% if training_pass.status == 'running' %}
+        <a class="border-red text-red button-inverted" href="{% url "stop-training" project.id training_pass.id %}">Stop</a>
         {% else %}
-            Aktueller Trainingsverlust: {{ metrics.metrics_dict.training.loss|floatformat:-3 }} <br>
-            Aktueller Validierungsverlust: {{ metrics.metrics_dict.validation.loss|floatformat:-3 }} <br>
-            Aktuelle Träningsgenauigkeit: {{ metrics.metrics_dict.training.accuracy|floatformat:-3 }} <br>
-            Aktueller Validierungsgenauigkeit: {{ metrics.metrics_dict.validation.accuracy|floatformat:-3 }} <br>
+        <a class="border-red text-red button-inverted" href="{% url "delete-training" project.id training_pass.id %}">Löschen</a>
         {% endif %}
-    {% endwith %}
+        <a class="button-standard button-inverted" href="{% url "show-trainings" project.id %}">Zurück</a>
+    </div>
+{% endblock %}
 
+{% block main %}
+{% with metrics=training_pass.latest_training_step_metrics %}
+<div>
+    {% if metrics == None %}
+        <article class="card">
+            <h3>Oh wow!</h3>
+            <p>Für dieses Training sind noch keine Metriken vorhanden.</p>
+        </article>
+        <br>
+    {% else %}
+    <div class="card">
+        Status: {{ training_pass.status }}<br>
+        Epoche: {{ training_pass.epoche }}<br>
+        Dauer: {{ training_pass.duration_human_readable }}
+    </div>
     <br>
-    Epoche: {{ training_pass.epoche }}<br>
-    Dauer: {{ training_pass.duration_human_readable }}
-
-    <div style="width:25%; height: 25%">
+    <div class="card">
+        <div class="flex justify-between items-center">
+            <h3>Verlust</h3>
+            <div class="text-text-gray">
+                Aktuell {{ metrics.metrics_dict.training.loss|floatformat:-3 }} im Training
+                und {{ metrics.metrics_dict.validation.loss|floatformat:-3 }} in der Validierung
+            </div>
+        </div>
         <canvas id="trainingAndValidationLoss"></canvas>
     </div>
     <br>
-    <div style="width:25%; height: 25%">
+    <div class="card">
+        <div class="flex justify-between items-center">
+            <h3>Genauigkeit</h3>
+            <div class="text-text-gray">
+                Aktuell {{ metrics.metrics_dict.training.accuracy|floatformat:-3 }} im Training
+                und {{ metrics.metrics_dict.validation.accuracy|floatformat:-3 }} in der Validierung
+            </div>
+        </div>
         <canvas id="trainingAndValidationAccuracy"></canvas>
     </div>
-
+   {% endif %}
 </div>
 <!--Nice colors: view-source:https://www.chartjs.org/samples/latest/utils.js -->
+<script src="/public/js/chart.js_2.9.4.js"></script>
 <script>
     var lossGraphCanvas = document.getElementById("trainingAndValidationLoss").getContext("2d");
     var lossChart = new Chart(lossGraphCanvas, {
@@ -101,5 +132,5 @@
         }
     })
 </script>
-</body>
-</html>
+{% endwith %}
+{% endblock %}
