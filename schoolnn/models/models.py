@@ -151,8 +151,10 @@ class Project(TimestampedModelMixin):
         return reverse("project-details", kwargs={"pk": self.pk})
 
     @property
-    def training_parameter(self) -> TrainingParameter:
+    def training_parameter(self) -> Optional[TrainingParameter]:
         """Get training parameter object from json representation."""
+        if self.training_parameter_json is None:
+            return None
         return TrainingParameter.from_json(self.training_parameter_json)
 
     @training_parameter.setter

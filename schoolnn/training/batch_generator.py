@@ -5,7 +5,7 @@ from random import shuffle, seed, randint
 from io import BytesIO
 from typing import List, Tuple, Optional, Union
 from numpy import array
-from keras import utils
+from tensorflow.keras import utils
 from imgaug import augmenters
 from PIL import Image as PillowImage
 from PIL.JpegImagePlugin import JpegImageFile
