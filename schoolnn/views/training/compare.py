@@ -88,7 +88,7 @@ class TrainingCompareView(UserIsProjectOwnerMixin, View):
         context = {
             "request": request,
             "project": Project.objects.get(id=project_pk),
-            "training_pass_details_and_colors": training_pass_details_and_colors,
+            "training_pass_details_and_colors": training_pass_details_and_colors,  # noqa: E501
             "x_values": longest_x_values,
         }
 
