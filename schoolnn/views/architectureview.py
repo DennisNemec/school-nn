@@ -32,7 +32,7 @@ class ArchitectureDeleteView(AuthenticatedQuerysetMixin, DeleteView):
 class ArchitectureEditView(AuthenticatedQuerysetMixin, UpdateView):
     model = Architecture
     fields = ["name"]
-    template_name = "architectures/add.html"
+    template_name = "architectures/edit.html"
 
 
 class ArchitectureCreateView(AuthenticatedCreateView):

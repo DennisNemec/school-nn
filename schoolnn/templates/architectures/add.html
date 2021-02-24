@@ -1,15 +1,24 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <title>SchoolNN</title>
-</head>
-<body>
-<h3>Create architecture</h3>
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+
+{% block title %}Architektur erstellen{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Architekturen" "architecture-list" %}
+    {% url "architecture-create" as arch_create_url %}
+    {% breadcrumb "Architektur erstellen" arch_create_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Architektur erstellen</h1>
+{% endblock %}
+
+{% block main %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" class="btnbtn-primary" value="submit">
+    <div class="mb-4">
+        {{ form.as_p }}
+    </div>
+    <input type="submit" value="Erstellen" class="button-standard" value="submit">
 </form>
-</body>
-</html>
+{% endblock %}
