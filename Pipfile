@@ -13,6 +13,7 @@ imgaug = "~=0.4.0"
 h5py = "~=2.10.0"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.8"
