@@ -45,7 +45,7 @@
           </tbody>
         </table>
 
-        <a class="text-selected" :href="'/datasets/' + id">Details anzeigen</a>
+        <a class="text-accent" :href="'/datasets/' + id">Details anzeigen</a>
 
         <div class="mt-10 w-full text-primary">
           <div class="w-full mb-8" v-for="cat in categories" v-bind:key="cat.name">
