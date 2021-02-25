@@ -28,11 +28,12 @@ class FieldsetFormNode(Node):
         append_to_form = form_html.append
         self.form.auto_id = True
 
-        fieldset_template = \
-            "<fieldset%(id)s>" \
-            "<h2><legend>%(legend)s</legend></h2>" \
-            "%(fields)s" \
+        fieldset_template = (
+            "<fieldset%(id)s>"
+            "<h2><legend>%(legend)s</legend></h2>"
+            "%(fields)s"
             "</fieldset>"
+        )
 
         for fieldset in self.fieldsets:
             context = {}
@@ -60,8 +61,8 @@ class FieldsetFormNode(Node):
             if self.form[field_name].errors:
                 errors = str(self.form[field_name].errors)
             append(
-                f'{errors}<label for="{field_name}">{field.label}</label> '
-                f'{str(field)} {help_text}'
+                f"{errors}<label for='{field_name}'>{field.label}</label>"
+                f"{str(field)} {help_text}"
             )
         return "".join(fields_html)
 

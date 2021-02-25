@@ -139,45 +139,32 @@ class ProjectEditView(View):
                 "architectures": Architecture.objects.exclude(custom=False)
             }
         elif self.step == "parameters":
-            params = TrainingParameter.from_json(
+            parameters = TrainingParameter.from_json(
                 json.dumps(self.project.training_parameter_json)
             )
 
             return {
-                "parameters": params,
+                "parameters": parameters,
                 "parameter_form": TrainingParameterForm(
                     initial={
-                        "validation_split": params.validation_split,
-                        "learning_rate": params.learning_rate,
-                        "termination_condition_seconds":
-                            params.termination_condition.seconds,
-                        "termination_condition_epochs":
-                            params.termination_condition.epochs,
-                        "batch_size": params.batch_size,
-                        "loss_function": params.loss_function.value,
-                        "optimizer": params.optimizer.value,
-                        "augmentation_channel_shuffle":
-                            params.augmentation_options.channel_shuffle,
-                        "augmentation_brightness":
-                            params.augmentation_options.brightness,
-                        "augmentation_gaussian_noise":
-                            params.augmentation_options.gaussian_noise,
-                        "augmentation_dropout_boxes":
-                            params.augmentation_options.dropout_boxes,
-                        "augmentation_salt_and_pepper":
-                            params.augmentation_options.salt_and_pepper,
-                        "augmentation_jpeg_artifacts":
-                            params.augmentation_options.jpeg_artifacts,
-                        "augmentation_vertical_flip":
-                            params.augmentation_options.vertical_flip,
-                        "augmentation_distortion":
-                            params.augmentation_options.distortion,
-                        "augmentation_rotate":
-                            params.augmentation_options.rotate,
-                        "augmentation_scale_translate":
-                            params.augmentation_options.scale_and_translate,
-                        "augmentation_color":
-                            params.augmentation_options.color,
+                        "validation_split": parameters.validation_split,
+                        "learning_rate": parameters.learning_rate,
+                        "termination_condition_seconds": parameters.termination_condition.seconds,  # noqa: E501
+                        "termination_condition_epochs": parameters.termination_condition.epochs,  # noqa: E501
+                        "batch_size": parameters.batch_size,
+                        "loss_function": parameters.loss_function.value,
+                        "optimizer": parameters.optimizer.value,
+                        "augmentation_channel_shuffle": parameters.augmentation_options.channel_shuffle,  # noqa: E501
+                        "augmentation_brightness": parameters.augmentation_options.brightness,  # noqa: E501
+                        "augmentation_gaussian_noise": parameters.augmentation_options.gaussian_noise,  # noqa: E501
+                        "augmentation_dropout_boxes": parameters.augmentation_options.dropout_boxes,  # noqa: E501
+                        "augmentation_salt_and_pepper": parameters.augmentation_options.salt_and_pepper,  # noqa: E501
+                        "augmentation_jpeg_artifacts": parameters.augmentation_options.jpeg_artifacts,  # noqa: E501
+                        "augmentation_vertical_flip": parameters.augmentation_options.vertical_flip,  # noqa: E501
+                        "augmentation_distortion": parameters.augmentation_options.distortion,  # noqa: E501
+                        "augmentation_rotate": parameters.augmentation_options.rotate,  # noqa: E501
+                        "augmentation_scale_and_translate": parameters.augmentation_options.scale_and_translate,  # noqa: E501
+                        "augmentation_color": parameters.augmentation_options.color,  # noqa: E501
                     }
                 ),
             }
