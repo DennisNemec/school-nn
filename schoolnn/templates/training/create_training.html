@@ -1,15 +1,31 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <title>SchoolNN</title>
-</head>
-<body>
-<h3>Starte ein Training</h3>
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Training für „{{ project.name }}“ starten{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+    {% url "show-trainings" project.id as training_url %}
+    {% breadcrumb "Training" training_url %}
+    {% url "create-training" project.id as create_training_url %}
+    {% breadcrumb "Training starten" create_training_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Training für „{{ project.name }}“ starten</h1>
+    <div class="space-x-4">
+        <a class="button-standard-add" href="javascript:submit.click()">Starten</a>
+        <a class="button-standard button-inverted" href="{% url "show-trainings" project.id %}">Zurück</a>
+    </div>
+{% endblock %}
+
+{% block main %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" class="btnbtn-primary" value="submit">
+    <input type="submit" class="hidden" value="submit" id="submit">
 </form>
-</body>
-</html>
+{% endblock %}

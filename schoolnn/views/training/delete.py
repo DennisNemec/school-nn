@@ -24,4 +24,4 @@ class TrainingDeleteView(UserIsProjectOwnerMixin, View):
     def post(self, request, training_pk: int = 0, **_kwargs):
         """Delete training pass."""
         TrainingPass.objects.get(pk=training_pk).delete()
-        HttpResponseRedirect("../create")
+        return HttpResponseRedirect("../create")

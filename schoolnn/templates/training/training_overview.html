@@ -1,38 +1,50 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <title>SchoolNN</title>
-</head>
-<body>
-<h3>Training Übersicht</h3>
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
 
-<a href="training/create">Starte ein neues Training</a><br>
-<a href="training/compare">Vergleiche Trainingsdurchläufe</a><br><br>
+{% block title %}Traininere „{{ project.name }}“{% endblock %}
 
-{% for training_pass in object_list %}
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" project.id as detail_url %}
+    {% breadcrumb project.name detail_url %}
+    {% url "show-trainings" project.id as training_url %}
+    {% breadcrumb "Training" training_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Trainiere „{{ project.name }}“</h1>
+    <div class="space-x-4">
+        <a class="button-standard-add" href="{% url "create-training" project.id %}">Training starten</a>
+        <a class="button-standard" href="{% url "compare-training" project.id %}">Training vergleichen</a>
+    </div>
+{% endblock %}
+
+{% block main %}
+ <div class="space-y-4">
+    {% for training_pass in object_list %}
     {% with last_metrics=training_pass.latest_training_step_metrics %}
-        <li>
-            <hr>
-            Training pass <a href="training/{{ training_pass.id }}">{{ training_pass.name }}</a><br>
-            Epochen: {{ training_pass.epoche }}<br>
-            Status: {{ training_pass.status }}<br><br>
-            {% if last_metrics == None %}
-                Training pass has no metrics (yet)<br>
-            {% else %}
-                Loss:
-                {{ last_metrics.metrics_dict.training.loss|floatformat:-3 }} Training / 
-                {{ last_metrics.metrics_dict.validation.loss|floatformat:-3 }} Validierung <br>
-                Accuracy:
-                {{ last_metrics.metrics_dict.training.accuracy|floatformat:-3 }} Training / 
-                {{ last_metrics.metrics_dict.validation.accuracy|floatformat:-3 }} Validierung <br>
-            {% endif %}
-            <br>
-            <a href="training/{{ training_pass.id }}/inference">Inferenz</a>
-            <br>
-        </li>
+        <article class="card flex items-center justify-between">
+            <div>
+                <h3>{{ training_pass.name }}</h3>
+                <div class="text-text-gray">
+                    {{ training_pass.status }} &bullet; Epoch {{ training_pass.epoche }}
+                </div>
+            </div>
+            <div>
+                <a class="text-text-gray" href="{% url "show-training" project.id training_pass.id %}">Details</a> &bullet;
+                <a class="text-text-gray" href="{% url "inference" project.id training_pass.id %}">Inferenze</a> &bullet;
+                <a class="text-red" href="{% url "delete-training" project.id training_pass.id %}">Löschen</a>
+            </div>
+        </article>
     {% endwith %}
-    <br>
-{% endfor %}
-</body>
-</html>
+    {% endfor %}
+</div>
+
+{% if not object_list %}
+    <article class="card">
+        <h3>Oh wow!</h3>
+        <p>Es wurden noch keine Training gestartet. Klicke oben auf den Button „Projekt starten, um ein neues Training zu starten.</p>
+    </article>
+{% endif %}
+{% endblock %}

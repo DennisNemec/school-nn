@@ -17,7 +17,6 @@ from tensorflow.keras import metrics
 from schoolnn_app.settings import DEBUG
 from multiprocessing import Process, Queue
 from datetime import datetime
-from json import loads
 from io import BytesIO
 
 
@@ -99,7 +98,7 @@ def _initialize_training_pass(
     project: Project, training_pass_name: str
 ) -> TrainingPass:
     wrapped_architecture = WrappedArchitecture(
-        dictionary_representation=loads(project.architecture.architecture_json)
+        dictionary_representation=project.architecture.architecture_json
     )
 
     keras_model = wrapped_architecture.to_keras_model()
@@ -117,7 +116,7 @@ def _initialize_training_pass(
         end_datetime=datetime.now(),
         dataset_id=project.dataset,
         training_parameter_json=project.training_parameter_json,
-        project_id=project,
+        project=project,
         architecture=project.architecture,
         model_weights=weights_binary.read(),
         status=TrainingPassState.START_REQUESTED.value,
