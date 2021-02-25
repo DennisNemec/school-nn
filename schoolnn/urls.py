@@ -33,6 +33,15 @@ from .views.projects import (
     ProjectDeleteView,
 )
 
+from .views.users import (
+    UserCreateView,
+    UserDeleteView,
+    UserEditView,
+    UserListView,
+    UserDetailView,
+)
+
+
 # TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
@@ -125,6 +134,33 @@ urlpatterns = [
         name="auth-login",
     ),
     path("logout/", LogoutView.as_view(), name="auth-logout"),
+
+    path(
+        "users/",
+        UserListView.as_view(),
+        name="user-list",
+    ),
+    path(
+        "users/<int:pk>/",
+        UserDetailView.as_view(),
+        name="user-detail",
+    ),
+    path(
+        "users/<int:pk>/delete/",
+        UserDeleteView.as_view(),
+        name="user-delete",
+    ),
+    path(
+        "users/<int:pk>/edit/",
+        UserEditView.as_view(),
+        name="user-edit",
+    ),
+    path(
+        "users/add/",
+        UserCreateView.as_view(),
+        name="user-create",
+    ),
+
 ]
 
 # Project routes

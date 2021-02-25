@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 
 from schoolnn.models import Project, TrainingPass
 
@@ -44,3 +46,8 @@ class AuthenticatedCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+    
+class UserIsWorkspaceAdminMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
