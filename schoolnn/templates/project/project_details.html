@@ -52,11 +52,11 @@
                 <img class="h-6 w-6" src="{% static "assets/icons/parameters.svg" %}">
                 <h3>Trainingsparameter</h3>
             </div>
-            {% if project.training_parameter_json.created_at|date:"U" == project.training_parameter_json.updated_at|date:"U" %}
-                <p class="mb-4">Standardeinstellung noch nie bearbeitet.</p>
-            {% else %}
-                <p class="mb-4">Zuletzt bearbeitet am: {{ project.training_parameter_json.updated_at | date:"d.m.Y H:i:s" }}</p>
-            {% endif %}
+            <p class="mb-4">
+                <span class="font-semibold">Validierungs-Anteil</span>: {{ project.training_parameter.validation_split }}<br>
+                <span class="font-semibold">Lernrate</span>: {{ project.training_parameter.learning_rate }}<br>
+                <span class="font-semibold">Batchgröße</span>: {{ project.training_parameter.batch_size }}
+            </p>
             <a class="button-inverted" href="{% url "project-edit-parameters" project.id %}">Trainingsparameter bearbeiten</a>
         </section>
 

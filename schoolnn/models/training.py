@@ -47,53 +47,33 @@ class TerminationCondition:
     """Combination of conditions, when to stop training."""
 
     def __init__(
-        self,
-        seconds: Optional[int] = None,
-        epochs: Optional[int] = None,
-        validation_loss_raising: bool = False,
+        self, seconds: Optional[int] = None, epochs: Optional[int] = None
     ):
         """Provide multiple conditions, stop learning if one is met."""
         self.seconds = seconds
         self.epochs = epochs
-        self.validation_loss_raising = validation_loss_raising
-        self.optimum_validation_loss: Optional[float] = None
 
     def to_dict(self) -> dict:
         """Dump object to a dictionary."""
-        return {
-            "seconds": self.seconds,
-            "epochs": self.epochs,
-            "validation_loss_raising": self.validation_loss_raising,
-        }
+        return {"seconds": self.seconds, "epochs": self.epochs}
 
     @classmethod
     def from_dict(cls, dictionary: dict):
         """Load object from a dictionary."""
-        return cls(
-            seconds=dictionary["seconds"],
-            epochs=dictionary["epochs"],
-            validation_loss_raising=dictionary["validation_loss_raising"],
-        )
+        return cls(seconds=dictionary["seconds"], epochs=dictionary["epochs"])
 
     def termination_criteria_fulfilled(
-        self,
-        running_for_seconds: float,
-        epoche: int,
-        validation_loss: float,
+        self, running_for_seconds: float, epoche: int
     ) -> bool:
         """Check whether training should terminate."""
         if self.seconds:
             if running_for_seconds >= self.seconds:
                 return True
+
         if self.epochs:
             if epoche >= self.epochs:
                 return True
-        if self.optimum_validation_loss is None:
-            self.optimum_validation_loss = validation_loss
-        if validation_loss < self.optimum_validation_loss:
-            self.optimum_validation_loss = validation_loss
-        if validation_loss > 1.1 * self.optimum_validation_loss:
-            return True
+
         return False
 
 
@@ -123,7 +103,7 @@ class TrainingParameter:
     @classmethod
     def from_json(cls, json: str):
         """Load from a json string."""
-        tp_dict: dict = loads(json)
+        tp_dict: dict = loads(dumps(json))
         return cls(
             validation_split=tp_dict["validation_split"],
             learning_rate=tp_dict["learning_rate"],
