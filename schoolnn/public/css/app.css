@@ -12622,6 +12622,10 @@ select {
   min-height: 100vh
 }
 
+.min-h-screen-minus-header {
+  min-height: calc(100vh - 6rem)
+}
+
 .min-w-0 {
   min-width: 0px
 }
@@ -38563,6 +38567,10 @@ select {
     min-height: 100vh
   }
 
+  .sm\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .sm\:min-w-0 {
     min-width: 0px
   }
@@ -64459,6 +64467,10 @@ select {
 
   .md\:min-h-screen {
     min-height: 100vh
+  }
+
+  .md\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
   }
 
   .md\:min-w-0 {
@@ -90359,6 +90371,10 @@ select {
     min-height: 100vh
   }
 
+  .lg\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .lg\:min-w-0 {
     min-width: 0px
   }
@@ -116257,6 +116273,10 @@ select {
     min-height: 100vh
   }
 
+  .xl\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .xl\:min-w-0 {
     min-width: 0px
   }
@@ -142153,6 +142173,10 @@ select {
 
   .\32xl\:min-h-screen {
     min-height: 100vh
+  }
+
+  .\32xl\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
   }
 
   .\32xl\:min-w-0 {

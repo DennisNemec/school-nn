@@ -44,6 +44,7 @@ module.exports = {
 
       minHeight: {
         '4': '1rem',
+        "screen-minus-header": "calc(100vh - 6rem)",
       }
     },
   },

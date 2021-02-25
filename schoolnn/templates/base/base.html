@@ -30,44 +30,46 @@
         </div>
     </header>
 
-    <nav class="w-1/5 h-screen-minus-header bg-white flex flex-col justify-between shadow-base z-40 xl:w-1/6">
-        <ul class="pl-8 pt-20 space-y-8 xl:pl-12">
-            <!--TODO: remove redundancy -->
-            <li class="menu-item {% if "/datasets/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
-                <a href="{% url "dataset-list" %}">Datensätze</a>
-            </li>
-            <li class="menu-item {% if "/architectures/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/architectures.svg' %} ')">
-                <a href="{% url "architecture-list" %}">Architekturen</a>
-            </li>
-            <li class="menu-item {% if "/project/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">
-                <a href="{% url "project-list" %}">Projekte</a>
-            </li>
-        </ul>
+    <div class="w-full min-h-screen-minus-header flex">
+        <nav class="w-1/5 h-full bg-white flex flex-col justify-between shadow-base z-40 xl:w-1/6">
+            <ul class="pl-8 pt-20 space-y-8 xl:pl-12">
+                <!--TODO: remove redundancy -->
+                <li class="menu-item {% if "/datasets/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
+                    <a href="{% url "dataset-list" %}">Datensätze</a>
+                </li>
+                <li class="menu-item {% if "/architectures/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/architectures.svg' %} ')">
+                    <a href="{% url "architecture-list" %}">Architekturen</a>
+                </li>
+                <li class="menu-item {% if "/project/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">
+                    <a href="{% url "project-list" %}">Projekte</a>
+                </li>
+            </ul>
 
-        <div class="bg-green h-32 w-full pl-8 py-8 text-white text-sm xl:text-base xl:pl-12">
-            <p>Aktuelles Training</p>
-            <p class="font-bold">78% Genauigkeit</p>
-            <a href="" class="underline">Laufendes Training anzeigen</a>
-        </div>
-    </nav>
-
-    <main class="w-4/5 p-12 xl:w-5/6">
-        <div class="flex items-center justify-between h-16 mb-8">
-            {% block top %}{% endblock %}
-        </div>
-
-        {% if messages %}
-            <div class="space-y-4 mb-8">
-            {% for message in messages %}
-                <div class="w-full py-3 px-6 border-2 border-green rounded-lg rounded-lg text-white  {% if message.tags %}{% if message.tags == "success" %}bg-light-green{% elif message.tags == "error" %}bg-red{% endif %}{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            <div class="bg-green h-32 w-full pl-8 py-8 text-white text-sm xl:text-base xl:pl-12">
+                <p>Aktuelles Training</p>
+                <p class="font-bold">78% Genauigkeit</p>
+                <a href="" class="underline">Laufendes Training anzeigen</a>
             </div>
-        {% endif %}
+        </nav>
 
-        {% block main %}{% endblock %}
-    </main>
+        <main class="w-4/5 p-12 xl:w-5/6 min-h-screen-minus-header">
+            <div class="flex items-center justify-between h-16 mb-8">
+                {% block top %}{% endblock %}
+            </div>
+
+            {% if messages %}
+                <div class="space-y-4 mb-8">
+                {% for message in messages %}
+                    <div class="w-full py-3 px-6 border-2 border-green rounded-lg text-white  {% if message.tags %}{% if message.tags == "success" %}bg-light-green{% elif message.tags == "error" %}bg-red{% endif %}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block main %}{% endblock %}
+        </main>
+    </div>
 </body>
 
 
