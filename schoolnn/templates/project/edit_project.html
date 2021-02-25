@@ -52,6 +52,7 @@
         {% include "editor/partials/editor.html" %}
         <a class="button-inverted mt-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
     {% elif step == "parameters" %}
+        <a class="button-inverted mb-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
         {% include "project/partials/parameter-form.html" %}
     {% endif %}
 {% endblock %}

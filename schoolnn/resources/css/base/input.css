@@ -71,6 +71,10 @@ input[type=range] {
 
 fieldset {
     @apply p-6 rounded-xl bg-white shadow-base;
+
+    &:not(:last-of-type){
+        @apply mb-8;
+     }
 }
 
 fieldset#augmentation_settings{
