@@ -9,7 +9,16 @@ from django.urls import reverse_lazy, resolve
 from django.views import View
 from django.views.generic import DetailView, CreateView, ListView, DeleteView
 
-from schoolnn.models import Project, Dataset, Architecture, TrainingParameter
+from schoolnn.models import (
+    Project,
+    Dataset,
+    Architecture,
+    TrainingParameter,
+    LossFunction,
+    Optimizer,
+    AugmentationOptions,
+    TerminationCondition,
+)
 from schoolnn.resources.static.layer_list import layer_list
 
 
@@ -259,9 +268,73 @@ class ProjectEditView(View):
         return redirect("project-edit-architecture", self.kwargs["pk"])
 
     def _handle_parameters_form(self):
-        # Todo: Check if json is valid
+        form = TrainingParameterForm(self.request.POST)
 
-        return redirect("project-details", self.kwargs["pk"])
+        if not form.is_valid():
+            messages.error(
+                self.request,
+                "Parameter nicht valide.",
+            )
+
+            return redirect("project-details", self.kwargs["pk"])
+
+        termination_condition = TerminationCondition.from_dict(
+            {
+                "seconds": form.cleaned_data["termination_condition_seconds"],
+                "epochs": form.cleaned_data["termination_condition_epochs"],
+            }
+        )
+        loss_function = LossFunction(form.cleaned_data["loss_function"])
+        optimizer = Optimizer(form.cleaned_data["optimizer"])
+        augmentation_options = AugmentationOptions.from_dict(
+            {
+                "channel_shuffle": form.cleaned_data[
+                    "augmentation_channel_shuffle"
+                ],
+                "brightness": form.cleaned_data["augmentation_brightness"],
+                "gaussian_noise": form.cleaned_data[
+                    "augmentation_gaussian_noise"
+                ],
+                "dropout_boxes": form.cleaned_data[
+                    "augmentation_dropout_boxes"
+                ],
+                "salt_and_pepper": form.cleaned_data[
+                    "augmentation_salt_and_pepper"
+                ],
+                "jpeg_artifacts": form.cleaned_data[
+                    "augmentation_jpeg_artifacts"
+                ],
+                "vertical_flip": form.cleaned_data[
+                    "augmentation_vertical_flip"
+                ],
+                "distortion": form.cleaned_data["augmentation_distortion"],
+                "rotate": form.cleaned_data["augmentation_rotate"],
+                "scale_and_translate": form.cleaned_data[
+                    "augmentation_scale_and_translate"
+                ],
+                "color": form.cleaned_data["augmentation_color"],
+            }
+        )
+
+        new_parameters = TrainingParameter(
+            validation_split=form.cleaned_data["validation_split"],
+            learning_rate=form.cleaned_data["learning_rate"],
+            termination_condition=termination_condition,
+            batch_size=form.cleaned_data["batch_size"],
+            loss_function=loss_function,
+            optimizer=optimizer,
+            augmentation_options=augmentation_options,
+        )
+
+        self.project.training_parameter_json = json.loads(
+            new_parameters.to_json()
+        )
+
+        messages.success(
+            self.request, "Die Änderungen wurden erfolgreich gespeichert."
+        )
+
+        return redirect("project-edit-parameters", self.kwargs["pk"])
 
 
 class TrainingParameterForm(forms.Form):
@@ -351,33 +424,45 @@ class TrainingParameterForm(forms.Form):
         ],
     )
 
-    augmentation_channel_shuffle = forms.BooleanField(label="Channel-Shuffle")
+    augmentation_channel_shuffle = forms.BooleanField(
+        label="Channel-Shuffle", required=False
+    )
 
-    augmentation_brightness = forms.BooleanField(label="Helligkeit")
+    augmentation_brightness = forms.BooleanField(
+        label="Helligkeit", required=False
+    )
 
     augmentation_gaussian_noise = forms.BooleanField(
-        label="Gaußsches Rauschen"
+        label="Gaußsches Rauschen", required=False
     )
 
-    augmentation_dropout_boxes = forms.BooleanField(label="Dropout-Boxen")
+    augmentation_dropout_boxes = forms.BooleanField(
+        label="Dropout-Boxen", required=False
+    )
 
-    augmentation_salt_and_pepper = forms.BooleanField(label="Salz und Pfeffer")
+    augmentation_salt_and_pepper = forms.BooleanField(
+        label="Salz und Pfeffer", required=False
+    )
 
-    augmentation_jpeg_artifacts = forms.BooleanField(label="JPEG-Artefakte")
+    augmentation_jpeg_artifacts = forms.BooleanField(
+        label="JPEG-Artefakte", required=False
+    )
 
     augmentation_vertical_flip = forms.BooleanField(
-        label="Vertikale Spiegelung"
+        label="Vertikale Spiegelung", required=False
     )
 
-    augmentation_distortion = forms.BooleanField(label="Verzerrung")
+    augmentation_distortion = forms.BooleanField(
+        label="Verzerrung", required=False
+    )
 
-    augmentation_rotate = forms.BooleanField(label="Rotation")
+    augmentation_rotate = forms.BooleanField(label="Rotation", required=False)
 
     augmentation_scale_and_translate = forms.BooleanField(
-        label="Skalierung und Verschiebung"
+        label="Skalierung und Verschiebung", required=False
     )
 
-    augmentation_color = forms.BooleanField(label="Farbe")
+    augmentation_color = forms.BooleanField(label="Farbe", required=False)
 
 
 class ProjectDeleteView(DeleteView):
