@@ -1,5 +1,10 @@
-<form method="POST" enctype="multipart/form-data">
+{% load draw_fieldset_form %}
+
+<form class="space-y-8" id="parameter-form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ parameter_form.as_p }}
-    <input type="submit" class="" value="submit">
+    {% draw_fieldset_form parameter_form parameter_form.fieldsets %}
+    <div class="space-x-4">
+        <a class="button-inverted" href="{% url "project-details" project.id %}">&larr; Zurück</a>
+        <input type="submit" class="button-standard w-auto" value="Parameter speichern">
+    </div>
 </form>

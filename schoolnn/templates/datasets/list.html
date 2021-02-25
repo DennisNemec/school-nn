@@ -4,7 +4,7 @@
 {% block top %}
     <h1>Datensätze</h1>
     <div class="space-x-4">
-        <select class="rounded-xl p-4 font-bold shadow-md" onchange="location = this.value;">
+        <select onchange="location = this.value;" class="py-4 font-bold">
             <option value="/datasets/list/own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
             <option value="/datasets/list/shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
         </select>

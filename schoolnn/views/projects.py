@@ -9,7 +9,7 @@ from django.urls import reverse_lazy, resolve
 from django.views import View
 from django.views.generic import DetailView, CreateView, ListView, DeleteView
 
-from schoolnn.models import Project, Dataset, Architecture
+from schoolnn.models import Project, Dataset, Architecture, TrainingParameter
 from schoolnn.resources.static.layer_list import layer_list
 
 
@@ -139,7 +139,48 @@ class ProjectEditView(View):
                 "architectures": Architecture.objects.exclude(custom=False)
             }
         elif self.step == "parameters":
-            return {"parameter_form": TrainingParameterForm()}
+            params = TrainingParameter.from_json(
+                json.dumps(self.project.training_parameter_json)
+            )
+
+            return {
+                "parameters": params,
+                "parameter_form": TrainingParameterForm(
+                    initial={
+                        "validation_split": params.validation_split,
+                        "learning_rate": params.learning_rate,
+                        "termination_condition_seconds":
+                            params.termination_condition.seconds,
+                        "termination_condition_epochs":
+                            params.termination_condition.epochs,
+                        "batch_size": params.batch_size,
+                        "loss_function": params.loss_function.value,
+                        "optimizer": params.optimizer.value,
+                        "augmentation_channel_shuffle":
+                            params.augmentation_options.channel_shuffle,
+                        "augmentation_brightness":
+                            params.augmentation_options.brightness,
+                        "augmentation_gaussian_noise":
+                            params.augmentation_options.gaussian_noise,
+                        "augmentation_dropout_boxes":
+                            params.augmentation_options.dropout_boxes,
+                        "augmentation_salt_and_pepper":
+                            params.augmentation_options.salt_and_pepper,
+                        "augmentation_jpeg_artifacts":
+                            params.augmentation_options.jpeg_artifacts,
+                        "augmentation_vertical_flip":
+                            params.augmentation_options.vertical_flip,
+                        "augmentation_distortion":
+                            params.augmentation_options.distortion,
+                        "augmentation_rotate":
+                            params.augmentation_options.rotate,
+                        "augmentation_scale_translate":
+                            params.augmentation_options.scale_and_translate,
+                        "augmentation_color":
+                            params.augmentation_options.color,
+                    }
+                ),
+            }
         else:
             return {}
 
@@ -237,14 +278,119 @@ class ProjectEditView(View):
 
 
 class TrainingParameterForm(forms.Form):
+    fieldsets = [
+        {
+            "headline": "Allgemeine Einstellungen",
+            "fields": [
+                "validation_split",
+                "learning_rate",
+                "batch_size",
+                "loss_function",
+                "optimizer",
+            ],
+            "id": "general_settings",
+        },
+        {
+            "headline": "Abbruchbedingungen",
+            "fields": [
+                "termination_condition_seconds",
+                "termination_condition_epochs",
+            ],
+            "id": "termination_settings",
+        },
+        {
+            "headline": "Augmentierungs-Einstellungen",
+            "fields": [
+                "augmentation_channel_shuffle",
+                "augmentation_brightness",
+                "augmentation_gaussian_noise",
+                "augmentation_dropout_boxes",
+                "augmentation_salt_and_pepper",
+                "augmentation_jpeg_artifacts",
+                "augmentation_vertical_flip",
+                "augmentation_distortion",
+                "augmentation_rotate",
+                "augmentation_scale_and_translate",
+                "augmentation_color",
+            ],
+            "id": "augmentation_settings",
+        },
+    ]
+
     validation_split = forms.FloatField(
+        label="Validierungs-Anteil",
         min_value=0.0,
-        max_value=0.01,
+        max_value=0.5,
+        # widget=NumberInput(attrs={
+        #     "type": "range",
+        #     "oninput": "updateTextInput(this.value);"
+        # })
     )
-    learning_rate = forms.FloatField(min_value=0.001, max_value=0.2)
+
+    learning_rate = forms.FloatField(
+        label="Lernrate", min_value=0.001, max_value=0.2
+    )
+
     termination_condition_seconds = forms.IntegerField(
-        min_value=1, max_value=86400
+        label="Vergangene Sekunden seit Trainingsbeginn",
+        min_value=1,
+        max_value=86400,
     )
+
+    termination_condition_epochs = forms.IntegerField(
+        label="Anzahl der Epochen", min_value=1, max_value=128
+    )
+
+    batch_size = forms.IntegerField(
+        label="Batchgröße", min_value=1, max_value=128
+    )
+
+    # Todo: Build choices by calling LossFunction.to_array()
+    loss_function = forms.ChoiceField(
+        label="Loss-Funktion",
+        choices=[("categorical_crossentropy", "Categorical Crossentropy")],
+    )
+
+    # Todo: Build choices by calling Optimizer.to_array()
+    optimizer = forms.ChoiceField(
+        label="Optimierer",
+        choices=[
+            ("sgd", "Stochastic Gradient Descent"),
+            ("rmsprop", "RMSprop"),
+            ("adam", "Adam"),
+            ("nadam", "NAdam"),
+            ("adadelta", "Adadelta"),
+            ("adamax", "Adamax"),
+        ],
+    )
+
+    augmentation_channel_shuffle = forms.BooleanField(label="Channel-Shuffle")
+
+    augmentation_brightness = forms.BooleanField(label="Helligkeit")
+
+    augmentation_gaussian_noise = forms.BooleanField(
+        label="Gaußsches Rauschen"
+    )
+
+    augmentation_dropout_boxes = forms.BooleanField(label="Dropout-Boxen")
+
+    augmentation_salt_and_pepper = forms.BooleanField(label="Salz und Pfeffer")
+
+    augmentation_jpeg_artifacts = forms.BooleanField(label="JPEG-Artefakte")
+
+    augmentation_vertical_flip = forms.BooleanField(
+        label="Vertikale Spiegelung"
+    )
+
+    augmentation_distortion = forms.BooleanField(label="Verzerrung")
+
+    augmentation_rotate = forms.BooleanField(label="Rotation")
+
+    augmentation_scale_and_translate = forms.BooleanField(
+        label="Skalierung und Verschiebung"
+    )
+
+    augmentation_color = forms.BooleanField(label="Farbe")
 
 
 class ProjectDeleteView(DeleteView):

@@ -47,9 +47,7 @@ class TerminationCondition:
     """Combination of conditions, when to stop training."""
 
     def __init__(
-        self,
-        seconds: Optional[int] = None,
-        epochs: Optional[int] = None
+        self, seconds: Optional[int] = None, epochs: Optional[int] = None
     ):
         """Provide multiple conditions, stop learning if one is met."""
         self.seconds = seconds
@@ -57,23 +55,15 @@ class TerminationCondition:
 
     def to_dict(self) -> dict:
         """Dump object to a dictionary."""
-        return {
-            "seconds": self.seconds,
-            "epochs": self.epochs
-        }
+        return {"seconds": self.seconds, "epochs": self.epochs}
 
     @classmethod
     def from_dict(cls, dictionary: dict):
         """Load object from a dictionary."""
-        return cls(
-            seconds=dictionary["seconds"],
-            epochs=dictionary["epochs"]
-        )
+        return cls(seconds=dictionary["seconds"], epochs=dictionary["epochs"])
 
     def termination_criteria_fulfilled(
-        self,
-        running_for_seconds: float,
-        epoche: int
+        self, running_for_seconds: float, epoche: int
     ) -> bool:
         """Check whether training should terminate."""
         if self.seconds:

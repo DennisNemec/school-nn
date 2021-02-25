@@ -1,7 +1,8 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from .training import TrainingManager
+# from .training import TrainingManager
+
 from .views.architectureview import (
     ArchitectureCreateView,
     ArchitectureDeleteView,
