@@ -8,7 +8,7 @@
 {% block breadcrumbs %}
     {% breadcrumb_url "Datensätze" "dataset-list" %}
     {% url "dataset-add" as dataset_create_url %}
-    {% breadcrumb "Datensätze erstellen" dataset_create_url %}
+    {% breadcrumb "Datensatz erstellen" dataset_create_url %}
 {% endblock %}
 
 {% block top %}
@@ -18,11 +18,10 @@
 {% block main %}
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-
-        <div class="mb-4">
-            {{ form.as_p }}
+        {{ form }}
+        <div class="space-x-4 mt-8">
+            <a class="button-inverted" href="{% url "dataset-list" %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto" type="submit" value="Datensatz hinzufügen"/>
         </div>
-
-        <input class="mr-4 cursor-pointer bg-green p-3 pl-6 pr-6 rounded-xl text-white border-green border-2 hover:red-selected hover:bg-white hover:text-green shadow-md" type="submit" value="Datensatz erstellen"/>
     </form>
 {% endblock %}
