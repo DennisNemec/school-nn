@@ -50,7 +50,7 @@ layer_list = """
                 "value": {
                   "type": "list",
                   "dataType": "string",
-                  "default_value": "tanh",
+                  "default_value": "relu",
                   "possible_values": [
                     "tanh",
                     "sigmoid",
@@ -117,6 +117,11 @@ layer_list = """
                 "activated": true
               }
             ]
+          },
+          {
+            "type": "Flatten",
+            "default_name": "Flatten",
+            "properties": []
           },
           {
             "type": "Dense",
