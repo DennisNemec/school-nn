@@ -15,18 +15,18 @@
 
 {% block main %}
     <div class="space-y-4">
-        {% for user_item in users %}
+        {% for detail_user in detail_users %}
             <article class="card flex items-center justify-between">
                 <h3>
-                    {{ user_item.username }}
-                    {% if user_item.id == user.id %}
+                    {{ detail_user.username }}
+                    {% if detail_user.id == user.id %}
                         <span class="text-text-gray">(ich)</span>
                     {% endif %}
                 </h3>
                 <div>
-                    <a class="text-text-gray" href="{% url "user-detail" user_item.id %}">Details</a> &bullet;
-                    <a class="text-text-gray" href="{% url "user-edit" user_item.id %}">Einstellungen</a> &bullet;
-                    <a class="text-red" href="{% url "user-delete" user_item.id %}">Löschen</a>
+                    <a class="text-text-gray" href="{% url "user-detail" detail_user.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "user-edit" detail_user.id %}">Einstellungen</a> &bullet;
+                    <a class="text-red" href="{% url "user-delete" detail_user.id %}">Löschen</a>
                 </div>
             </article>
         {% endfor %}

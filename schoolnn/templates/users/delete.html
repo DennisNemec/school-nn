@@ -2,26 +2,26 @@
 {% load static %}
 {% load breadcrumbs %}
 
-{% block title %}Benutzer „{{ user.username }}“ löschen{% endblock %}
+{% block title %}Benutzer „{{ detail_user.username }}“ löschen{% endblock %}
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Benutzer" "user-list" %}
-    {% url "user-detail" user.id as detail_url %}
-    {% breadcrumb user.username detail_url %}
+    {% url "user-detail" detail_user.id as detail_url %}
+    {% breadcrumb detail_user.username detail_url %}
     {% breadcrumb "Benutzer löschen" %}
 {% endblock %}
 
 {% block top %}
-    <h1>Benutzer „{{ user.username }}“ löschen</h1>
+    <h1>Benutzer „{{ detail_user.username }}“ löschen</h1>
 {% endblock %}
 
 {% block main %}
-    <p class="my-8 card">Möchtest du den Benutzer „{{ user.username }}“ wirklich löschen? Alle mit diesem Nutzer verknüpften Datensätze, Architekturen, Projekte und Trainings-Durchläufe werden damit ebenfalls gelöscht.</p>
+    <p class="my-8 card">Möchtest du den Benutzer „{{ detail_user.username }}“ wirklich löschen? Alle mit diesem Nutzer verknüpften Datensätze, Architekturen, Projekte und Trainings-Durchläufe werden damit ebenfalls gelöscht.</p>
 
     <form method="POST">
         {% csrf_token %}
         <div class="space-x-4">
-            <a class="button-inverted" href="{% url "user-detail" user.id %}">&larr; Abbrechen</a>
+            <a class="button-inverted" href="{% url "user-detail" detail_user.id %}">&larr; Abbrechen</a>
             <input class="button-standard w-auto border-red bg-red" type="submit" value="Benutzer löschen"/>
         </div>
     </form>
