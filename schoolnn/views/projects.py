@@ -173,8 +173,8 @@ class ProjectEditView(LoginRequiredMixin, View):
         elif self.step == "load_architecture":
             return {"architectures": self._get_user_architectures()}
         elif self.step == "parameters":
-            parameters = TrainingParameter.from_json(
-                json.dumps(self.project.training_parameter_json)
+            parameters = TrainingParameter.from_dict(
+                self.project.training_parameter_json
             )
 
             return {
@@ -360,9 +360,7 @@ class ProjectEditView(LoginRequiredMixin, View):
             augmentation_options=augmentation_options,
         )
 
-        self.project.training_parameter_json = json.loads(
-            new_parameters.to_json()
-        )
+        self.project.training_parameter_json = new_parameters.to_dict()
 
         messages.success(
             self.request, "Die Änderungen wurden erfolgreich gespeichert."
