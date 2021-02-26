@@ -12,17 +12,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 
-    <title>{% block title %}SchoolNN - Login{% endblock %}</title>
+    <title>SchoolNN - Login</title>
 </head>
-<body class="bg-light-gray font-sans text-primary">
-<main class="w-1/3 m-auto mt-20 align-center">
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" class="btnbtn-primary" value="Login">
-    </form>
-    {% block main %}
-    {% endblock %}
-</main>
+<body class="bg-primary font-sans h-screen w-fulltext-primary flex items-center justify-center">
+    <main class="w-1/3 flex flex-col items-center">
+        <img class="mb-8" src="{% static "assets/logo.svg" %}" alt="">
+        <form class="card inputs-w-full" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="button-standard mt-8" value="Anmelden">
+        </form>
+    </main>
 </body>
 </html>
