@@ -137,7 +137,7 @@ class Project(TimestampedModelMixin):
     custom = models.BooleanField(default=False)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, null=True)
     architecture = models.ForeignKey(
-        Architecture, on_delete=models.CASCADE, null=True
+        Architecture, on_delete=models.SET_NULL, null=True
     )
     training_parameter_json = models.JSONField(
         null=True, default=default_training_parameters

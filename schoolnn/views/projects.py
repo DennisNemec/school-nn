@@ -481,3 +481,13 @@ class ProjectDeleteView(DeleteView):
     model = Project
     success_url = reverse_lazy("project-list")
     template_name = "project/delete_project.html"
+
+    def delete(self, request, *args, **kwargs):
+        project = self.get_object()
+
+        if project.architecture is not None:
+            project.architecture.delete()
+
+        project.delete()
+
+        return super().delete(request, *args, **kwargs)
