@@ -258,7 +258,9 @@ class ProjectEditView(View):
             return redirect("project-edit-architecture", self.kwargs["pk"])
 
         # Set Architecture JSON
-        self.project.architecture.architecture_json = loaded_architecture.architecture_json
+        self.project.architecture.architecture_json = (
+            loaded_architecture.architecture_json
+        )
         self.project.architecture.save()
 
         messages.success(

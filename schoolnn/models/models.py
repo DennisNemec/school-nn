@@ -1,5 +1,5 @@
 """All ORM models."""
-
+import json
 import os
 from typing import Optional
 from django.contrib.auth.models import AbstractUser
@@ -155,7 +155,9 @@ class Project(TimestampedModelMixin):
         """Get training parameter object from json representation."""
         if self.training_parameter_json is None:
             return None
-        return TrainingParameter.from_json(self.training_parameter_json)
+        return TrainingParameter.from_json(
+            json.dumps(self.training_parameter_json)
+        )
 
     @training_parameter.setter
     def training_parameter(self, training_parameter: TrainingParameter):
