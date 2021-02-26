@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block main %}
-    <p class="my-12">Möchtest du die Architektur „{{ architecture.name }} wirklich löschen?“</p>
+    <p class="my-8 card">Möchtest du die Architektur „{{ architecture.name }}“ wirklich löschen?</p>
 
     <form method="POST">
         {% csrf_token %}

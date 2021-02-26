@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block main %}
-    <p class="my-12">Möchtest du das Projekt „{{ project.name }} wirklich löschen?“</p>
+    <p class="my-8 card">Möchtest du das Projekt „{{ project.name }}“ wirklich löschen?</p>
 
     <form method="POST">
         {% csrf_token %}
