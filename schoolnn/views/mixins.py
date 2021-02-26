@@ -47,7 +47,7 @@ class AuthenticatedCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
-    
+
 class UserIsWorkspaceAdminMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_staff

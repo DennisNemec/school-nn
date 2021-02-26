@@ -16,7 +16,6 @@ from schoolnn.resources.static.default_training_parameters import (
 from django.contrib.auth.models import UserManager
 
 
-
 class TimestampedModelMixin(models.Model):
     """Abstract class that manages the created-
     and updated-timestamp for other classes"""

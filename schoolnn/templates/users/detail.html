@@ -1,8 +1,23 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
 
-<h3>Users: {{ user.username}}</h3>
+{% block title %}Nutzerdetails„{{ user.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+{% breadcrumb_url "Benutzer" "user-list" %}
+{% endblock %}
+
+{% block top %}
+<h1>Nutzerdetails</h1>
+{% endblock %}
+
+{% block main %}
+<h3>Nutzer: {{ user.username}}</h3>
 
 <p>
     <a href="/users/">Liste</a>
     <a href="edit/">Edit</a>
     <a href="delete/">Delete</a>
-</p>
+</p></form>
+{% endblock %}

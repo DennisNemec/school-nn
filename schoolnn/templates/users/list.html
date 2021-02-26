@@ -11,12 +11,6 @@
 {% endblock %}
 
 {% block top %}
-    <h1>Inferenz mit „{{ user.name }}“</h1>
-    <div class="space-x-4">
-        <a class="button-standard" href="javascript:submit.click()">Starten</a>
-        <a class="button-standard" href="{% url "show-training" training_pass.project.id training_pass.id %}">Trainingsdetails</a>
-        <a class="button-standard button-inverted" href="{% url "show-trainings" training_pass.project.id %}">Zurück</a>
-    </div>
 {% endblock %}
 
 {% block main %}

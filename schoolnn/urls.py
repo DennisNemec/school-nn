@@ -134,7 +134,6 @@ urlpatterns = [
         name="auth-login",
     ),
     path("logout/", LogoutView.as_view(), name="auth-logout"),
-
     path(
         "users/",
         UserListView.as_view(),
@@ -160,7 +159,6 @@ urlpatterns = [
         UserCreateView.as_view(),
         name="user-create",
     ),
-
 ]
 
 # Project routes

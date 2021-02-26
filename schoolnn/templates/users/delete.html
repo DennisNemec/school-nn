@@ -1,5 +1,23 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Nutzer löschen „{{ user.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+{% breadcrumb_url "Benutzer" "user-list" %}
+    {% breadcrumb "Benutzer löschen" %}
+{% endblock %}
+
+{% block top %}
+<h1>Nutzer löschen</h1>
+{% endblock %}
+
+{% block main %}
+<h3>Nutzer löschen</h3>
 <form method="POST">
     {% csrf_token %}
     <input type="submit" value="Nutzer löschen"/>
     <a href="javascript:history.back()">Zurück</a>
 </form>
+{% endblock %}
