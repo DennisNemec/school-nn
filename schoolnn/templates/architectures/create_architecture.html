@@ -19,6 +19,9 @@
     <div class="mb-4">
         {{ form.as_p }}
     </div>
-    <input type="submit" value="Erstellen" class="button-standard" value="submit">
+    <div class="space-x-4 mt-8">
+        <a class="button-inverted" href="{% url "architecture-list" %}">&larr; Abbrechen</a>
+        <input class="button-standard w-auto" type="submit" value="Architektur erstellen"/>
+    </div>
 </form>
 {% endblock %}

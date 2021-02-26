@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load static %}
 {% load breadcrumbs %}
 
 {% block title %}Architecture: {{ architecture.name }}{% endblock %}
@@ -10,61 +11,47 @@
 {% endblock %}
 
 {% block top %}
-    <h1>Architecture: {{ architecture.name }}</h1>
-    <a href="{% url 'architecture-edit' architecture.id %}" class="button-standard">Bearbeiten</a>
+    <h1>Architektur „{{ architecture.name }}“</h1>
+    <div class="space-x-4">
+        <a class="button-standard" href="{% url 'architecture-edit' architecture.id %}">Architektureinstellungen</a>
+        <a class="button-inverted border-red text-red" href="{% url "architecture-delete" architecture.id %}">Architektur löschen</a>
+    </div>
 {% endblock %}
 
 {% block main %}
-<div class="mb-4">
-    <div class="mb-2">
-        <h2>Allgemeines</h2>
-    </div>
-
-    <div class="w-1/4">
-        <div class="flex flex-wrap justify-between">
-            <div>ID:</div>
-            <div class="w-1/2">
-                <p class="text-left">{{architecture.id }}</p>
+    <div class="space-y-8 my-8">
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Allgemeines</h3>
             </div>
-        </div>
+            <table class="w-1/4">
+                <tr>
+                    <td class="font-semibold">ID</td>
+                    <td>{{ architecture.id }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Ersteller</td>
+                    <td>{{ architecture.user.username }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Erstellt am</td>
+                    <td>{{ architecture.created_at | date:"d.m.Y \u\m H:i"}}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Zuletzt geändert am</td>
+                    <td>{{ architecture.updated_at | date:"d.m.Y \u\m H:i" }}</td>
+                </tr>
+            </table>
+        </section>
 
-        <div class="flex flex-wrap justify-between">
-            <div>Ersteller: </div>
-            <div class="w-1/2">
-                <p class="text-left">{{architecture.user.name }}</p>
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/architectures.svg" %}">
+                <h3>Modellarchitektur</h3>
             </div>
-        </div>
-
-        <div class="flex flex-wrap justify-between">
-            <div>Erstellt am: </div>
-            <div class="w-1/2">
-                <p class="text-left">{{architecture.created_at }}</p>
-            </div>
-        </div>
-
-        <div class="flex flex-wrap justify-between">
-            <div>Geändert am: </div>
-            <div class="w-1/2">
-                <p class="text-left">{{architecture.updated_at }}</p>
-            </div>
-        </div>
+            <p class="mb-4">Drücke auf Editor, um die Architektur <b>{{ architecture.name }}</b> einzusehen.</p>
+            <a class="button-inverted" href="{% url 'architecture-editor' architecture.id %}">Editor</a>
+        </section>
     </div>
-</div>
-
-<hr>
-
-<div class="mt-4">
-    <div class="mb-4">
-        <h2>
-            Modell
-        </h2>
-        <p>
-            Drücke auf Editor, um die Architektur <b>{{ architecture.name }}</b> einzusehen.
-        </p>
-    </div>
-
-    <div class="mb-4">
-        <a href="{% url 'architecture-editor' architecture.id %}" class="button-standard">Editor</a>
-    </div>
-</div>
 {% endblock %}

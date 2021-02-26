@@ -1,6 +1,7 @@
 @import "~tailwindcss/base.css";
 @import "./base/typography.css";
 @import "./base/input.css";
+@import "./base/table.css";
 
 @import "~tailwindcss/components.css";
 @import "./components/menu/menu-item.css";

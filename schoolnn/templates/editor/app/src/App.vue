@@ -1,54 +1,49 @@
 <template>
   <div id="app" class="text-primary font-sans">
-    <div class="flex flex-wrap overflow-hidden bg-light-gray h-screen-minus-header w-full float-right">
+    <div class="w-full card">
+      <div class="p-4 flex items-start flex-wrap">
+        <!-- Print preview layer -->
+        <div class="w-1/4 self-stretch pt-6 border-text-gray border-dotted border-r-2">
+          <h3 class="mb-4">Verfügbare Schichten</h3>
+          <draggable
+              v-model="providedLayerList"
+              class="space-y-4"
+              :group="{ name: 'layer', pull: 'clone', put: false }"
+              @start="drag=true"
+              @end="drag=true"
+              :move="onMove"
+              :clone="onClone"
+          >
 
-      <!-- Print preview layer -->
-      <div class="w-1/6 pt-5 overflow-hidden border-gray-300 border-dashed border-r-2 pl-5">
-        <h1 class="text-lg font-bold">Verfügbare Schichten</h1>
-        <br />
-        <draggable
-            v-model="providedLayerList"
-            :group="{ name: 'layer', pull: 'clone', put: false }"
-            @start="drag=true"
-            @end="drag=true"
-            :move="onMove"
-            :clone="onClone"
-        >
+            <div class="flex" v-for="element in providedLayerList" :key="element.type">
+              <layer-preview :title=element.default_name />
+            </div>
+          </draggable>
 
-          <div class="flex" v-for="element in providedLayerList" :key="element.type">
-            <layer-preview :title=element.default_name />
-          </div>
-        </draggable>
+        </div>
 
-      </div>
+        <!-- Print selected Layer Draggable-List -->
+        <div class="w-2/4 py-6 pl-16">
+          <h3 class="mb-4">Ausgewählte Schichten</h3>
+          <draggable
+              v-model="selectedLayerList"
+              class="space-y-4"
+              group="layer"
+              @start="drag=false"
+              @end="drag=true"
+              :move="onMove">
 
-      <!-- Print selected Layer Draggable-List -->
-      <div class="w-3/6 pb-28 pt-5 h-screen overflow-y-scroll pl-10">
-        <h1 class="text-lg font-bold">Ausgewählte Schichten</h1>
-        <br/>
-        <draggable
-            v-model="selectedLayerList"
-            group="layer"
-            @start="drag=false"
-            @end="drag=true"
-            :move="onMove">
+            <div class="flex" v-for="element in selectedLayerList" :key="element.id">
+              <layer-node v-bind:selected-layer-id="selectedLayer.id" v-on:on-layer-select="onLayerSelect" v-on:on-duplicate-layer="onDuplicateLayer" v-on:on-delete-layer="onDeleteLayer" :layer=element />
+            </div>
+          </draggable>
+        </div>
 
-          <div class="flex" v-for="element in selectedLayerList" :key="element.id">
-            <layer-node v-bind:selected-layer-id="selectedLayer.id" v-on:on-layer-select="onLayerSelect" v-on:on-duplicate-layer="onDuplicateLayer" v-on:on-delete-layer="onDeleteLayer" :layer=element />
-          </div>
-        </draggable>
-      </div>
-
-      <!-- Print configuration -->
-      <div class="w-2/6 overflow-hidden pt-5 pl-10 bg-white">
-        <div class="flex flex-wrap overflow-hidden relative h-screen">
-
-          <div class="w-full min-h-full overflow-hidden flex-grow">
-            <layer-configuration v-on:set-invalid-state="onInvalidStateToggle" v-on:on-save="onSave" v-bind:invalid-state="invalidState" v-bind:layer="selectedLayer" />
-          </div>
+        <!-- Print configuration -->
+        <div class="w-1/4 mb-6 pt-16">
+          <layer-configuration v-on:set-invalid-state="onInvalidStateToggle" v-on:on-save="onSave" v-bind:invalid-state="invalidState" v-bind:layer="selectedLayer" />
         </div>
       </div>
-
     </div>
   </div>
 </template>

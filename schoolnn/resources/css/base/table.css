@@ -1,0 +1,23 @@
+table {
+    @apply w-full border-collapse;
+
+    tr {
+        &:nth-child(odd) {
+            td {
+                @apply bg-light-gray;
+
+                &:first-child {
+                     @apply rounded-l-lg;
+                 }
+
+                &:last-child {
+                     @apply rounded-r-lg;
+                 }
+            }
+        }
+
+        td {
+            @apply py-3 px-5;
+        }
+    }
+}

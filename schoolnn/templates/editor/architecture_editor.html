@@ -17,5 +17,7 @@
 {% endblock %}
 
 {% block main %}
+    <a class="button-inverted mb-8" href="{% url "architecture-detail" architecture.id %}">&larr; Abbrechen</a>
     {% include "editor/partials/editor.html" %}
+    <a class="button-inverted mt-8" href="{% url "architecture-detail" architecture.id %}">&larr; Abbrechen</a>
 {% endblock %}

@@ -2,17 +2,14 @@
   <div class="
     flex
     items-center
-    shadow-md
     text-center
-    primary
-    bg-white
-    mb-5 h-20
+    card
     w-5/6
-    rounded-md
-    hover:border-black
+    hover:border-icon-gray
     border-2
-    border-white
+    border-light-gray
     pl-2
+    cursor-move
     "
   >
     <span>
@@ -21,9 +18,9 @@
       </svg>
     </span>
 
-    <p class="font-bold select-none">
+    <h4 class="select-none ml-3">
       {{title}}
-    </p>
+    </h4>
   </div>
 </template>
 

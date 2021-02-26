@@ -17,7 +17,7 @@
 
       <!-- Collapsed -->
       <div class="ml-12 mt-5" v-bind:class="collapsed">
-        <div class="pt-5" :class="isCollapsed === true ? 'border-t' : ''">
+        <div class="pt-5">
           <slot name="accordion-content"></slot>
         </div>
       </div>

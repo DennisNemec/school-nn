@@ -9,36 +9,25 @@
     {% url "architecture-details" architecture.id as detail_url %}
     {% url "architecture-edit" architecture.id as edit_detail_url %}
     {% breadcrumb architecture.name detail_url %}
-    {% breadcrumb "Bearbeiten" edit_detail_url %}
+    {% breadcrumb "Architektureinstellungen" edit_detail_url %}
 {% endblock %}
 
 {% block top %}
-    <h1>Architektur „{{ architecture.name }}“</h1>
-    <div class="space-x-4">
-        <a class="button-inverted border-red text-red" href="{% url "architecture-delete" architecture.id %}">Architektur löschen</a>
-    </div>
+    <h1>Einstellungen der Architektur „{{ architecture.name }}“</h1>
 {% endblock %}
 
 {% block main %}
-<div class="mb-4">
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="mb-4">
-            {{ form.as_p }}
-        </div>
-
-        <input type="submit" value="Speichern" class="button-standard w-32">
-    </form>
-</div>
-
-<hr>
-
-<div class="mt-4">
     <div class="mb-4">
-        <p>
-            Drücke auf Löschen, um die Architektur <b>{{ architecture.name }}</b> zu löschen.
-        </p>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                {{ form.as_p }}
+            </div>
+            <div class="space-x-4">
+                <a class="button-inverted" href="{% url "architecture-detail" architecture.id %}">&larr; Abbrechen</a>
+                <input type="submit" value="Speichern" class="button-standard w-32">
+            </div>
+        </form>
     </div>
-</div>
 {% endblock %}

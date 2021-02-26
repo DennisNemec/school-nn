@@ -5,8 +5,7 @@
         <div class="flex w-full justify-between">
           <div class="flex items-center w-5/6 text-primary font-bold">
             <div>
-              <p>{{title}}</p>
-              <p class="font-light text-icon-gray">Erstellt am {{creationDate}}</p>
+              <h3>{{title}}</h3>
             </div>
           </div>
 
@@ -19,28 +18,26 @@
       </template>
 
       <template v-slot:accordion-content>
-        <table class="table-fixed w-1/3 text-primary mb-4">
-          <thead>
-            <tr>
-              <th class="w-2/5"></th>
-              <th class="w-1/2"></th>
-            </tr>
-          </thead>
-
+        <table class="table-fixed w-1/3 text-primary">
           <tbody>
             <tr>
-              <td>Anzahl Bilder</td>
-              <td class="font-bold">{{amountOfPictures}}</td>
+              <td class="font-bold">Erstellt am</td>
+              <td>{{creationDate}}</td>
             </tr>
 
             <tr>
-              <td>Anzahl Kategorien</td>
-              <td class="font-bold">{{amountOfCategories}}</td>
+              <td class="font-bold">Anzahl Bilder</td>
+              <td>{{amountOfPictures}}</td>
             </tr>
 
             <tr>
-              <td>Unklassifizierte Bilder</td>
-              <td class="font-bold">{{unlabeledCount}}</td>
+              <td class="font-bold">Anzahl Kategorien</td>
+              <td>{{amountOfCategories}}</td>
+            </tr>
+
+            <tr>
+              <td class="font-bold">Unklassifizierte Bilder</td>
+              <td>{{unlabeledCount}}</td>
             </tr>
           </tbody>
         </table>
