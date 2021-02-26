@@ -41,6 +41,11 @@
             <li class="menu-item {% if "/project/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">
                 <a href="{% url "project-list" %}">Projekte</a>
             </li>
+            {% if user.is_staff %}
+                <li class="menu-item {% if "/users/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/users.svg' %} ')">
+                    <a href="{% url "user-list" %}">Benutzer</a>
+                </li>
+            {% endif %}
         </ul>
     </nav>
 
