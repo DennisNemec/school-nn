@@ -13,13 +13,17 @@
 {% endblock %}
 
 {% block top %}
-    <h1>Architektur „{{ architecture.name }}“</h1>
+    <h1>Architektur „{{ architecture.name }}“ löschen</h1>
 {% endblock %}
 
 {% block main %}
-<form method="POST">
-    {% csrf_token %}
-    <input type="submit" class="w-52 button-inverted border-red text-red" value="Architektur löschen"/>
-    <a class="button-standard" href="javascript:history.back()">Zurück</a>
-</form>
+    <p class="my-12">Möchtest du die Architektur „{{ architecture.name }} wirklich löschen?“</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="space-x-4">
+            <a class="button-inverted" href="{% url "architecture-detail" architecture.id %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto border-red bg-red" type="submit" value="Architektur löschen"/>
+        </div>
+    </form>
 {% endblock %}
