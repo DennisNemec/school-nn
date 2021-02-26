@@ -25,7 +25,6 @@ label {
 
 select {
     @apply
-        w-3/5
         rounded-lg
         px-4
         py-2
@@ -72,19 +71,24 @@ input[type=range] {
 fieldset {
     @apply p-6 rounded-xl bg-white shadow-base;
 
+    h3 {
+        @apply mb-6;
+    }
+    
     &:not(:last-of-type){
         @apply mb-8;
      }
 }
 
 fieldset#augmentation_settings{
-    @apply grid grid-cols-2 items-center;
+    @apply grid grid-cols-4 items-center;
 
-    >h2 {
-        @apply col-span-2;
+    >h3 {
+        @apply col-span-4;
     }
 
     label {
-        @apply m-0 py-3;
+        @apply m-0 py-3 w-1/2;
     }
+
 }

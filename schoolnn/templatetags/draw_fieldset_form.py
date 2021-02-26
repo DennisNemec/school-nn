@@ -30,7 +30,7 @@ class FieldsetFormNode(Node):
 
         fieldset_template = (
             "<fieldset%(id)s>"
-            "<h2><legend>%(legend)s</legend></h2>"
+            "<h3><legend>%(legend)s</legend></h3>"
             "%(fields)s"
             "</fieldset>"
         )
