@@ -3,6 +3,7 @@ from typing import Optional
 
 from django import forms
 from django.contrib import messages
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, resolve
@@ -37,18 +38,21 @@ class ProjectCreateView(CreateView):
 
     def form_valid(self, form: ProjectCreateForm):
         """If the form is valid, save the associated model."""
-        self.object = form.save()
 
-        if self.object is None:
-            # TODO: Translation für Fehlermeldung
-            raise ValueError("Failed to parse the project create form")
+        with transaction.atomic():
+            form.instance.user = self.request.user
+            self.object = form.save()
 
-        # Create and assign anonymous architecture
-        new_architecture = Architecture()
-        new_architecture.save()
+            if self.object is None:
+                # TODO: Translation für Fehlermeldung
+                raise ValueError("Failed to parse the project create form")
 
-        self.object.architecture = new_architecture
-        self.object.save()
+            # Create and assign anonymous architecture
+            new_architecture = Architecture(user=self.request.user)
+            new_architecture.save()
+
+            self.object.architecture = new_architecture
+            self.object.save()
 
         messages.success(
             self.request, f"Projekt „{self.object.name}“ erfolgreich erstellt."
