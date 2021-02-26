@@ -490,6 +490,10 @@ class ProjectDeleteView(DeleteView):
         if project.architecture is not None:
             project.architecture.delete()
 
+        messages.success(
+            self.request, f"Projekt „{project.name}“ erfolgreich gelöscht."
+        )
+
         project.delete()
 
-        return super().delete(request, *args, **kwargs)
+        return HttpResponseRedirect(self.success_url)
