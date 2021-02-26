@@ -1,67 +1,73 @@
 {% load static %}
 
 <!DOCTYPE html>
-
 <!-- TODO: Set lang within settings -->
 <html lang="de">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/app.css' %}">
 
-    <!-- Vue.js specific files -->
-    <link href="{% static '/js/editor.app.js' %}" rel="preload" as="script">
-    <link href="{% static '/js/editor.chunk-vendors.js' %}" rel="preload" as="script">
-    <title>SchoolNN – {% block title %}Startseite{% endblock %}</title>
-</head>
-<body class="bg-light-gray font-sans text-primary flex flex-wrap">
-    <header class="w-full h-24 bg-white flex">
-        <a href="{% url "home" %}" class="w-1/5 h-full bg-primary flex items-center px-8 z-50 xl:w-1/6 xl:px-12">
-            <img src="{% static 'assets/logo.svg' %}" alt="SchoolNN Logo">
-        </a>
-        <div class="w-4/5 h-full bg-white shadow-base flex items-center px-12 z-40 xl:w-5/6">
-            <div>
-                <span class="font-bold"><a href="{% url "home" %}">Startseite</a></span>{% block breadcrumbs %}{% endblock %}
-            </div>
-        </div>
-    </header>
-
-    <nav class="w-1/5 min-h-screen-minus-header bg-white flex flex-col justify-between shadow-base z-40 xl:w-1/6">
-        <ul class="pl-8 pt-20 space-y-8 xl:pl-12">
-            <!--TODO: remove redundancy -->
-            <li class="menu-item {% if "/datasets/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
-                <a href="{% url "dataset-list" %}">Datensätze</a>
-            </li>
-            <li class="menu-item {% if "/architectures/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/architectures.svg' %} ')">
-                <a href="{% url "architecture-list" %}">Architekturen</a>
-            </li>
-            <li class="menu-item {% if "/project/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">
-                <a href="{% url "project-list" %}">Projekte</a>
-            </li>
-        </ul>
-    </nav>
-
-    <main class="w-4/5 p-12 min-h-screen-minus-header xl:w-5/6">
-        <div class="flex items-center justify-between h-16 mb-8">
-            {% block top %}{% endblock %}
-        </div>
-
-        {% if messages %}
-            <div class="space-y-4 mb-8">
-            {% for message in messages %}
-                <div class="w-full py-3 px-6 border-2 rounded-lg rounded-lg text-white  {% if message.tags %}{% if message.tags == "success" %}bg-light-green border-green{% elif message.tags == "error" %}bg-red border-red{% endif %}{% endif %}">
-                    {{ message }}
+        <!-- Vue.js specific files -->
+        <link href="{% static '/js/editor.app.js' %}" rel="preload" as="script">
+        <link href="{% static '/js/editor.chunk-vendors.js' %}" rel="preload" as="script">
+        <title>SchoolNN – {% block title %}Startseite{% endblock %}</title>
+    </head>
+    <body class="bg-light-gray font-sans text-primary flex flex-wrap">
+        <header class="w-full h-24 bg-white flex">
+            <a href="{% url "home" %}" class="w-1/5 h-full bg-primary flex items-center px-8 z-50 xl:w-1/6 xl:px-12">
+                <img src="{% static 'assets/logo.svg' %}" alt="SchoolNN Logo">
+            </a>
+            <div class="w-4/5 h-full bg-white shadow-base flex items-center justify-between px-12 z-40 xl:w-5/6">
+                <nav>
+                    <span class="font-bold"><a href="{% url "home" %}">Startseite</a></span>{% block breadcrumbs %}{% endblock %}
+                </nav>
+                <div>
+                    Angemeldet als {{ user }} &bull;
+                    <a class="text-text-gray" href="{% url "auth-logout" %}">Abmelden</a>
                 </div>
-            {% endfor %}
             </div>
-        {% endif %}
+        </header>
 
-        {% block main %}{% endblock %}
-    </main>
-</body>
+        <nav class="w-1/5 min-h-screen-minus-header bg-white flex flex-col justify-between shadow-base z-40 xl:w-1/6">
+            <ul class="pl-8 pt-20 space-y-8 xl:pl-12">
+                <!--TODO: remove redundancy -->
+                <li class="menu-item {% if "/datasets/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
+                    <a href="{% url "dataset-list" %}">Datensätze</a>
+                </li>
+                <li class="menu-item {% if "/architectures/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/architectures.svg' %} ')">
+                    <a href="{% url "architecture-list" %}">Architekturen</a>
+                </li>
+                <li class="menu-item {% if "/project/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/projects.svg' %} ')">
+                    <a href="{% url "project-list" %}">Projekte</a>
+                </li>
+                {% if user.is_staff %}
+                    <li class="menu-item {% if "/users/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/users.svg' %} ')">
+                        <a href="{% url "user-list" %}">Benutzer</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
 
+        <main class="w-4/5 p-12 min-h-screen-minus-header xl:w-5/6">
+            <div class="flex items-center justify-between h-16 mb-8">
+                {% block top %}{% endblock %}
+            </div>
 
+            {% if messages %}
+                <div class="space-y-4 mb-8">
+                {% for message in messages %}
+                    <div class="w-full py-3 px-6 border-2 rounded-lg rounded-lg text-white  {% if message.tags %}{% if message.tags == "success" %}bg-light-green border-green{% elif message.tags == "error" %}bg-red border-red{% endif %}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block main %}{% endblock %}
+        </main>
+    </body>
 </html>
