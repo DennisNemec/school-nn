@@ -18,7 +18,7 @@
       </template>
 
       <template v-slot:accordion-content>
-        <table class="table-fixed w-1/3 text-primary">
+        <table class="w-1/2">
           <tbody>
             <tr>
               <td class="font-bold">Erstellt am</td>
@@ -42,13 +42,13 @@
           </tbody>
         </table>
 
-        <a class="text-accent" :href="'/datasets/' + id">Details anzeigen</a>
+        <a class="button-inverted mt-4 mb-8" :href="'/datasets/' + id">Details anzeigen</a>
 
-        <div class="mt-10 w-full text-primary">
+        <div class="w-full">
           <div class="w-full mb-8" v-for="cat in categories" v-bind:key="cat.name">
-            <p class="font-bold">{{cat.name}}</p>
+            <p class="font-bold mb-1">{{cat.name}}</p>
 
-            <div class="flex">
+            <div class="flex space-x-2">
               <img loading=lazy v-for="image_id in cat.image_ids" v-bind:key="image_id" :src="baseImagePath + image_id" width="80" height="80">
             </div>
           </div>
