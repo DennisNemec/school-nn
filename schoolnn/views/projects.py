@@ -3,6 +3,7 @@ from typing import Optional
 
 from django import forms
 from django.contrib import messages
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, resolve
@@ -37,18 +38,21 @@ class ProjectCreateView(CreateView):
 
     def form_valid(self, form: ProjectCreateForm):
         """If the form is valid, save the associated model."""
-        self.object = form.save()
 
-        if self.object is None:
-            # TODO: Translation für Fehlermeldung
-            raise ValueError("Failed to parse the project create form")
+        with transaction.atomic():
+            form.instance.user = self.request.user
+            self.object = form.save()
 
-        # Create and assign anonymous architecture
-        new_architecture = Architecture()
-        new_architecture.save()
+            if self.object is None:
+                # TODO: Translation für Fehlermeldung
+                raise ValueError("Failed to parse the project create form")
 
-        self.object.architecture = new_architecture
-        self.object.save()
+            # Create and assign anonymous architecture
+            new_architecture = Architecture(user=self.request.user)
+            new_architecture.save()
+
+            self.object.architecture = new_architecture
+            self.object.save()
 
         messages.success(
             self.request, f"Projekt „{self.object.name}“ erfolgreich erstellt."
@@ -114,6 +118,7 @@ class ProjectEditView(View):
         self.default_redirect = redirect("project-details", self.kwargs["pk"])
         self.step = self._get_step()
         self.project = self._get_project()
+        self._ensure_architecture_exists()
         self._set_context()
 
     # project-edit-dataset -> dataset
@@ -241,28 +246,26 @@ class ProjectEditView(View):
         if architecture_id is None:
             raise ValueError("Architektur-ID nicht angegeben.")
 
-        architecture = Architecture.objects.filter(pk=architecture_id).first()
+        loaded_architecture = Architecture.objects.filter(
+            pk=architecture_id
+        ).first()
 
-        if architecture is None:
+        if loaded_architecture is None:
             messages.error(
                 self.request,
                 "Die gewählte Architektur konnte nicht gefunden werden.",
             )
             return redirect("project-edit-architecture", self.kwargs["pk"])
 
-        # Duplicate selected architecture
-        architecture.pk = None
-        architecture.custom = False
-        architecture_name = architecture.name
-        architecture.name = f"Copy of {architecture_name}"
-        architecture.save()
+        # Set Architecture JSON
+        self.project.architecture.architecture_json = (
+            loaded_architecture.architecture_json
+        )
+        self.project.architecture.save()
 
-        # Delete old architecture and replace with new one
-        self.project.architecture.delete()
-        self.project.architecture = architecture
         messages.success(
             self.request,
-            f"Architektur „{architecture_name}“ erfolgreich geladen.",
+            f"Architektur „{loaded_architecture.name}“ erfolgreich geladen.",
         )
 
         return redirect("project-edit-architecture", self.kwargs["pk"])
@@ -335,6 +338,15 @@ class ProjectEditView(View):
         )
 
         return redirect("project-edit-parameters", self.kwargs["pk"])
+
+    def _ensure_architecture_exists(self):
+        if self.project.architecture is None:
+            # Create and assign anonymous architecture
+            new_architecture = Architecture(user=self.request.user)
+            new_architecture.save()
+
+            self.project.architecture = new_architecture
+            self.project.save()
 
 
 class TrainingParameterForm(forms.Form):
@@ -471,3 +483,17 @@ class ProjectDeleteView(DeleteView):
     model = Project
     success_url = reverse_lazy("project-list")
     template_name = "project/delete_project.html"
+
+    def delete(self, request, *args, **kwargs):
+        project = self.get_object()
+
+        if project.architecture is not None:
+            project.architecture.delete()
+
+        messages.success(
+            self.request, f"Projekt „{project.name}“ erfolgreich gelöscht."
+        )
+
+        project.delete()
+
+        return HttpResponseRedirect(self.success_url)

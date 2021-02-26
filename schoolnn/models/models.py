@@ -1,5 +1,5 @@
 """All ORM models."""
-
+import json
 import os
 from typing import Optional
 from django.contrib.auth.models import AbstractUser
@@ -142,7 +142,7 @@ class Project(TimestampedModelMixin):
     custom = models.BooleanField(default=False)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, null=True)
     architecture = models.ForeignKey(
-        Architecture, on_delete=models.CASCADE, null=True
+        Architecture, on_delete=models.SET_NULL, null=True
     )
     training_parameter_json = models.JSONField(
         null=True, default=default_training_parameters
@@ -160,7 +160,9 @@ class Project(TimestampedModelMixin):
         """Get training parameter object from json representation."""
         if self.training_parameter_json is None:
             return None
-        return TrainingParameter.from_json(self.training_parameter_json)
+        return TrainingParameter.from_json(
+            json.dumps(self.training_parameter_json)
+        )
 
     @training_parameter.setter
     def training_parameter(self, training_parameter: TrainingParameter):

@@ -103,7 +103,7 @@ class TrainingParameter:
     @classmethod
     def from_json(cls, json: str):
         """Load from a json string."""
-        tp_dict: dict = loads(dumps(json))
+        tp_dict: dict = loads(json)
         return cls(
             validation_split=tp_dict["validation_split"],
             learning_rate=tp_dict["learning_rate"],
