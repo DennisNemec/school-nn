@@ -212,7 +212,7 @@ class ProjectEditView(LoginRequiredMixin, View):
     #
     def _get_user_architectures(self):
         return Architecture.objects.filter(user=self.request.user).exclude(
-            custom=False
+            name__isnull=True
         )
 
     #
