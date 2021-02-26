@@ -245,28 +245,24 @@ class ProjectEditView(View):
         if architecture_id is None:
             raise ValueError("Architektur-ID nicht angegeben.")
 
-        architecture = Architecture.objects.filter(pk=architecture_id).first()
+        loaded_architecture = Architecture.objects.filter(
+            pk=architecture_id
+        ).first()
 
-        if architecture is None:
+        if loaded_architecture is None:
             messages.error(
                 self.request,
                 "Die gewählte Architektur konnte nicht gefunden werden.",
             )
             return redirect("project-edit-architecture", self.kwargs["pk"])
 
-        # Duplicate selected architecture
-        architecture.pk = None
-        architecture.custom = False
-        architecture_name = architecture.name
-        architecture.name = f"Copy of {architecture_name}"
-        architecture.save()
+        # Set Architecture JSON
+        self.project.architecture.architecture_json = loaded_architecture.architecture_json
+        self.project.architecture.save()
 
-        # Delete old architecture and replace with new one
-        self.project.architecture.delete()
-        self.project.architecture = architecture
         messages.success(
             self.request,
-            f"Architektur „{architecture_name}“ erfolgreich geladen.",
+            f"Architektur „{loaded_architecture.name}“ erfolgreich geladen.",
         )
 
         return redirect("project-edit-architecture", self.kwargs["pk"])
