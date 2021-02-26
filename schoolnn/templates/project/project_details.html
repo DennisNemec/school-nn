@@ -22,6 +22,36 @@
     <div class="space-y-8 my-8">
         <section class="card">
             <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Allgemeines</h3>
+            </div>
+            <table class="w-1/4">
+                <tr>
+                    <td class="font-semibold">ID</td>
+                    <td>{{ project.id }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Ersteller</td>
+                    <td>{{ project.user.username }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Erstellt am</td>
+                    <td>{{ project.created_at | date:"d.m.Y \u\m H:i"}}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Zuletzt geändert am</td>
+                    <td>
+                        {% if project.created_at|date:"U" == project.updated_at|date:"U" %}
+                            Noch nie bearbeitet
+                        {% else %}
+                            {{ project.updated_at | date:"d.m.Y \u\m H:i" }}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
                 <img class="h-6 w-6" src="{% static "assets/icons/datasets.svg" %}">
                 <h3>Datensatz</h3>
             </div>
@@ -29,7 +59,20 @@
                 <p>Noch kein Datensatz gewählt.</p>
                 <p class="mb-4 text-yellow">Um ein Training starten zu können, muss ein Datensatz gewählt werden.</p>
             {% else %}
-                <p class="mb-4">Gewählter Datensatz: <a href="{% url "dataset-detail" project.dataset.id %}"><span class="underline">{{ project.dataset.name }}</span></a></p>
+                <table class="w-1/4">
+                    <tr>
+                        <td class="font-semibold">Gewählter Datensatz</td>
+                        <td>
+                            <a href="{% url "dataset-detail" project.dataset.id %}">
+                                <span class="underline">{{ project.dataset.name}}</span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold">ID</td>
+                        <td>{{ project.dataset.id }}</td>
+                    </tr>
+                </table>
             {% endif %}
             <a class="button-inverted" href="{% url "project-edit-dataset" project.id %}">Datensatz wählen</a>
         </section>
@@ -39,11 +82,22 @@
                 <img class="h-6 w-6" src="{% static "assets/icons/architectures.svg" %}">
                 <h3>Modellarchitektur</h3>
             </div>
-            {% if project.architecture.created_at|date:"U" == project.architecture.updated_at|date:"U" %}
-                <p class="mb-4">Standardeinstellung noch nie bearbeitet.</p>
-            {% else %}
-                <p class="mb-4">Zuletzt bearbeitet am: {{ project.architecture.updated_at | date:"d.m.Y H:i:s" }}</p>
-            {% endif %}
+            <table class="w-1/4 mb-8">
+                <tr>
+                    <td class="font-semibold">ID</td>
+                    <td>{{ project.architecture.id }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Zuletzt geändert am</td>
+                    <td>
+                        {% if project.architecture.created_at|date:"U" == project.architecture.updated_at|date:"U" %}
+                            Noch nie bearbeitet
+                        {% else %}
+                            {{ project.architecture.updated_at | date:"d.m.Y \u\m H:i" }}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
             <a class="button-inverted" href="{% url "project-edit-architecture" project.id %}">Modellarchitektur bearbeiten</a>
         </section>
 
@@ -52,7 +106,7 @@
                 <img class="h-6 w-6" src="{% static "assets/icons/parameters.svg" %}">
                 <h3>Trainingsparameter</h3>
             </div>
-            <table class="w-1/4 mb-6">
+            <table class="w-1/4 mb-8">
                 <tr>
                     <td class="font-semibold">Validierungs-Anteil</td>
                     <td>{{ project.training_parameter.validation_split }}</td>

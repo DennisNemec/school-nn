@@ -28,19 +28,19 @@
             <table class="w-1/4">
                 <tr>
                     <td class="font-semibold">ID</td>
-                    <td>{{architecture.id }}</td>
+                    <td>{{ architecture.id }}</td>
                 </tr>
                 <tr>
                     <td class="font-semibold">Ersteller</td>
-                    <td>{{architecture.id }}</td>
+                    <td>{{ architecture.user.username }}</td>
                 </tr>
                 <tr>
                     <td class="font-semibold">Erstellt am</td>
-                    <td>{{architecture.created_at | date:"d.m.Y \u\m H:i"}}</td>
+                    <td>{{ architecture.created_at | date:"d.m.Y \u\m H:i"}}</td>
                 </tr>
                 <tr>
                     <td class="font-semibold">Zuletzt geändert am</td>
-                    <td>{{architecture.updated_at | date:"d.m.Y \u\m H:i" }}</td>
+                    <td>{{ architecture.updated_at | date:"d.m.Y \u\m H:i" }}</td>
                 </tr>
             </table>
         </section>
