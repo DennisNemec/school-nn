@@ -2,23 +2,28 @@
 {% load static %}
 {% load breadcrumbs %}
 
-{% block title %}Nutzer hinzufügen „{{ user.name }}“{% endblock %}
+{% block title %}Benutzer{% endblock %}
 
 {% block breadcrumbs %}
-    {% breadcrumb_url "Nutzer" "user-list" %}
-    {% url "user-details" user.id as detail_url %}
-    {% breadcrumb user.username detail_url %}
+    {% breadcrumb_url "Benutzer" "user-list" %}
 {% endblock %}
 
 {% block top %}
+    <h1>Nutzer</h1>
+    <a class="button-standard-add" href="{% url "user-create" %}">Benutzer hinzufügen</a>
 {% endblock %}
 
 {% block main %}
-<ul>
-    {% for user in users %}
-        <li><a href="/users/{{ user.id }}">{{ user.username }}</a></li>
-    {% endfor %}
-</ul>
-
-<a href="/users/add">Add</a>
+    <div class="space-y-4">
+        {% for user in users %}
+            <article class="card flex items-center justify-between">
+                <h3>{{ user.username }}</h3>
+                <div>
+                    <a class="text-text-gray" href="{% url "user-detail" user.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "user-edit" user.id %}">Einstellungen</a> &bullet;
+                    <a class="text-red" href="{% url "user-delete" user.id %}">Löschen</a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
 {% endblock %}
