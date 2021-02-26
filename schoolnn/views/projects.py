@@ -21,9 +21,13 @@ from schoolnn.models import (
     TerminationCondition,
 )
 from schoolnn.resources.static.layer_list import layer_list
+from schoolnn.views.mixins import (
+    LoginRequiredMixin,
+    AuthenticatedQuerysetMixin,
+)
 
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
     """Responsible for the creation of projects."""
 
     class ProjectCreateForm(forms.ModelForm):
@@ -61,7 +65,7 @@ class ProjectCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ProjectListView(ListView):
+class ProjectListView(AuthenticatedQuerysetMixin, ListView):
     """Responsible for listing all projects."""
 
     queryset = Project.objects.order_by("-created_at")
@@ -69,14 +73,14 @@ class ProjectListView(ListView):
     template_name = "project/project_overview.html"
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(AuthenticatedQuerysetMixin, DetailView):
     """Responsible for displaying a single project."""
 
     model = Project
     template_name = "project/project_details.html"
 
 
-class ProjectEditView(View):
+class ProjectEditView(LoginRequiredMixin, View):
     """Responsible for editing all the data of a project."""
 
     template_name: str = "project/edit_project.html"
@@ -89,12 +93,18 @@ class ProjectEditView(View):
     ]
 
     def get(self, request, *args, **kwargs):
-        self._setup()
+        error_redirect = self._check_and_setup()
+
+        if error_redirect is not None:
+            return error_redirect
 
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self._setup()
+        error_redirect = self._check_and_setup()
+
+        if error_redirect is not None:
+            return error_redirect
 
         if self.step == "settings":
             post_redirect = self._handle_settings_form()
@@ -114,12 +124,24 @@ class ProjectEditView(View):
 
         return post_redirect
 
-    def _setup(self):
+    def _check_and_setup(self):
+        try:
+            self.project = self._get_project()
+        except Project.DoesNotExist:
+            messages.error(self.request, "Dieses Projekt existiert nicht.")
+            return redirect("project-list")
+
+        if self.project.user != self.request.user:
+            messages.error(self.request, "Zugriff verweigert.")
+            return redirect("project-list")
+
         self.default_redirect = redirect("project-details", self.kwargs["pk"])
         self.step = self._get_step()
         self.project = self._get_project()
         self._ensure_architecture_exists()
         self._set_context()
+
+        return None
 
     # project-edit-dataset -> dataset
     def _get_step(self):
@@ -140,7 +162,7 @@ class ProjectEditView(View):
 
     def _get_step_context(self):
         if self.step == "dataset":
-            return {"datasets": Dataset.objects.all()}
+            return {"datasets": self._get_user_datasets()}
         elif self.step == "architecture":
             return {
                 "layer_list": layer_list,
@@ -149,9 +171,7 @@ class ProjectEditView(View):
                 ),
             }
         elif self.step == "load_architecture":
-            return {
-                "architectures": Architecture.objects.exclude(custom=False)
-            }
+            return {"architectures": self._get_user_architectures()}
         elif self.step == "parameters":
             parameters = TrainingParameter.from_json(
                 json.dumps(self.project.training_parameter_json)
@@ -185,6 +205,17 @@ class ProjectEditView(View):
         else:
             return {}
 
+    #
+    def _get_user_datasets(self):
+        return Dataset.objects.filter(user=self.request.user)
+
+    #
+    def _get_user_architectures(self):
+        return Architecture.objects.filter(user=self.request.user).exclude(
+            custom=False
+        )
+
+    #
     def _handle_settings_form(self):
         name = self.request.POST.get("name", None)
 
@@ -477,7 +508,7 @@ class TrainingParameterForm(forms.Form):
     augmentation_color = forms.BooleanField(label="Farbe", required=False)
 
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(AuthenticatedQuerysetMixin, DeleteView):
     """Responsible for deleting all the data of a project."""
 
     model = Project

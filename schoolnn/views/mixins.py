@@ -4,13 +4,7 @@ from django.views.generic import CreateView
 from schoolnn.models import Project, TrainingPass
 
 
-class AuthMixin(LoginRequiredMixin):
-    """ Require the user to be logged in. """
-
-    login_url = "/login"
-
-
-class UserIsProjectOwnerMixin(AuthMixin, UserPassesTestMixin):
+class UserIsProjectOwnerMixin(LoginRequiredMixin, UserPassesTestMixin):
     """
     Test if the user is the owner of the project specified as project_pk.
     """
