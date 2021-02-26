@@ -18,8 +18,7 @@ class ArchitectureListView(AuthenticatedQuerysetMixin, ListView):
     template_name = "architectures/architecture_overview.html"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(custom=True)
+        return super().get_queryset().filter(name__isnull=False)
 
 
 class ArchitectureDetailView(AuthenticatedQuerysetMixin, DetailView):
