@@ -4,6 +4,15 @@ from schoolnn.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.hashers import make_password
 from schoolnn.views.mixins import UserIsWorkspaceAdminMixin
+from django import forms
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ["username", "password"]
 
 
 class UserListView(UserIsWorkspaceAdminMixin, ListView):
@@ -30,9 +39,8 @@ class UserEditView(UserIsWorkspaceAdminMixin, UpdateView):
 
 
 class UserCreateView(UserIsWorkspaceAdminMixin, CreateView):
-    model = User
+    form_class = UserForm
     template_name = "users/add.html"
-    fields = ["username", "password"]
 
     def form_valid(self, form):
         form.instance.password = make_password(form.instance.password)
