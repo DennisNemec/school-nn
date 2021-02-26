@@ -1,3 +1,5 @@
+/*! tailwindcss v2.0.3 | MIT License | https://tailwindcss.com */
+
 /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
 
 /*
@@ -440,6 +442,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
+  opacity: 1;
   color: #9ca3af;
 }
 
@@ -595,228 +598,580 @@ input, textarea {
 }
 
 label {
+  cursor: pointer;
   display: block;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.375rem;
+  width: auto;
+}
+
+label:not(:first-child){
+    margin-top: 1rem;
+  }
+
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3e%3cpath d='M15.3 9.3a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z'/%3e%3c/svg%3e");
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+  background-repeat: no-repeat;
+  background-color: #fff;
+  padding-top: 0.5rem;
+  padding-right: 2.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-size: 1rem;
+  font-size: [object Object];
+  line-height: 1.5;
+  background-position: right 0.5rem center;
+  background-size: 1.5em 1.5em;
+}
+
+select::-ms-expand {
+  color: #6b7280;
+  border: none;
+}
+
+@media not print {
+  select::-ms-expand {
+    display: none;
+  }
+}
+
+@media print and (-ms-high-contrast: active), print and (-ms-high-contrast: none) {
+  select {
+    padding-right: 0.75rem;
+  }
+}
+
+select:focus {
+  outline: none;
+  border-color: #60a5fa;
 }
 
 select {
+  --tw-border-opacity: 1;
+  border-color: rgba(241, 243, 245, var(--tw-border-opacity));
+  border-radius: 0.5rem;
+  border-style: solid;
+  border-width: 2px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-right: 2rem;
+  --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  width: 60%;
+}
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+  display: inline-block;
+  vertical-align: middle;
+  background-origin: border-box;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  flex-shrink: 0;
+  height: 1em;
+  width: 1em;
+  color: #3b82f6;
+  background-color: #fff;
+}
+
+input[type=checkbox]:checked {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+  border-color: transparent;
+  background-color: currentColor;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media not print {
+  input[type=checkbox]::-ms-check {
+    color: transparent;
+    background: inherit;
+    border-color: inherit;
+    border-radius: inherit;
+  }
+}
+
+input[type=checkbox]:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  padding: 0.625rem;
+  --tw-text-opacity: 1;
+  color: rgba(16, 156, 241, var(--tw-text-opacity));
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+  --tw-bg-opacity: 1;
+  background-color: rgba(144, 160, 183, var(--tw-bg-opacity));
+  cursor: pointer;
+  height: 1rem;
+  width: 1rem;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(144, 160, 183, var(--tw-bg-opacity));
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  --tw-bg-opacity: 1;
+  background-color: rgba(144, 160, 183, var(--tw-bg-opacity));
+  height: 0.75rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  padding: 0px;
+}
+
+fieldset {
+  --tw-bg-opacity: 1;
+  background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
   border-radius: 0.75rem;
-  font-weight: 700;
-  padding: 1rem;
-  --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  --tw-shadow: 6px 6px 18px rgba(0, 0, 0, 0.06);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+
+fieldset:not(:last-of-type){
+    margin-bottom: 2rem;
+  }
+
+fieldset#augmentation_settings{
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+fieldset#augmentation_settings >h2 {
+    grid-column: span 2 / span 2;
+  }
+
+fieldset#augmentation_settings label {
+    margin: 0px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
 .container {
-  width: 100%
+  width: 100%;
 }
 
 @media (min-width: 640px) {
   .container {
-    max-width: 640px
+    max-width: 640px;
   }
 }
 
 @media (min-width: 768px) {
   .container {
-    max-width: 768px
+    max-width: 768px;
   }
 }
 
 @media (min-width: 1024px) {
   .container {
-    max-width: 1024px
+    max-width: 1024px;
   }
 }
 
 @media (min-width: 1280px) {
   .container {
-    max-width: 1280px
+    max-width: 1280px;
   }
 }
 
 @media (min-width: 1536px) {
   .container {
-    max-width: 1536px
+    max-width: 1536px;
   }
+}
+
+.form-input {
+  -webkit-appearance: none;
+          appearance: none;
+  background-color: #fff;
+  padding-top: 0.5rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-size: 1rem;
+  font-size: [object Object];
+  line-height: 1.5;
+}
+
+.form-input::placeholder {
+  color: #6b7280;
+  opacity: 1;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.form-textarea {
+  -webkit-appearance: none;
+          appearance: none;
+  background-color: #fff;
+  padding-top: 0.5rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-size: 1rem;
+  font-size: [object Object];
+  line-height: 1.5;
+}
+
+.form-textarea::placeholder {
+  color: #6b7280;
+  opacity: 1;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.form-multiselect {
+  -webkit-appearance: none;
+          appearance: none;
+  background-color: #fff;
+  padding-top: 0.5rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-size: 1rem;
+  font-size: [object Object];
+  line-height: 1.5;
+}
+
+.form-multiselect:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3e%3cpath d='M15.3 9.3a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z'/%3e%3c/svg%3e");
+  -webkit-appearance: none;
+          appearance: none;
+  -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+  background-repeat: no-repeat;
+  background-color: #fff;
+  padding-top: 0.5rem;
+  padding-right: 2.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-size: 1rem;
+  font-size: [object Object];
+  line-height: 1.5;
+  background-position: right 0.5rem center;
+  background-size: 1.5em 1.5em;
+}
+
+.form-select::-ms-expand {
+  color: #6b7280;
+  border: none;
+}
+
+@media not print {
+  .form-select::-ms-expand {
+    display: none;
+  }
+}
+
+@media print and (-ms-high-contrast: active), print and (-ms-high-contrast: none) {
+  .form-select {
+    padding-right: 0.75rem;
+  }
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.form-checkbox {
+  -webkit-appearance: none;
+          appearance: none;
+  -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+  display: inline-block;
+  vertical-align: middle;
+  background-origin: border-box;
+  -webkit-user-select: none;
+          user-select: none;
+  flex-shrink: 0;
+  height: 1em;
+  width: 1em;
+  color: #3b82f6;
+  background-color: #fff;
+}
+
+.form-checkbox:checked {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+  border-color: transparent;
+  background-color: currentColor;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media not print {
+  .form-checkbox::-ms-check {
+    color: transparent;
+    background: inherit;
+    border-color: inherit;
+    border-radius: inherit;
+  }
+}
+
+.form-checkbox:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.form-radio {
+  -webkit-appearance: none;
+          appearance: none;
+  -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+  display: inline-block;
+  vertical-align: middle;
+  background-origin: border-box;
+  -webkit-user-select: none;
+          user-select: none;
+  flex-shrink: 0;
+  border-radius: 100%;
+  height: 1em;
+  width: 1em;
+  color: #3b82f6;
+  background-color: #fff;
+}
+
+.form-radio:checked {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+  border-color: transparent;
+  background-color: currentColor;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media not print {
+  .form-radio::-ms-check {
+    color: transparent;
+    background: inherit;
+    border-color: inherit;
+    border-radius: inherit;
+  }
+}
+
+.form-radio:focus {
+  outline: none;
+  border-color: #60a5fa;
 }
 
 @media (min-width: 640px) {
   .sm\:container {
-    width: 100%
+    width: 100%;
   }
 
   @media (min-width: 640px) {
     .sm\:container {
-      max-width: 640px
+      max-width: 640px;
     }
   }
 
   @media (min-width: 768px) {
     .sm\:container {
-      max-width: 768px
+      max-width: 768px;
     }
   }
 
   @media (min-width: 1024px) {
     .sm\:container {
-      max-width: 1024px
+      max-width: 1024px;
     }
   }
 
   @media (min-width: 1280px) {
     .sm\:container {
-      max-width: 1280px
+      max-width: 1280px;
     }
   }
 
   @media (min-width: 1536px) {
     .sm\:container {
-      max-width: 1536px
+      max-width: 1536px;
     }
   }
 }
 
 @media (min-width: 768px) {
   .md\:container {
-    width: 100%
+    width: 100%;
   }
 
   @media (min-width: 640px) {
     .md\:container {
-      max-width: 640px
+      max-width: 640px;
     }
   }
 
   @media (min-width: 768px) {
     .md\:container {
-      max-width: 768px
+      max-width: 768px;
     }
   }
 
   @media (min-width: 1024px) {
     .md\:container {
-      max-width: 1024px
+      max-width: 1024px;
     }
   }
 
   @media (min-width: 1280px) {
     .md\:container {
-      max-width: 1280px
+      max-width: 1280px;
     }
   }
 
   @media (min-width: 1536px) {
     .md\:container {
-      max-width: 1536px
+      max-width: 1536px;
     }
   }
 }
 
 @media (min-width: 1024px) {
   .lg\:container {
-    width: 100%
+    width: 100%;
   }
 
   @media (min-width: 640px) {
     .lg\:container {
-      max-width: 640px
+      max-width: 640px;
     }
   }
 
   @media (min-width: 768px) {
     .lg\:container {
-      max-width: 768px
+      max-width: 768px;
     }
   }
 
   @media (min-width: 1024px) {
     .lg\:container {
-      max-width: 1024px
+      max-width: 1024px;
     }
   }
 
   @media (min-width: 1280px) {
     .lg\:container {
-      max-width: 1280px
+      max-width: 1280px;
     }
   }
 
   @media (min-width: 1536px) {
     .lg\:container {
-      max-width: 1536px
+      max-width: 1536px;
     }
   }
 }
 
 @media (min-width: 1280px) {
   .xl\:container {
-    width: 100%
+    width: 100%;
   }
 
   @media (min-width: 640px) {
     .xl\:container {
-      max-width: 640px
+      max-width: 640px;
     }
   }
 
   @media (min-width: 768px) {
     .xl\:container {
-      max-width: 768px
+      max-width: 768px;
     }
   }
 
   @media (min-width: 1024px) {
     .xl\:container {
-      max-width: 1024px
+      max-width: 1024px;
     }
   }
 
   @media (min-width: 1280px) {
     .xl\:container {
-      max-width: 1280px
+      max-width: 1280px;
     }
   }
 
   @media (min-width: 1536px) {
     .xl\:container {
-      max-width: 1536px
+      max-width: 1536px;
     }
   }
 }
 
 @media (min-width: 1536px) {
   .\32xl\:container {
-    width: 100%
+    width: 100%;
   }
 
   @media (min-width: 640px) {
     .\32xl\:container {
-      max-width: 640px
+      max-width: 640px;
     }
   }
 
   @media (min-width: 768px) {
     .\32xl\:container {
-      max-width: 768px
+      max-width: 768px;
     }
   }
 
   @media (min-width: 1024px) {
     .\32xl\:container {
-      max-width: 1024px
+      max-width: 1024px;
     }
   }
 
   @media (min-width: 1280px) {
     .\32xl\:container {
-      max-width: 1280px
+      max-width: 1280px;
     }
   }
 
   @media (min-width: 1536px) {
     .\32xl\:container {
-      max-width: 1536px
+      max-width: 1536px;
     }
   }
 }
@@ -9345,6 +9700,10 @@ select {
   cursor: move
 }
 
+.cursor-help {
+  cursor: help
+}
+
 .cursor-not-allowed {
   cursor: not-allowed
 }
@@ -14994,7 +15353,6 @@ select {
 }
 
 .sticky {
-  position: -webkit-sticky;
   position: sticky
 }
 
@@ -35286,6 +35644,10 @@ select {
     cursor: move
   }
 
+  .sm\:cursor-help {
+    cursor: help
+  }
+
   .sm\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -40935,7 +41297,6 @@ select {
   }
 
   .sm\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -61184,6 +61545,10 @@ select {
     cursor: move
   }
 
+  .md\:cursor-help {
+    cursor: help
+  }
+
   .md\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -66833,7 +67198,6 @@ select {
   }
 
   .md\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -87082,6 +87446,10 @@ select {
     cursor: move
   }
 
+  .lg\:cursor-help {
+    cursor: help
+  }
+
   .lg\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -92731,7 +93099,6 @@ select {
   }
 
   .lg\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -112980,6 +113347,10 @@ select {
     cursor: move
   }
 
+  .xl\:cursor-help {
+    cursor: help
+  }
+
   .xl\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -118629,7 +119000,6 @@ select {
   }
 
   .xl\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -138878,6 +139248,10 @@ select {
     cursor: move
   }
 
+  .\32xl\:cursor-help {
+    cursor: help
+  }
+
   .\32xl\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -144527,7 +144901,6 @@ select {
   }
 
   .\32xl\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 

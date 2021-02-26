@@ -27,6 +27,8 @@ DEBUG = os.environ.get("DEBUG", "").lower() in ["true", "yes", "1", "t", "y"]
 
 ALLOWED_HOSTS: List[str] = []
 
+LOGIN_URL = "/login"
+
 LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/"

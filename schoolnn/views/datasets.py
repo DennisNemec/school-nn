@@ -16,7 +16,7 @@ from django.db import transaction
 from PIL import Image as PIL_Image, ImageOps
 from schoolnn.models import Dataset, Label, Image
 from schoolnn.views.mixins import (
-    AuthMixin,
+    LoginRequiredMixin,
     AuthenticatedQuerysetMixin,
 )
 
@@ -124,7 +124,7 @@ class DatasetDetail(AuthenticatedQuerysetMixin, DetailView):
     template_name = "datasets/detail.html"
 
 
-class DatasetCreate(AuthMixin, CreateView):
+class DatasetCreate(LoginRequiredMixin, CreateView):
     """Handles creation of datasets."""
 
     form_class = DatasetCreateForm
