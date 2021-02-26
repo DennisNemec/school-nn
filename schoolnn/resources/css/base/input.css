@@ -74,7 +74,7 @@ fieldset {
     h3 {
         @apply mb-6;
     }
-    
+
     &:not(:last-of-type){
         @apply mb-8;
      }

@@ -21,7 +21,7 @@
 {% block main %}
     <div class="space-y-8 my-8">
         <section class="card">
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4 mb-6">
                 <img class="h-6 w-6" src="{% static "assets/icons/datasets.svg" %}">
                 <h3>Datensatz</h3>
             </div>
@@ -35,7 +35,7 @@
         </section>
 
         <section class="card">
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4 mb-6">
                 <img class="h-6 w-6" src="{% static "assets/icons/architectures.svg" %}">
                 <h3>Modellarchitektur</h3>
             </div>
@@ -48,28 +48,35 @@
         </section>
 
         <section class="card">
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4 mb-6">
                 <img class="h-6 w-6" src="{% static "assets/icons/parameters.svg" %}">
                 <h3>Trainingsparameter</h3>
             </div>
-            <p class="mb-4">
-                <span class="font-semibold">Validierungs-Anteil</span>: {{ project.training_parameter.validation_split }}<br>
-                <span class="font-semibold">Lernrate</span>: {{ project.training_parameter.learning_rate }}<br>
-                <span class="font-semibold">Batchgröße</span>: {{ project.training_parameter.batch_size }}
-            </p>
+            <table class="w-1/4 mb-6">
+                <tr>
+                    <td class="font-semibold">Validierungs-Anteil</td>
+                    <td>{{ project.training_parameter.validation_split }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Lernrate</td>
+                    <td>{{ project.training_parameter.learning_rate }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Batchgröße</td>
+                    <td>{{ project.training_parameter.batch_size }}</td>
+                </tr>
+            </table>
             <a class="button-inverted" href="{% url "project-edit-parameters" project.id %}">Trainingsparameter bearbeiten</a>
         </section>
 
         <section class="card">
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4 mb-6">
                 <img class="h-6 w-6" src="{% static "assets/icons/play.svg" %}">
                 <h3>Training</h3>
             </div>
             <p class="mb-4">Hier können Trainingsdurchläufe gestartet, verwaltet und verglichen werden.</p>
             <a class="button-inverted" href="{% url "show-trainings" project.id %}">Trainingsdurchläufe verwalten</a>
         </section>
-
-        <hr>
     </div>
 
 {% endblock %}
