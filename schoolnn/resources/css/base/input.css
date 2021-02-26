@@ -10,6 +10,12 @@ input, textarea {
         border-light-gray;
 }
 
+.inputs-w-full {
+    input, textarea {
+        @apply w-full;
+    }
+}
+
 label {
     @apply
         w-auto
