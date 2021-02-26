@@ -1,5 +1,4 @@
 """Models used for domain logic / training."""
-from json import loads, dumps
 from enum import Enum
 from typing import Optional
 from .augmentation_options import AugmentationOptions
@@ -101,33 +100,30 @@ class TrainingParameter:
         self.augmentation_options = augmentation_options
 
     @classmethod
-    def from_json(cls, json: str):
-        """Load from a json string."""
-        tp_dict: dict = loads(json)
+    def from_dict(cls, dictionary: dict):
+        """Load from a dictionary."""
         return cls(
-            validation_split=tp_dict["validation_split"],
-            learning_rate=tp_dict["learning_rate"],
+            validation_split=dictionary["validation_split"],
+            learning_rate=dictionary["learning_rate"],
             termination_condition=TerminationCondition.from_dict(
-                tp_dict["termination_condition"],
+                dictionary["termination_condition"],
             ),
-            batch_size=tp_dict["batch_size"],
-            loss_function=LossFunction(tp_dict["loss_function"]),
-            optimizer=Optimizer(tp_dict["optimizer"]),
+            batch_size=dictionary["batch_size"],
+            loss_function=LossFunction(dictionary["loss_function"]),
+            optimizer=Optimizer(dictionary["optimizer"]),
             augmentation_options=AugmentationOptions.from_dict(
-                tp_dict["augmentation_options"],
+                dictionary["augmentation_options"],
             ),
         )
 
-    def to_json(self) -> str:
-        """Dump to a json string."""
-        return dumps(
-            {
-                "validation_split": self.validation_split,
-                "learning_rate": self.learning_rate,
-                "termination_condition": self.termination_condition.to_dict(),
-                "batch_size": self.batch_size,
-                "loss_function": self.loss_function.value,
-                "optimizer": self.optimizer.value,
-                "augmentation_options": self.augmentation_options.to_dict(),
-            }
-        )
+    def to_dict(self) -> dict:
+        """Dump to a dictionary."""
+        return {
+            "validation_split": self.validation_split,
+            "learning_rate": self.learning_rate,
+            "termination_condition": self.termination_condition.to_dict(),
+            "batch_size": self.batch_size,
+            "loss_function": self.loss_function.value,
+            "optimizer": self.optimizer.value,
+            "augmentation_options": self.augmentation_options.to_dict(),
+        }

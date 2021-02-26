@@ -119,10 +119,6 @@ class WrappedArchitecture:
         architecture_dict = {"layers": arch_layers}
         return cls(architecture_dict)
 
-    def to_json(self) -> str:
-        """Get the architecture as json string."""
-        return dumps(self.dictionary_representation)
-
     def to_json_indent(self) -> str:
         """Get the architecture as humand readable json string."""
         return dumps(self.dictionary_representation, indent=4)

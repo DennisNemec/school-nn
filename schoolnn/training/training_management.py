@@ -76,7 +76,6 @@ def run_job_until_done_or_terminated(
         if termination_condition.termination_criteria_fulfilled(
             running_for_seconds=running_for_seconds,
             epoche=training_pass.epoche,
-            validation_loss=0.0,  # TODO
         ):
             training_pass.status = TrainingPassState.COMPLETED.value
             training_pass.save()

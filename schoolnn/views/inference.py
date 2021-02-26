@@ -39,13 +39,13 @@ class InferenceView(View):
 
         images_zipped = zipfile.ZipFile(form.cleaned_data["file"])
         for filename in images_zipped.namelist():
-            print("FILENAME", filename)
             images_filename.append(filename)
             images_binary.append(BytesIO(images_zipped.read(filename)))
 
         predictions = infere_images(
             training_pass=training_pass, images=images_binary
         )
+        return predictions
 
         result = []
         for binary_data, prediction in zip(images_binary, predictions):

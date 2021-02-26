@@ -2,7 +2,7 @@
 {% load static %}
 {% load breadcrumbs %}
 
-{% block title %}Traininere „{{ project.name }}“{% endblock %}
+{% block title %}Traininere „{{ training_pass.name }}“{% endblock %}
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Projekte" "project-list" %}
@@ -26,11 +26,17 @@
 
 {% block main %}
 <div class="flex flex-wrap justify-between">
-{% for image_b64_classification in image_predictions %}
+{% for classification in image_predictions %}
     <div class="card m-1 w-1/4">
-    <img width="100%" src="data:image/jpeg;base64,{{ image_b64_classification.0 }}">
+    <div class="text-text-gray">Originales Bild:</div>
+    <img width="100%" src="data:image/jpeg;base64,{{ classification.image_b64 }}">
     <br>
-    <div class="text-text-gray">{{ image_b64_classification.1 }}</div>
+    <div class="text-text-gray">Eingabe des neuronalen Netzes und Heatmap:</div>
+    <img width=45% src="data:image/jpeg;base64,{{ classification.image_for_neural_net_b64 }}" style="display: inline-block;">
+    <img width=45% src="data:image/jpeg;base64,{{ classification.image_with_heatmap_b64 }}" style="display: inline-block;">
+    <div class="text-text-gray">Klassifiziert als: {{ classification.label.name }}
+        ({{classification.confidence_percent|floatformat:-2}}%)
+    </div>
     </div>
 {% endfor %}
 </div>

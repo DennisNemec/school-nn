@@ -1,5 +1,4 @@
 """All ORM models."""
-import json
 import os
 from typing import Optional
 from django.contrib.auth.models import AbstractUser
@@ -161,14 +160,12 @@ class Project(TimestampedModelMixin):
         """Get training parameter object from json representation."""
         if self.training_parameter_json is None:
             return None
-        return TrainingParameter.from_json(
-            json.dumps(self.training_parameter_json)
-        )
+        return TrainingParameter.from_dict(self.training_parameter_json)
 
     @training_parameter.setter
     def training_parameter(self, training_parameter: TrainingParameter):
         """Assign training parameter object and save json representation."""
-        self.training_parameter_json = training_parameter.to_json()
+        self.training_parameter_json = training_parameter.to_dict()
 
 
 class TrainingPass(models.Model):
@@ -189,12 +186,12 @@ class TrainingPass(models.Model):
     @property
     def training_parameter(self) -> TrainingParameter:
         """Get training parameter object from json representation."""
-        return TrainingParameter.from_json(self.training_parameter_json)
+        return TrainingParameter.from_dict(self.training_parameter_json)
 
     @training_parameter.setter
     def training_parameter(self, training_parameter: TrainingParameter):
         """Assign training parameter object and save json representation."""
-        self.training_parameter_json = training_parameter.to_json()
+        self.training_parameter_json = training_parameter.to_dict()
 
     @property
     def duration_human_readable(self) -> str:
