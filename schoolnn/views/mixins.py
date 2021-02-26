@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView
-from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 from schoolnn.models import Project, TrainingPass
