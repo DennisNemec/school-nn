@@ -28,7 +28,7 @@ from .views.datasets import (
     DatasetClassify,
 )
 from .views.images import ImageView
-from .views.base_view import BaseView
+from .views.home_view import HomeView
 from .views.labels import (
     LabelDetailView,
     LabelUpdateView,
@@ -58,7 +58,7 @@ from .views.users import (
 # TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
-    path("", BaseView.as_view(), name="home"),
+    path("", HomeView.as_view(), name="home"),
     path("datasets/", DatasetList.as_view(), name="dataset-list"),
     path(
         "datasets/create/image",
