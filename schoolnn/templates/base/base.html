@@ -30,7 +30,7 @@
         </div>
     </header>
 
-    <nav class="w-1/5 h-full bg-white flex flex-col justify-between shadow-base z-40 xl:w-1/6">
+    <nav class="w-1/5 min-h-screen-minus-header bg-white flex flex-col justify-between shadow-base z-40 xl:w-1/6">
         <ul class="pl-8 pt-20 space-y-8 xl:pl-12">
             <!--TODO: remove redundancy -->
             <li class="menu-item {% if "/datasets/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
@@ -45,7 +45,7 @@
         </ul>
     </nav>
 
-    <main class="w-4/5 p-12 xl:w-5/6">
+    <main class="w-4/5 p-12 min-h-screen-minus-header xl:w-5/6">
         <div class="flex items-center justify-between h-16 mb-8">
             {% block top %}{% endblock %}
         </div>

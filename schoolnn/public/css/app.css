@@ -1,3 +1,5 @@
+/*! tailwindcss v2.0.3 | MIT License | https://tailwindcss.com */
+
 /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
 
 /*
@@ -440,6 +442,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
+  opacity: 1;
   color: #9ca3af;
 }
 
@@ -9345,6 +9348,10 @@ select {
   cursor: move
 }
 
+.cursor-help {
+  cursor: help
+}
+
 .cursor-not-allowed {
   cursor: not-allowed
 }
@@ -12622,6 +12629,10 @@ select {
   min-height: 100vh
 }
 
+.min-h-screen-minus-header {
+  min-height: calc(100vh - 6rem)
+}
+
 .min-w-0 {
   min-width: 0px
 }
@@ -14994,7 +15005,6 @@ select {
 }
 
 .sticky {
-  position: -webkit-sticky;
   position: sticky
 }
 
@@ -35286,6 +35296,10 @@ select {
     cursor: move
   }
 
+  .sm\:cursor-help {
+    cursor: help
+  }
+
   .sm\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -38563,6 +38577,10 @@ select {
     min-height: 100vh
   }
 
+  .sm\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .sm\:min-w-0 {
     min-width: 0px
   }
@@ -40935,7 +40953,6 @@ select {
   }
 
   .sm\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -61184,6 +61201,10 @@ select {
     cursor: move
   }
 
+  .md\:cursor-help {
+    cursor: help
+  }
+
   .md\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -64461,6 +64482,10 @@ select {
     min-height: 100vh
   }
 
+  .md\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .md\:min-w-0 {
     min-width: 0px
   }
@@ -66833,7 +66858,6 @@ select {
   }
 
   .md\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -87082,6 +87106,10 @@ select {
     cursor: move
   }
 
+  .lg\:cursor-help {
+    cursor: help
+  }
+
   .lg\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -90359,6 +90387,10 @@ select {
     min-height: 100vh
   }
 
+  .lg\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .lg\:min-w-0 {
     min-width: 0px
   }
@@ -92731,7 +92763,6 @@ select {
   }
 
   .lg\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -112980,6 +113011,10 @@ select {
     cursor: move
   }
 
+  .xl\:cursor-help {
+    cursor: help
+  }
+
   .xl\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -116257,6 +116292,10 @@ select {
     min-height: 100vh
   }
 
+  .xl\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .xl\:min-w-0 {
     min-width: 0px
   }
@@ -118629,7 +118668,6 @@ select {
   }
 
   .xl\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
@@ -138878,6 +138916,10 @@ select {
     cursor: move
   }
 
+  .\32xl\:cursor-help {
+    cursor: help
+  }
+
   .\32xl\:cursor-not-allowed {
     cursor: not-allowed
   }
@@ -142155,6 +142197,10 @@ select {
     min-height: 100vh
   }
 
+  .\32xl\:min-h-screen-minus-header {
+    min-height: calc(100vh - 6rem)
+  }
+
   .\32xl\:min-w-0 {
     min-width: 0px
   }
@@ -144527,7 +144573,6 @@ select {
   }
 
   .\32xl\:sticky {
-    position: -webkit-sticky;
     position: sticky
   }
 
