@@ -12,12 +12,79 @@ input, textarea {
 
 label {
     @apply
+        w-auto
         font-semibold
         block
-        mb-2;
+        mb-1.5
+        cursor-pointer;
+
+    &:not(:first-child){
+        @apply mt-4;
+     }
 }
 
 select {
     @apply
-        rounded-xl p-4 font-bold shadow-md;
+        w-3/5
+        rounded-lg
+        px-4
+        py-2
+        pr-8
+        shadow-sm
+        border-2
+        border-solid
+        border-light-gray
+        form-select;
+}
+
+input[type=checkbox] {
+    @apply
+        appearance-none
+        form-checkbox
+        cursor-pointer
+        text-accent
+        p-2.5
+        rounded-md;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    @apply
+        appearance-none
+        w-4
+        h-4
+        bg-icon-gray
+        cursor-pointer;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    @apply bg-icon-gray;
+}
+
+input[type=range] {
+    @apply
+        appearance-none
+        h-3
+        p-0
+        bg-icon-gray
+        outline-none;
+}
+
+fieldset {
+    @apply p-6 rounded-xl bg-white shadow-base;
+
+    &:not(:last-of-type){
+        @apply mb-8;
+     }
+}
+
+fieldset#augmentation_settings{
+    @apply grid grid-cols-2 items-center;
+
+    >h2 {
+        @apply col-span-2;
+    }
+
+    label {
+        @apply m-0 py-3;
+    }
 }

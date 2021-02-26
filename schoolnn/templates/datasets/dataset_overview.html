@@ -10,12 +10,14 @@
 
 {% block top %}
     <h1>Datensätze</h1>
-    <div class="space-x-4">
-        <select class="rounded-xl p-4 font-bold shadow-md" onchange="location = this.value;">
-            <option value="/datasets/?type=own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
-            <option value="/datasets/?type=shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
-        </select>
-        <a href="{% url "dataset-add" %}" class="button-standard-add">Datensatz hinzufügen</a>
+    <div class="space-x-4 w-1/2">
+        <div class="flex justify-end">
+            <select class="rounded-xl p-4 font-bold shadow-md w-1/2" onchange="location = this.value;">
+                <option value="{% url 'dataset-list' %}?type=own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
+                <option value="{% url 'dataset-list' %}?type=shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
+            </select>
+            <a href="{% url "dataset-add" %}" class="ml-8 mt-2 mb-2 button-standard-add">Datensatz hinzufügen</a>
+        </div>
     </div>
 {% endblock %}
 

@@ -15,29 +15,29 @@ class ArchitectureListView(AuthenticatedQuerysetMixin, ListView):
     model = Architecture
     ordering = "-created_at"
     context_object_name = "architectures"
-    template_name = "architectures/list.html"
+    template_name = "architectures/architecture_overview.html"
 
 
 class ArchitectureDetailView(AuthenticatedQuerysetMixin, DetailView):
     model = Architecture
-    template_name = "architectures/detail.html"
+    template_name = "architectures/architecture_details.html"
 
 
 class ArchitectureDeleteView(AuthenticatedQuerysetMixin, DeleteView):
     model = Architecture
     success_url = reverse_lazy("architecture-list")
-    template_name = "architectures/delete.html"
+    template_name = "architectures/delete_architecture.html"
 
 
 class ArchitectureEditView(AuthenticatedQuerysetMixin, UpdateView):
     model = Architecture
     fields = ["name"]
-    template_name = "architectures/add.html"
+    template_name = "architectures/edit_architecture.html"
 
 
 class ArchitectureCreateView(AuthenticatedCreateView):
     model = Architecture
-    template_name = "architectures/add.html"
+    template_name = "architectures/create_architecture.html"
     fields = ["name"]
 
     def form_valid(self, form):
@@ -48,7 +48,7 @@ class ArchitectureCreateView(AuthenticatedCreateView):
 class ArchitectureEditorView(AuthenticatedQuerysetMixin, UpdateView):
     model = Architecture
     context_object_name = "architecture"
-    template_name = "editor/editor.html"
+    template_name = "editor/architecture_editor.html"
     fields = ["architecture_json"]
 
     def get_context_data(self, **kwargs):

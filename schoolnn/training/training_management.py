@@ -13,11 +13,10 @@ from .do_training_block import (
 from .load_dataset import get_training_and_validation_images
 from .architecturewrapper import WrappedArchitecture
 from .batch_generator import BatchGeneratorTraining, BatchGeneratorValidation
-from keras import metrics
+from tensorflow.keras import metrics
 from schoolnn_app.settings import DEBUG
 from multiprocessing import Process, Queue
 from datetime import datetime
-from json import loads
 from io import BytesIO
 
 
@@ -95,9 +94,11 @@ def run_job_until_done_or_terminated(
     training_pass.save(update_fields=["end_datetime"])
 
 
-def _initialize_training_pass(project: Project) -> TrainingPass:
+def _initialize_training_pass(
+    project: Project, training_pass_name: str
+) -> TrainingPass:
     wrapped_architecture = WrappedArchitecture(
-        dictionary_representation=loads(project.architecture.architecture_json)
+        dictionary_representation=project.architecture.architecture_json
     )
 
     keras_model = wrapped_architecture.to_keras_model()
@@ -110,12 +111,12 @@ def _initialize_training_pass(project: Project) -> TrainingPass:
     weights_binary = BytesIO(keras_model_to_bytes(keras_model))
 
     return TrainingPass.objects.create(
-        name=project.training_parameter["name"],
+        name=training_pass_name,
         start_datetime=datetime.now(),
         end_datetime=datetime.now(),
         dataset_id=project.dataset,
         training_parameter_json=project.training_parameter_json,
-        project_id=project,
+        project=project,
         architecture=project.architecture,
         model_weights=weights_binary.read(),
         status=TrainingPassState.START_REQUESTED.value,
@@ -157,11 +158,16 @@ class TrainingManager:
         TrainingManager._process.start()
         self._read_back_tasks_from_database()  # Restore tasks from last run
 
-    def apply_job(self, project: Project) -> TrainingPass:
+    def apply_job(
+        self, project: Project, training_pass_name: str
+    ) -> TrainingPass:
         """Create TrainingPass from project and push it into work queue."""
         if TrainingManager._queue is None:
             raise ValueError("TrainingManager singleton not initialized!")
-        training_pass = _initialize_training_pass(project=project)
+        training_pass = _initialize_training_pass(
+            project=project,
+            training_pass_name=training_pass_name,
+        )
         TrainingManager._queue.put(training_pass)
         return training_pass
 

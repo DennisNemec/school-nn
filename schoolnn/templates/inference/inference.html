@@ -1,16 +1,37 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <title>SchoolNN</title>
-</head>
-<body>
-<h3>Inferenz - Classify images</h3>
-<a href="../{{ training_pass.id }}">Training details</a><br>
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Traininere „{{ project.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Projekte" "project-list" %}
+    {% url "project-details" training_pass.project.id as detail_url %}
+    {% breadcrumb training_pass.project.name detail_url %}
+    {% url "show-trainings" training_pass.project.id as training_url %}
+    {% breadcrumb "Training" training_url %}
+    {% url "show-training" training_pass.project.id training_pass.id as show_training_url %}
+    {% breadcrumb training_pass.name show_training_url %}
+    {% url "inference" training_pass.project.id training_pass.id as inference_url %}
+    {% breadcrumb "Inferenze" inference_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Inferenz mit „{{ training_pass.name }}“</h1>
+    <div class="space-x-4">
+        <a class="button-standard" href="javascript:submit.click()">Starten</a>
+        <a class="button-standard" href="{% url "show-training" training_pass.project.id training_pass.id %}">Trainingsdetails</a>
+        <a class="button-standard button-inverted" href="{% url "show-trainings" training_pass.project.id %}">Zurück</a>
+    </div>
+{% endblock %}
+
+{% block main %}
+<div class="card">
+    Lade Bilder hoch um diese klassifizieren zu lassen.
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" class="btnbtn-primary" value="submit">
+    <input type="submit" class="hidden" value="submit" id="submit">
 </form>
-</body>
-</html>
+</div>
+{% endblock %}

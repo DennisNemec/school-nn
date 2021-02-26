@@ -1,6 +1,6 @@
 <template>
-  <div id="app" class="w-full min-h-screen">
-    <DatasetAccordion v-for="dataset in datasets" v-bind:key="dataset.name" class="bg-white rounded-md p-5 shadow-lg mb-10" :id=dataset.id :amount-of-categories=dataset.label_amount :amount-of-pictures=dataset.image_amount :title=dataset.name :creation-date=dataset.created_at :unlabeled-count=dataset.status.is_completely_labeled :status-text=dataset.status.text :categories=dataset.label />
+  <div id="app" class="w-full">
+    <DatasetAccordion v-for="dataset in datasets" v-bind:key="dataset.name" class="card" :id=dataset.id :amount-of-categories=dataset.label_amount :amount-of-pictures=dataset.image_amount :title=dataset.name :creation-date=dataset.created_at :unlabeled-count=dataset.status.is_completely_labeled :status-text=dataset.status.text :categories=dataset.label />
   </div>
 </template>
 

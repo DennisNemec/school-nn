@@ -4,7 +4,7 @@ module.exports = {
     purgeLayersByDefault: true,
   },
   purge: {
-    enabled: false, //true for production build
+    enabled: process.env.NODE_ENV !== 'development',
     content: [
       'templates/*.html',
       'templates/**/*.html'
@@ -48,5 +48,7 @@ module.exports = {
     },
   },
   variants: {},
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/custom-forms'),
+  ],
 }

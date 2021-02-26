@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Architektur „{{ architecture.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Architekturen" "architecture-list" %}
+    {% url "architecture-details" architecture.id as detail_url %}
+    {% url "architecture-editor" architecture.id as editor_url %}
+    {% breadcrumb architecture.name detail_url %}
+    {% breadcrumb "Editor" editor_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Architektur „{{ architecture.name }}“</h1>
+{% endblock %}
+
+{% block main %}
+    {% include "editor/partials/editor.html" %}
+{% endblock %}

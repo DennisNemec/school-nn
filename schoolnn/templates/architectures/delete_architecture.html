@@ -1,0 +1,25 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Architektur „{{ architecture.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Architekturen" "architecture-list" %}
+    {% url "architecture-details" architecture.id as detail_url %}
+    {% url "architecture-delete" architecture.id as delete_url %}
+    {% breadcrumb architecture.name detail_url %}
+    {% breadcrumb "Löschen" delete_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Architektur „{{ architecture.name }}“</h1>
+{% endblock %}
+
+{% block main %}
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" class="w-52 button-inverted border-red text-red" value="Architektur löschen"/>
+    <a class="button-standard" href="javascript:history.back()">Zurück</a>
+</form>
+{% endblock %}

@@ -1,5 +1,5 @@
 {% for label in labels %}
-    <div onclick="location = '{% url 'label-detail' pk=label.id %}'" class="h-84 m-4 w-60 rounded shadow-lg flex-grow-0 flex-shrink-0 bg-white cursor-pointer border border- hover:border-selected hover:border-2">
+    <div onclick="location = '{% url 'label-detail' pk=label.id %}'" class="h-70 m-4 w-60 flex-grow-0 flex-shrink-0 card cursor-pointer">
         <div class="w-full h-60">
             {% if label.image_set.count > 0%}
                 <img alt="Kein Bild vorhanden" src="/images/{{ label.image_set.first.id }}" class="w-full h-full">
@@ -17,8 +17,8 @@
 
         <div class="pl-4 pr-4 pb-4 w-full">
             <div class="flex flex-wrap justify-between w-full items-center">
-                <p class="inline-block">Anzahl Bilder: </p>
-                <p class="inline-block font-bold">{{label.image_set.count}}</p>
+                <p class="pt-3">Anzahl Bilder: </p>
+                <p class="font-bold">{{label.image_set.count}}</p>
             </div>
         </div>
     </div>

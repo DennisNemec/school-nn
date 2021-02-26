@@ -1,8 +1,0 @@
-<h2>Architectures</h2>
-<ul>
-    {% for architecture in architectures %}
-        <li><a href="/architectures/{{ architecture.id }}">{{ architecture.name }}</a>{% if architecture.custom == True %}  (custom){% endif %}</li>
-    {% endfor %}
-</ul>
-
-<a href="/architectures/add">Add</a>

@@ -13,7 +13,7 @@
 
 {% block top %}
     <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
-    <a class="button-standard-add" href="{% url "dataset-edit" pk=dataset.id %}">Bearbeiten</a>
+    <a class="button-standard" href="{% url "dataset-edit" pk=dataset.id %}">Bearbeiten</a>
 {% endblock %}
 
 {% block main %}

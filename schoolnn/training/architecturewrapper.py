@@ -1,8 +1,8 @@
-"""Convert from Keras to a simple dictionary/json format and vice versa."""
-from keras import layers
+"""Convert from keras to a simple dictionary/json format and vice versa."""
+from tensorflow.keras import layers
 from typing import Union, Any, Callable
 from json import dumps
-import keras
+import tensorflow.keras as keras
 
 
 SupportedLayers = Union[

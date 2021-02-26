@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+
+{% block title %}Architekturen{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Architekturen" "architecture-list" %}
+{% endblock %}
+
+{% block top %}
+    <h1>Architekturen</h1>
+    <a class="button-standard-add" href="{% url "architecture-create" %}">Architektur erstellen</a>
+{% endblock %}
+
+{% block main %}
+    <div class="space-y-4">
+        {% for architecture in architectures %}
+            <article class="card flex items-center justify-between">
+                <h3>{{ architecture.name }}</h3>
+                <div>
+                    <a class="text-text-gray" href="{% url "architecture-detail" architecture.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "architecture-editor" architecture.id %}">Editor</a> &bullet;
+                    <a class="text-text-gray" href="{% url "architecture-edit" architecture.id %}">Einstellungen</a> &bullet;
+                    <a class="text-red" href="{% url "architecture-delete" architecture.id %}">Löschen</a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+
+    {% if not architectures %}
+        <article class="card">
+            <h3>Oh wow!</h3>
+            <p>Es wurden noch keine Architekturen angelegt. Klicke oben auf den Button <b>Architektur erstellen</b>, um eine neue Architektur anzulegen.</p>
+        </article>
+    {% endif %}
+{% endblock %}
