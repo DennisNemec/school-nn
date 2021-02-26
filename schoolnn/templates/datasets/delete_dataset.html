@@ -14,13 +14,17 @@
 {% endblock %}
 
 {% block top %}
-    <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
+    <h1>Datensatz „{{ dataset.name }}“</h1>
 {% endblock %}
 
 {% block main %}
+    <p class="my-8 card">Möchtest du den Datensatz „{{ dataset.name }}“ wirklich löschen?</p>
+
     <form method="POST">
         {% csrf_token %}
-        <input class="w-48 button-standard" type="submit" value="Datensatz löschen"/>
-        <a class="button-standard" href="{% url 'dataset-edit' pk=dataset.id %}">Zurück</a>
+        <div class="space-x-4">
+            <a class="button-inverted" href="{% url "dataset-detail" dataset.id %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto border-red bg-red" type="submit" value="Datensatz löschen"/>
+        </div>
     </form>
 {% endblock %}

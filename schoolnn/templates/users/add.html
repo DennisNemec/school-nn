@@ -2,22 +2,25 @@
 {% load static %}
 {% load breadcrumbs %}
 
-{% block title %}Nutzer hinzufügen „{{ user.name }}“{% endblock %}
+{% block title %}Nutzer hinzufügen{% endblock %}
 
 {% block breadcrumbs %}
-{% breadcrumb_url "Benutzer" "user-list" %}
+    {% breadcrumb_url "Benutzer" "user-list" %}
     {% breadcrumb "Benutzer erstellen" %}
 {% endblock %}
 
 {% block top %}
-<h1>Nutzer hinzufügen</h1>
+    <h1>Nutzer hinzufügen</h1>
 {% endblock %}
 
 {% block main %}
-<h3>Create user</h3>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" class="btnbtn-primary" value="submit">
-</form>
+    <form class="ignore-breaks" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <div class="space-x-4 mt-8">
+            <a class="button-inverted" href="{% url "user-list" %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto" type="submit" value="Nutzer hinzufügen"/>
+        </div>
+    </form>
 {% endblock %}
+

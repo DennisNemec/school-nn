@@ -1,0 +1,37 @@
+.animated-checkbox-container input[type="checkbox"][id^="image-"] {
+    display: none;
+}
+
+.animated-checkbox-container label:before {
+    background-color: white;
+    content: " ";
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 28px;
+    transition-duration: 0.4s;
+    transform: scale(0);
+    z-index:1;
+}
+
+.animated-checkbox-container label img {
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+}
+
+.animated-checkbox-container input:checked + label:before {
+    content: "✓";
+    background-color: #2ED47A;
+    color: white;
+    transform: scale(1);
+}
+
+.animated-checkbox-container input:checked + label img {
+    transform: scale(0.9);
+    z-index: -1;
+}
