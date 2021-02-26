@@ -21,9 +21,22 @@ from .views.training import (
 )
 from .views.auth import AuthLoginView
 from .views.datasets import DatasetCreate, DatasetList
-from .views.datasets import DatasetDetail, DatasetUpdate, DatasetDelete
+from .views.datasets import (
+    DatasetDetail,
+    DatasetUpdate,
+    DatasetDelete,
+    DatasetClassify,
+)
 from .views.images import ImageView
 from .views.base_view import BaseView
+from .views.labels import (
+    LabelDetailView,
+    LabelUpdateView,
+    LabelCreateView,
+    LabelCreateImageView,
+    LabelDeleteView,
+)
+
 from .views.inference import InferenceView
 from .views.projects import (
     ProjectCreateView,
@@ -37,16 +50,42 @@ from .views.projects import (
 
 urlpatterns = [
     path("", BaseView.as_view(), name="home"),
-    path("datasets/list/", DatasetList.as_view(), name="dataset-list"),
+    path("datasets/", DatasetList.as_view(), name="dataset-list"),
     path(
-        "datasets/list/<str:listing_type>/",
-        DatasetList.as_view(),
-        name="dataset-list",
+        "datasets/create/image",
+        LabelCreateImageView.as_view(),
+        name="label-addimage",
     ),
-    path("datasets/<int:pk>/", DatasetDetail.as_view(), name="dataset-detail"),
     path("datasets/add/", DatasetCreate.as_view(), name="dataset-add"),
     path(
         "datasets/<int:pk>/edit/", DatasetUpdate.as_view(), name="dataset-edit"
+    ),
+    path("datasets/<int:pk>/", DatasetDetail.as_view(), name="dataset-detail"),
+    path(
+        "datasets/<int:pk>/label",
+        DatasetClassify.as_view(),
+        name="dataset-label",
+    ),
+    path(
+        "datasets/label/<int:pk>/",
+        LabelDetailView.as_view(),
+        name="label-detail",
+    ),
+    path(
+        "datasets/label/<int:pk>/delete",
+        LabelDeleteView.as_view(),
+        name="label-delete",
+    ),
+    path("datasets/label/", LabelDetailView.as_view(), name="label-detail"),
+    path(
+        "datasets/<int:pk>/create/label/",
+        LabelCreateView.as_view(),
+        name="label-create",
+    ),
+    path(
+        "datasets/label/<int:pk>/edit",
+        LabelUpdateView.as_view(),
+        name="label-edit",
     ),
     path(
         "datasets/<int:pk>/delete/",

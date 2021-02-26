@@ -1,0 +1,76 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% load breadcrumbs %}
+
+{% block title %}Datensatz {{dataset.name}}{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-detail" dataset.id as detail_url %}
+    {% breadcrumb dataset.name detail_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
+    <a class="button-standard" href="{% url "dataset-edit" pk=dataset.id %}">Bearbeiten</a>
+{% endblock %}
+
+{% block main %}
+    <div class="mb-5"> 
+        <h3 class="font-bold text-lg">Allgemeines</h3>
+        <div class="p-4">
+            <div class="w-1/4">
+                <div class="flex flex-wrap justify-between w-full">
+                    <label>ID:</label>
+                    <input type="text" value="{{dataset.id}}" disabled>
+                </div>  
+
+                <div class="flex flex-wrap justify-between w-full">
+                    <label>Name:</label>
+                    <input name="name" type="text" value="{{dataset.name}}" disabled >
+                </div>
+
+                <div class="flex flex-wrap justify-between w-full">
+                    <label>Ersteller:</label>
+                    <input type="text"  value="{{dataset.user.name}}" disabled>
+                </div>
+
+                <div class="flex flex-wrap justify-between w-full">
+                    <label>Benutzerdefiniert:</label>
+                    <input type="text" value="{{dataset.custom}}" disabled>
+                </div>
+
+                <div class="flex flex-wrap justify-between w-full">
+                    <label>Erstellt am:</label>
+                    <input type="text" value="{{dataset.created_at}}" disabled>
+                </div>
+
+                <div class="flex flex-wrap justify-between w-full">
+                    <label>Geändert am:</label>
+                    <input type="text" value="{{dataset.updated_at}}" disabled>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full mb-4">
+        <h3 class="font-bold text-lg">Unklassifizierte Bilder</h3>
+
+        <div class="p-4"> 
+            {% if unlabeled_count > 0 %}
+                <p>Es sind {{ unlabeled_count }} Bilder unklassifiziert. Klicke auf Bearbeiten, um diese zu klassifizieren.</p>
+            {% else %}
+                <p>Glückwunsch, alle Bilder sind klassifiziert!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="w-full">
+        <h3 class="font-bold text-lg">Labels</h3>
+
+        <div class="flex flex-wrap">
+            {% include "datasets/partials/label_list.html" with labels=dataset.label_set.all %}
+        </div>
+    </div>
+{% endblock %}

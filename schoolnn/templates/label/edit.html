@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Klasse: &bdquo;{{ label.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-detail" label.dataset.id as detail_url %}
+    {% url "label-detail" label.id as label_detail_url %}
+    {% url "dataset-edit" label.dataset.id as edit_url %}
+    {% url "label-edit" label.id as label_edit_url %}
+    {% breadcrumb label.dataset.name detail_url %}
+    {% breadcrumb label.name label_detail_url %}
+    {% breadcrumb "Bearbeiten" label_edit_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Klasse: &bdquo;{{ label.name }} bearbeiten&ldquo;</h1>
+
+    <a href="{% url 'label-delete' pk=label.id %}" class="button-standard">
+        <p>Löschen</p>
+    </a>
+{% endblock %}
+
+{% block main %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-6">
+            {{ form.as_p }}
+        </div>
+        <a class="button-standard" href="javascript:history.back()">Zurück</a>
+        <input type="submit" value="Speichern" class="w-32 button-standard">
+    </form>
+{% endblock %}

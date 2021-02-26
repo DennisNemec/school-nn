@@ -1,0 +1,85 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Klasse: &bdquo;{{ label.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-detail" label.dataset.id as detail_url %}
+    {% url "label-detail" label.id as label_detail_url %}
+    {% url "dataset-edit" label.dataset.id as edit_url %}
+    {% breadcrumb label.dataset.name detail_url %}
+    {% breadcrumb label.name label_detail_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Klasse: &bdquo;{{ label.name }}&ldquo;</h1>
+    <a href="{% url 'label-edit' pk=label.id %}" class="button-standard">
+        <p>Bearbeiten</p>
+    </a>
+{% endblock %}
+
+{% block main %}
+    <div class="mb-5"> 
+        <h3 class="font-bold text-lg">Allgemeines</h3>
+        <div class="p-4">
+            <div class="w-1/4">
+                <div class="flex flex-wrap w-1/2">
+                    <div class="w-1/2">
+                        <p>ID:</p>
+                    </div>
+
+                    <div class="w-1/2">
+                        <p class="font-bold">{{label.id}}</p>
+                    </div>
+                </div> 
+
+                <div class="flex flex-wrap w-1/2">
+                    <div class="w-1/2">
+                        <p>Name:</p>
+                    </div>
+
+                    <div class="w-1/2">
+                        <p class="font-bold">{{label.name}}</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap w-1/2">
+                    <div class="w-1/2">
+                        <p>Datensatz:</p>
+                    </div>
+
+                    <div class="w-1/2">
+                        <a class="font-bold text-selected" href="{% url 'dataset-detail' pk=label.dataset.id %}">{{label.dataset.name}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5"> 
+        <h3 class="font-bold text-lg">Bild hinzufügen</h3>
+
+        <div class="p-4">            
+            <a class="block" href="{% url 'label-addimage' %}?label={{label.id}}&dataset={{label.dataset.id}} ">
+                <button class="button-standard">Bild hinzufügen</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="mb-5"> 
+        <h3 class="font-bold text-lg">Bilder</h3>
+        <div class="flex flex-wrap p-4">
+            <form method="post" action="{% url 'dataset-label' pk=label.dataset.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="-1">
+                <input class="w-full button-standard" type="submit" value="Zuordnung löschen">
+
+                <div class="mt-6">
+                    {{ form }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

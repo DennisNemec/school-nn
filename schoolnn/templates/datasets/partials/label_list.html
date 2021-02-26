@@ -1,0 +1,25 @@
+{% for label in labels %}
+    <div onclick="location = '{% url 'label-detail' pk=label.id %}'" class="h-70 m-4 w-60 flex-grow-0 flex-shrink-0 card cursor-pointer">
+        <div class="w-full h-60">
+            {% if label.image_set.count > 0%}
+                <img alt="Kein Bild vorhanden" src="/images/{{ label.image_set.first.id }}" class="w-full h-full">
+            {% else %}
+                <p class="p-4 w-full h-full">Keine Bilder vorhanden</p>
+            {% endif %}
+        </div>
+
+
+        <div class="flex-col w-full p-4">
+            <div class="border-b border-icon-gray">
+                <p class="font-bold text-lg">{{label.name}}</p>
+            </div>
+        </div>
+
+        <div class="pl-4 pr-4 pb-4 w-full">
+            <div class="flex flex-wrap justify-between w-full items-center">
+                <p class="pt-3">Anzahl Bilder: </p>
+                <p class="font-bold">{{label.image_set.count}}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}

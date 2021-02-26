@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+{% load breadcrumbs %}
+{% load static %}
+
+{% block title %}Datensätze{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+{% endblock %}
+
+{% block top %}
+    <h1>Datensätze</h1>
+    <div class="space-x-4 w-1/2">
+        <div class="flex justify-end">
+            <select class="rounded-xl p-4 font-bold shadow-md w-1/2" onchange="location = this.value;">
+                <option value="{% url 'dataset-list' %}?type=own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
+                <option value="{% url 'dataset-list' %}?type=shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
+            </select>
+            <a href="{% url "dataset-add" %}" class="ml-8 mt-2 mb-2 button-standard-add">Datensatz hinzufügen</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <!-- Content-Header -->
+    <input type="hidden" value="{{ datasets.1 }}" id="django_dataset_list">
+
+    <!-- Datasetlist -->
+    <div id="app"></div>
+
+    <script src="{% static '/js/datasets.chunk-vendors.js' %}"></script>
+    <script src="{% static '/js/datasets.app.js' %}"></script>
+{% endblock %}

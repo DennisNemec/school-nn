@@ -92,6 +92,11 @@ class Label(models.Model):
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     name = models.CharField(max_length=15)
 
+    def get_absolute_url(self):
+        """Web link to this Label."""
+
+        return reverse("label-detail", kwargs={"pk": self.pk})
+
 
 class Image(models.Model):
     """Image of a dataset used for training."""
