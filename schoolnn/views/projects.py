@@ -118,6 +118,7 @@ class ProjectEditView(View):
         self.default_redirect = redirect("project-details", self.kwargs["pk"])
         self.step = self._get_step()
         self.project = self._get_project()
+        self._ensure_architecture_exists()
         self._set_context()
 
     # project-edit-dataset -> dataset
@@ -335,6 +336,15 @@ class ProjectEditView(View):
         )
 
         return redirect("project-edit-parameters", self.kwargs["pk"])
+
+    def _ensure_architecture_exists(self):
+        if self.project.architecture is None:
+            # Create and assign anonymous architecture
+            new_architecture = Architecture(user=self.request.user)
+            new_architecture.save()
+
+            self.project.architecture = new_architecture
+            self.project.save()
 
 
 class TrainingParameterForm(forms.Form):
