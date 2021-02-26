@@ -2,19 +2,19 @@
 {% load static %}
 {% load breadcrumbs %}
 
-{% block title %}Nutzerdetails„{{ user.name }}“{% endblock %}
+{% block title %}Nutzerdetails„{{ detail_user.name }}“{% endblock %}
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Benutzer" "user-list" %}
-    {% url "user-detail" user.id as detail_url %}
-    {% breadcrumb user.username detail_url %}
+    {% url "user-detail" detail_user.id as detail_url %}
+    {% breadcrumb detail_user.username detail_url %}
 {% endblock %}
 
 {% block top %}
-    <h1>Benutzer „{{ user.username }}“</h1>
+    <h1>Benutzer „{{ detail_user.username }}“</h1>
     <div class="space-x-4">
-        <a class="button-standard" href="{% url "user-edit" user.id %}">Einstellungen</a>
-        <a class="button-inverted border-red text-red" href="{% url "user-delete" user.id %}">Benutzer löschen</a>
+        <a class="button-standard" href="{% url "user-edit" detail_user.id %}">Einstellungen</a>
+        <a class="button-inverted border-red text-red" href="{% url "user-delete" detail_user.id %}">Benutzer löschen</a>
     </div>
 {% endblock %}
 
@@ -28,23 +28,23 @@
         <table class="w-full md:w-1/2 xl:w-2/5">
             <tr>
                 <td class="font-semibold">Benutzername</td>
-                <td>{{ user.username }}</td>
+                <td>{{ detail_user.username }}</td>
             </tr>
             <tr>
                 <td class="font-semibold">ID</td>
-                <td>{{ user.id }}</td>
+                <td>{{ detail_user.id }}</td>
             </tr>
             <tr>
                 <td class="font-semibold">Erstellt am</td>
-                <td>{{ user.created_at | date:"d.m.Y \u\m H:i"}}</td>
+                <td>{{ detail_user.created_at | date:"d.m.Y \u\m H:i"}}</td>
             </tr>
             <tr>
                 <td class="font-semibold">Zuletzt geändert am</td>
                 <td>
-                    {% if user.created_at|date:"U" == user.updated_at|date:"U" %}
+                    {% if detail_user.created_at|date:"U" == detail_user.updated_at|date:"U" %}
                         Noch nie bearbeitet
                     {% else %}
-                        {{ user.updated_at | date:"d.m.Y \u\m H:i" }}
+                        {{ detail_user.updated_at | date:"d.m.Y \u\m H:i" }}
                     {% endif %}
                 </td>
             </tr>

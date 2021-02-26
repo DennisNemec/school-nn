@@ -17,23 +17,26 @@ class UserForm(forms.ModelForm):
 
 class UserListView(UserIsWorkspaceAdminMixin, ListView):
     model = User
-    context_object_name = "users"
+    context_object_name = "detail_users"
     template_name = "users/list.html"
 
 
 class UserDetailView(UserIsWorkspaceAdminMixin, DetailView):
     model = User
+    context_object_name = "detail_user"
     template_name = "users/detail.html"
 
 
 class UserDeleteView(UserIsWorkspaceAdminMixin, DeleteView):
     model = User
+    context_object_name = "detail_user"
     success_url = reverse_lazy("user-list")
     template_name = "users/delete.html"
 
 
 class UserEditView(UserIsWorkspaceAdminMixin, UpdateView):
     model = User
+    context_object_name = "detail_user"
     fields = ["username", "password"]
     template_name = "users/add.html"
 
