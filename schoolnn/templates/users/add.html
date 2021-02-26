@@ -1,0 +1,23 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Nutzer hinzufügen „{{ user.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+{% breadcrumb_url "Benutzer" "user-list" %}
+    {% breadcrumb "Benutzer erstellen" %}
+{% endblock %}
+
+{% block top %}
+<h1>Nutzer hinzufügen</h1>
+{% endblock %}
+
+{% block main %}
+<h3>Create user</h3>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" class="btnbtn-primary" value="submit">
+</form>
+{% endblock %}

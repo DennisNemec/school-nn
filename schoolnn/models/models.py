@@ -13,6 +13,7 @@ from schoolnn.resources.static.layer_list import default_layers
 from schoolnn.resources.static.default_training_parameters import (
     default_training_parameters,
 )
+from django.contrib.auth.models import UserManager
 
 
 class TimestampedModelMixin(models.Model):
@@ -39,13 +40,13 @@ class Workspace(TimestampedModelMixin):
 class User(AbstractUser, TimestampedModelMixin):
     """User account of students, teachers and admins."""
 
-    is_workspaceadmin = models.BooleanField(default=False)
     workspace = models.ForeignKey(
         Workspace, on_delete=models.CASCADE, null=True
     )
+    objects = UserManager()
 
-    def __str__(self):
-        return "%s" % (self.username)
+    def get_absolute_url(self):
+        return reverse("user-detail", kwargs={"pk": self.pk})
 
 
 class Dataset(TimestampedModelMixin):
