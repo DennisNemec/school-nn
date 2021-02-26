@@ -164,7 +164,7 @@ urlpatterns += [
         name="project-edit-parameters",
     ),
     path(
-        "project/<int:pk>/delete",
+        "project/<int:pk>/delete/",
         ProjectDeleteView.as_view(),
         name="project-delete",
     ),
