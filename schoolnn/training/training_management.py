@@ -1,4 +1,8 @@
 """Manages the executions of training jobs in the background."""
+import django
+
+django.setup()
+
 from typing import Optional
 from ..models import (
     TrainingPassState,
