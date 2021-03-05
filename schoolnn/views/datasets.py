@@ -109,7 +109,9 @@ class DatasetList(AuthenticatedQuerysetMixin, ListView):
                 "is_completely_labeled": unlabeled_count,
                 # TODO: add locale
                 "text": "Vollständig" if unlabeled_count == 0 else "In Arbeit",
-                "background_color": "bg-green" if unlabeled_count == 0 else "bg-yellow"
+                "background_color": "bg-green"
+                if unlabeled_count == 0
+                else "bg-yellow",
             }
             dataset_dict["created_at"] = dataset.created_at.strftime(
                 "%d.%m.%Y um %H:%M Uhr"
