@@ -7,7 +7,9 @@
                 {{ form }}
             </div>
 
-            <div class="flex flex-wrap items-center w-1/6">
+            <hr>
+
+            <div class="mt-2 w-1/6">
                 <label for="provided-label" class="w-1/6 mr-4">Klasse: </label>
                 <select class="block mb-4 w-3/6" id="provided-label" name="label">
                     {% for label in labels %}
@@ -16,7 +18,9 @@
                 </select>
             </div>
 
-            <input type="submit" class="w-32 button-standard" value="Zuordnen">
+            <hr>
+
+            <input type="submit" class="w-32 button-standard mt-4" value="Zuordnen">
         </form>
     </div>
 {% else %}

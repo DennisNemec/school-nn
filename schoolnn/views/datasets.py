@@ -97,8 +97,6 @@ class DatasetList(AuthenticatedQuerysetMixin, ListView):
             raise Http404
 
         for dataset in datasets:
-            labels = self.get_label_of_datasets(dataset)
-
             unlabeled_count = Image.objects.filter(
                 dataset=dataset, label__isnull=True
             ).count()
@@ -107,35 +105,19 @@ class DatasetList(AuthenticatedQuerysetMixin, ListView):
             dataset_dict = {}
             dataset_dict["name"] = dataset.name
             dataset_dict["id"] = dataset.id
-            dataset_dict["image_amount"] = 0
             dataset_dict["status"] = {
                 "is_completely_labeled": unlabeled_count,
                 # TODO: add locale
                 "text": "Vollständig" if unlabeled_count == 0 else "In Arbeit",
+                "background_color": "bg-green" if unlabeled_count == 0 else "bg-yellow"
             }
             dataset_dict["created_at"] = dataset.created_at.strftime(
                 "%d.%m.%Y um %H:%M Uhr"
             )
 
-            label_list = []
-            for label in labels:
-                label_dict = {}
-                image_ids = self.get_images_of_label(label, dataset)
-
-                # save label specific details in label object
-                # TODO: add locale
-                label_dict["name"] = "Klasse: " + label.name
-                label_dict["image_ids"] = image_ids[:19]
-                label_list.append(label_dict)
-
-                dataset_dict["image_amount"] += len(image_ids)
-
-            dataset_dict["label"] = label_list
-            dataset_dict["label_amount"] = len(label_list)
-
             dataset_list.append(dataset_dict)
 
-        return [listing_type, json.dumps(dataset_list)]
+        return [listing_type, dataset_list]
 
 
 class DatasetDetail(AuthenticatedQuerysetMixin, DetailView):

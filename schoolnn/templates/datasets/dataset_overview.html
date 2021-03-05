@@ -20,12 +20,25 @@
 {% endblock %}
 
 {% block main %}
-    <!-- Content-Header -->
-    <input type="hidden" value="{{ datasets.1 }}" id="django_dataset_list">
+    {% for dataset in datasets.1 %}
+        <div class="card flex justify-between items-center w-full">
+            <div class="flex items-center">
+                <h3>{{ dataset.name }}</h3>
 
-    <!-- Datasetlist -->
-    <div id="app"></div>
+                <div class="w-48 flex justify-end h-10 pr-8 text-white">
+                    <div class="p-2 pl-6 pr-6 rounded-2xl text-center {{ dataset.status.background_color }}">
+                        <p>{{ dataset.status.text}}</p>
+                    </div>
+                </div>
+            </div>
 
-    <script src="{% static '/js/datasets.chunk-vendors.js' %}"></script>
-    <script src="{% static '/js/datasets.app.js' %}"></script>
+            <div class="flex items-center justify-between">
+                <div>
+                    <a class="text-text-gray" href="{% url "dataset-detail" dataset.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "dataset-edit" dataset.id %}">Einstellungen</a> &bullet;
+                    <a class="text-red" href="{% url "dataset-delete" dataset.id %}" >Löschen</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}

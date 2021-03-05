@@ -1,10 +1,12 @@
+{% load static %}
+
 {% for label in labels %}
-    <div onclick="location = '{% url 'label-detail' pk=label.id %}'" class="h-70 m-4 w-60 flex-grow-0 flex-shrink-0 card cursor-pointer">
-        <div class="w-full h-60">
+    <div onclick="location = '{% url 'label-detail' pk=label.id %}'" class="h-62 m-4 w-60 flex-grow-0 flex-shrink-0 card border cursor-pointer">
+        <div class="w-full h-42">
             {% if label.image_set.count > 0%}
-                <img alt="Kein Bild vorhanden" src="/images/{{ label.image_set.first.id }}" class="w-full h-full">
+                <img alt="Kein Bild vorhanden" src="/images/{{ label.image_set.first.id }}" class="w-full h-2/3">
             {% else %}
-                <p class="p-4 w-full h-full">Keine Bilder vorhanden</p>
+                <img alt="Kein Bild vorhanden" src="{% static "assets/no_image_found.png" %}" class="w-full h-2/3">
             {% endif %}
         </div>
 

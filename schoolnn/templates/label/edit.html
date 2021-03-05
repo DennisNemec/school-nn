@@ -18,7 +18,7 @@
 {% block top %}
     <h1>Klasse: &bdquo;{{ label.name }} bearbeiten&ldquo;</h1>
 
-    <a href="{% url 'label-delete' pk=label.id %}" class="button-standard">
+    <a href="{% url 'label-delete' pk=label.id %}" class="button-inverted border-red text-red">
         <p>Löschen</p>
     </a>
 {% endblock %}

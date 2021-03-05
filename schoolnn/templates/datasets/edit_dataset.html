@@ -14,66 +14,74 @@
 
 {% block top %}
     <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
-    <a href="{% url 'dataset-delete' pk=dataset.id %}" class="button-standard">
+    <a href="{% url 'dataset-delete' pk=dataset.id %}" class="button-inverted border-red text-red">
         <p>Löschen</p>
     </a>
 {% endblock %}
 
 {% block main %}
-    <div class="mb-5"> 
-        <h3 class="font-bold text-lg">Allgemeines</h3>
-        <div class="p-4">
-            <form method="post">
-                {% csrf_token %}
-                <div class="w-1/4">
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>ID:</label>
-                        <input type="text" value="{{dataset.id}}" disabled>
-                    </div>  
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Name:</label>
-                        <input name="name" type="text" value="{{dataset.name}}" >
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Ersteller:</label>
-                        <input type="text"  value="{{dataset.user.name}}" disabled>
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Benutzerdefiniert:</label>
-                        <input type="text" value="{{dataset.custom}}" disabled>
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Erstellt am:</label>
-                        <input type="text" value="{{dataset.created_at}}" disabled>
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Geändert am:</label>
-                        <input type="text" value="{{dataset.updated_at}}" disabled>
-                    </div>
-                </div>
-
-
-                <input type="submit" class="w-32 button-standard" value="Speichern">
-            </form>
+    <section class="card mb-5">
+        <div class="flex items-center space-x-4 mb-6">
+            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+            <h3>Allgemeines</h3>
         </div>
-    </div>
 
-    <div class="w-full mb-4">
-        <h3 class="font-bold text-lg">Unklassifizierte Bilder</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <table class="w-full md:w-1/2 xl:w-2/5 mb-6">
+                <tr>
+                    <td class="font-semibold">ID</td>
+                    <td>{{ dataset.id }}</td>
+                </tr>
+
+                <tr>
+                    <td class="font-semibold">Name</td>
+                    <td><input name="name" type="text" value="{{dataset.name}}" ></td>
+                </tr>
+                
+                <tr>
+                    <td class="font-semibold">Ersteller</td>
+                    <td>{{ dataset.user.username }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Erstellt am</td>
+                    <td>{{ dataset.created_at | date:"d.m.Y \u\m H:i"}}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Zuletzt geändert am</td>
+                    <td>
+                        {% if dataset.created_at|date:"U" == dataset.updated_at|date:"U" %}
+                            Noch nie bearbeitet
+                        {% else %}
+                            {{ dataset.updated_at | date:"d.m.Y \u\m H:i" }}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+
+            <input type="submit" class="w-32 button-standard" value="Speichern">
+        </form>
+    </section>
+
+    <section class="card w-full mb-4">
+        <div class="flex items-center space-x-4 mb-6">
+            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+            <h3>Unklassifizierte Bilder</h3>
+        </div>
 
         <div class="p-4"> 
             {% include "datasets/partials/dataset_classify_form.html" with form=classify_form %}
         </div>
-    </div>
+    </section>
 
-    <div class="w-full min-h-screen">
-        <h3 class="font-bold text-lg">Klassen</h3>
+    <section class="w-full card">
+        <div class="flex items-center space-x-4 mb-6">
+            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+            <h3>Labels</h3>
+        </div>
 
-        {% include "datasets/partials/label_list_with_add.html" with labels=dataset.label_set.all %}
-    </div>
+        <div class="flex flex-wrap">
+            {% include "datasets/partials/label_list_with_add.html" with labels=dataset.label_set.all %}
+        </div>
+    </section>
 {% endblock %}

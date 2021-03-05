@@ -21,9 +21,13 @@
 {% endblock %}
 
 {% block main %}
+    <p class="my-8 card">Möchtest du die Klasse „{{ label.name }}“ wirklich löschen?</p>
+
     <form method="POST">
         {% csrf_token %}
-        <input class="w-48 button-standard" type="submit" value="Datensatz löschen"/>
-        <a class="button-standard" href="{% url 'label-detail' pk=label.id %}">Zurück</a>
+        <div class="space-x-4">
+            <a class="button-inverted" href="{% url "label-detail" label.id %}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto border-red bg-red" type="submit" value="Klasse löschen"/>
+        </div>
     </form>
 {% endblock %}

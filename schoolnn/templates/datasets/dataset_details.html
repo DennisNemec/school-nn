@@ -17,60 +17,60 @@
 {% endblock %}
 
 {% block main %}
-    <div class="mb-5"> 
-        <h3 class="font-bold text-lg">Allgemeines</h3>
-        <div class="p-4">
-            <div class="w-1/4">
-                <div class="flex flex-wrap justify-between w-full">
-                    <label>ID:</label>
-                    <input type="text" value="{{dataset.id}}" disabled>
-                </div>  
-
-                <div class="flex flex-wrap justify-between w-full">
-                    <label>Name:</label>
-                    <input name="name" type="text" value="{{dataset.name}}" disabled >
-                </div>
-
-                <div class="flex flex-wrap justify-between w-full">
-                    <label>Ersteller:</label>
-                    <input type="text"  value="{{dataset.user.name}}" disabled>
-                </div>
-
-                <div class="flex flex-wrap justify-between w-full">
-                    <label>Benutzerdefiniert:</label>
-                    <input type="text" value="{{dataset.custom}}" disabled>
-                </div>
-
-                <div class="flex flex-wrap justify-between w-full">
-                    <label>Erstellt am:</label>
-                    <input type="text" value="{{dataset.created_at}}" disabled>
-                </div>
-
-                <div class="flex flex-wrap justify-between w-full">
-                    <label>Geändert am:</label>
-                    <input type="text" value="{{dataset.updated_at}}" disabled>
-                </div>
-            </div>
+    <section class="card mb-5">
+        <div class="flex items-center space-x-4 mb-6">
+            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+            <h3>Allgemeines</h3>
         </div>
-    </div>
+        <table class="w-full md:w-1/2 xl:w-2/5">
+            <tr>
+                <td class="font-semibold">ID</td>
+                <td>{{ dataset.id }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Ersteller</td>
+                <td>{{ dataset.user.username }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Erstellt am</td>
+                <td>{{ dataset.created_at | date:"d.m.Y \u\m H:i"}}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Zuletzt geändert am</td>
+                <td>
+                    {% if dataset.created_at|date:"U" == dataset.updated_at|date:"U" %}
+                        Noch nie bearbeitet
+                    {% else %}
+                        {{ dataset.updated_at | date:"d.m.Y \u\m H:i" }}
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </section>
 
-    <div class="w-full mb-4">
-        <h3 class="font-bold text-lg">Unklassifizierte Bilder</h3>
+    <section class="card w-full mb-4">
+        <div class="flex items-center space-x-4 mb-6">
+            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+            <h3>Unklassifizierte Bilder</h3>
+        </div>
 
         <div class="p-4"> 
             {% if unlabeled_count > 0 %}
-                <p>Es sind {{ unlabeled_count }} Bilder unklassifiziert. Klicke auf Bearbeiten, um diese zu klassifizieren.</p>
+                <p>Es sind <strong>{{ unlabeled_count }}</strong> Bilder unklassifiziert. Klicke auf Bearbeiten, um diese zu klassifizieren.</p>
             {% else %}
                 <p>Glückwunsch, alle Bilder sind klassifiziert!</p>
             {% endif %}
         </div>
-    </div>
+    </section>
 
-    <div class="w-full">
-        <h3 class="font-bold text-lg">Labels</h3>
+    <section class="w-full card">
+        <div class="flex items-center space-x-4 mb-6">
+            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+            <h3>Labels</h3>
+        </div>
 
         <div class="flex flex-wrap">
             {% include "datasets/partials/label_list.html" with labels=dataset.label_set.all %}
         </div>
-    </div>
+    </section>
 {% endblock %}
