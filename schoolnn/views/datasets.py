@@ -2,7 +2,6 @@
 import os
 import shutil
 import zipfile
-import json
 from typing import Optional
 
 from django.contrib import messages
