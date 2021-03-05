@@ -60,15 +60,20 @@
         </div>
 
         <div class="flex flex-wrap">
-            <form method="post" action="{% url 'dataset-label' pk=label.dataset.id %}">
-                {% csrf_token %}
-                <input type="hidden" name="id" value="-1">
-                <input class="w-full button-inverted border-red text-red" type="submit" value="Zuordnung löschen">
+            {% if image_count > 0 %}
+                <form method="post" action="{% url 'dataset-label' pk=label.dataset.id %}">
+                    {% csrf_token %}
 
-                <div class="mt-6">
-                    {{ form }}
-                </div>
-            </form>
+                    <input type="hidden" name="id" value="-1">
+                    <input class="w-full button-inverted border-red text-red" type="submit" value="Zuordnung löschen">
+
+                    <div class="mt-6">
+                        {{ form }}
+                    </div>
+                </form>
+            {% else %}
+                <p>Es sind keine Bilder der Klasse zugeordnet.</p>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

@@ -81,6 +81,15 @@ class LabelDetailView(UpdateView):
         kwargs.update(self.kwargs)
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        """ Retrieve required information for template """
+        context = super().get_context_data(**kwargs)
+        context["image_count"] = Image.objects.filter(
+            label=self.kwargs["pk"]
+        ).count()
+
+        return context
+
 
 class LabelCreateView(SuccessMessageMixin, CreateView):
     """ Label creation view with a form. """
