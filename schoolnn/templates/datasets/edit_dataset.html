@@ -74,6 +74,15 @@
         </div>
     </section>
 
+    <section class="card w-full mb-4">
+        <div class="flex items-center space-x-4 mb-6">
+            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+            <h3>Klasse erstellen</h3>
+        </div>
+
+        <a class="button-standard" href="{% url 'label-create' pk=dataset.id %}">Klasse erstellen</a>
+    </section>
+
     <section class="w-full card">
         <div class="flex items-center space-x-4 mb-6">
             <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
@@ -81,7 +90,7 @@
         </div>
 
         <div class="flex flex-wrap">
-            {% include "datasets/partials/label_list_with_add.html" with labels=dataset.label_set.all %}
+            {% include "datasets/partials/label_list.html" with labels=dataset.label_set.all %}
         </div>
     </section>
 {% endblock %}
