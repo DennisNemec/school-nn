@@ -1,8 +1,5 @@
 """Manages the executions of training jobs in the background."""
-import django
-
-django.setup()
-
+from . import importsetup  # noqa:F401
 from typing import Optional
 from ..models import (
     TrainingPassState,
