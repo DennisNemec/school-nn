@@ -1,8 +1,6 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from .training import TrainingManager
-
 from .views.architectureview import (
     ArchitectureCreateView,
     ArchitectureDeleteView,
@@ -54,8 +52,6 @@ from .views.users import (
     UserDetailView,
 )
 
-
-TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
