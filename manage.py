@@ -4,6 +4,7 @@ import os
 import sys
 from dotenv import load_dotenv
 
+
 def main():
     load_dotenv()
 
@@ -18,8 +19,9 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'runserver':
+        if sys.argv[1] == "runserver":
             from schoolnn.training import TrainingManager
+
             TrainingManager()
     execute_from_command_line(sys.argv)
 
