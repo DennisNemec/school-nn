@@ -56,6 +56,11 @@ migrations-check:
   variables:
     SECRET_KEY: CHANGE_ME_IN_PRODUCTION
   tags:
-    - mypy
+    - pytest
+    - tensorflow
+  before_script:
+    - apt update && apt install -y libgl1-mesa-glx
+    - pip install pipenv
+    - pipenv install --dev
   script:
-    - python3 manage.py makemigrations --check
+    - pipenv run python3 manage.py makemigrations schoolnn --check
