@@ -29,6 +29,7 @@ class IntegrationTestCase(StaticLiveServerTestCase):
             handleSIGINT=False,
             handleSIGTERM=False,
             handleSIGHUP=False,
+            args=["--no-sandbox"],
             headless=os.environ.get("HEADLESS_TESTS", True) is True,
         )
 
