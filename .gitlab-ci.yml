@@ -50,3 +50,12 @@ pytest-unittest:
     - pipenv install --dev
   script:
     - pipenv run python3 -m pytest . --confcutdir tests
+
+migrations-check:
+  stage: test
+  variables:
+    SECRET_KEY: CHANGE_ME_IN_PRODUCTION
+  tags:
+    - mypy
+  script:
+    - python3 manage.py makemigrations --check
