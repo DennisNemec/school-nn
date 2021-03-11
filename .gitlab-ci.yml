@@ -30,6 +30,29 @@ flake8-style-check:
   script:
     - python3 -m flake8 . --exclude "schoolnn/migrations/*"
 
+browsertests:
+  image: python:3.8-buster
+  stage: test
+  variables:
+    WORKON_HOME: .pipenv/venvs
+    PIP_CACHE_DIR: .pipenv/pipcache
+    SECRET_KEY: CHANGE_ME_IN_PRODUCTION
+  cache:
+    key: pipenv
+    paths:
+      - .pipenv
+  tags:
+    - pytest
+  before_script:
+    - apt update && apt install -y libgl1-mesa-glx
+    - pip install pipenv
+    - pipenv install --dev
+  script:
+    - pipenv run ./manage.py makemigrations
+    - pipenv run ./manage.py migrate
+    - pipenv run ./manage.py test
+
+
 pytest-unittest:
   image: python:3.8-buster
   stage: test
