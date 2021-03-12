@@ -375,14 +375,7 @@ class ProjectEditView(LoginRequiredMixin, View):
         return redirect("project-edit-parameters", self.kwargs["pk"])
 
     def _handle_parameters_reset(self):
-        try:
-            self.project.training_parameter_json = (
-                default_training_parameters()
-            )
-        except:
-            messages.error(
-                self.request, "Fehler beim Wiederherstellen der Standardwerte."
-            )
+        self.project.training_parameter_json = default_training_parameters()
 
         messages.success(
             self.request, "Standardwerte erfolgreich wiederhergestellt."
