@@ -237,6 +237,11 @@ urlpatterns += [
         name="project-edit-parameters",
     ),
     path(
+        "project/<int:pk>/edit/parameters/reset",
+        ProjectEditView.as_view(),
+        name="project-edit-reset_parameters",
+    ),
+    path(
         "project/<int:pk>/delete/",
         ProjectDeleteView.as_view(),
         name="project-delete",

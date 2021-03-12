@@ -20,6 +20,9 @@ from schoolnn.models import (
     AugmentationOptions,
     TerminationCondition,
 )
+from schoolnn.resources.static.default_training_parameters import (
+    default_training_parameters,
+)
 from schoolnn.resources.static.layer_list import layer_list
 from schoolnn.views.mixins import (
     LoginRequiredMixin,
@@ -90,6 +93,7 @@ class ProjectEditView(LoginRequiredMixin, View):
         "architecture",
         "load_architecture",
         "parameters",
+        "reset_parameters",
     ]
 
     def get(self, request, *args, **kwargs):
@@ -116,6 +120,8 @@ class ProjectEditView(LoginRequiredMixin, View):
             post_redirect = self._handle_architecture_form()
         elif self.step == "parameters":
             post_redirect = self._handle_parameters_form()
+        elif self.step == "reset_parameters":
+            post_redirect = self._handle_parameters_reset()
         else:
             messages.error(self.request, "Invalider Projekt-Editier-Schritt.")
             post_redirect = self.default_redirect
@@ -364,6 +370,22 @@ class ProjectEditView(LoginRequiredMixin, View):
 
         messages.success(
             self.request, "Die Änderungen wurden erfolgreich gespeichert."
+        )
+
+        return redirect("project-edit-parameters", self.kwargs["pk"])
+
+    def _handle_parameters_reset(self):
+        try:
+            self.project.training_parameter_json = (
+                default_training_parameters()
+            )
+        except:
+            messages.error(
+                self.request, "Fehler beim Wiederherstellen der Standardwerte."
+            )
+
+        messages.success(
+            self.request, "Standardwerte erfolgreich wiederhergestellt."
         )
 
         return redirect("project-edit-parameters", self.kwargs["pk"])
