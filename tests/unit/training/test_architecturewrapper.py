@@ -1,4 +1,5 @@
 """Contains tests for ArchitectureWrapper."""
+from typing import List
 from tensorflow.keras import Model, Sequential, layers
 from schoolnn.training.architecturewrapper import (
     # ModelNotSupportedException,
@@ -7,40 +8,38 @@ from schoolnn.training.architecturewrapper import (
 )
 
 
-def _get_example_dict() -> dict:
-    return {
-        "layers": [
-            {
-                "type": "Input",
-                "shape": [128, 128, 3],
-            },
-            {
-                "type": "Conv2D",
-                "activation": "relu",
-                "filters": 96,
-                "strides": [4, 4],
-                "kernel_size": [11, 11],
-                "padding": "same",
-            },
-            {
-                "type": "BatchNormalization",
-            },
-            {"type": "MaxPooling2D", "pool_size": [3, 3], "strides": [2, 2]},
-            {
-                "type": "Flatten",
-            },
-            {
-                "type": "Dense",
-                "activation": "elu",
-                "units": 1024,
-            },
-        ]
-    }
+def _get_example_list() -> List[dict]:
+    return [
+        {
+            "type": "Input",
+            "shape": [128, 128, 3],
+        },
+        {
+            "type": "Conv2D",
+            "activation": "relu",
+            "filters": 96,
+            "strides": [4, 4],
+            "kernel_size": [11, 11],
+            "padding": "same",
+        },
+        {
+            "type": "BatchNormalization",
+        },
+        {"type": "MaxPooling2D", "pool_size": [3, 3], "strides": [2, 2]},
+        {
+            "type": "Flatten",
+        },
+        {
+            "type": "Dense",
+            "activation": "elu",
+            "units": 1024,
+        },
+    ]
 
 
 def test_dict_to_model():
     """Test dict to model conversion."""
-    d = _get_example_dict()
+    d = _get_example_list()
     wrapped = WrappedArchitecture(d)
     keras_model: Model = wrapped.to_keras_model()
     keras_model.compile("adam", loss="mse")
@@ -72,7 +71,7 @@ def test_model_to_dict():
 
     wrapped = WrappedArchitecture.from_keras_model(model)
 
-    dict_layers = wrapped.dictionary_representation["layers"]
+    dict_layers = wrapped.to_json()
 
     assert dict_layers[0] == {"type": "Input", "shape": (1024, 512, 3)}
 
