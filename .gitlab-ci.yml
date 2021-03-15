@@ -73,3 +73,24 @@ pytest-unittest:
     - pipenv install --dev
   script:
     - pipenv run python3 -m pytest . --confcutdir tests
+
+migrations-check:
+  image: python:3.8-buster
+  stage: test
+  variables:
+    WORKON_HOME: .pipenv/venvs
+    PIP_CACHE_DIR: .pipenv/pipcache
+    SECRET_KEY: CHANGE_ME_IN_PRODUCTION
+  cache:
+    key: pipenv
+    paths:
+      - .pipenv
+  tags:
+    - pytest
+    - tensorflow
+  before_script:
+    - apt update && apt install -y libgl1-mesa-glx
+    - pip install pipenv
+    - pipenv install --dev
+  script:
+    - pipenv run python3 manage.py makemigrations schoolnn --check

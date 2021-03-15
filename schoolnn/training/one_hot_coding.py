@@ -1,4 +1,5 @@
 """Generate one hot encoders / decoders for datasets."""
+from . import importsetup  # noqa:F401
 from typing import Callable, List
 from ..models import Dataset, Label
 

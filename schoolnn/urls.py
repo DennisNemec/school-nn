@@ -1,8 +1,6 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-# from .training import TrainingManager
-
 from .views.architectureview import (
     ArchitectureCreateView,
     ArchitectureDeleteView,
@@ -54,8 +52,6 @@ from .views.users import (
     UserDetailView,
 )
 
-
-# TrainingManager()  # runs once, starts unfinished trainings
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
@@ -235,6 +231,11 @@ urlpatterns += [
         "project/<int:pk>/edit/parameters/",
         ProjectEditView.as_view(),
         name="project-edit-parameters",
+    ),
+    path(
+        "project/<int:pk>/edit/parameters/reset",
+        ProjectEditView.as_view(),
+        name="project-edit-reset_parameters",
     ),
     path(
         "project/<int:pk>/delete/",
