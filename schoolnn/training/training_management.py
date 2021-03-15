@@ -98,7 +98,7 @@ def _initialize_training_pass(
     project: Project, training_pass_name: str
 ) -> TrainingPass:
     wrapped_architecture = WrappedArchitecture(
-        dictionary_representation=project.architecture.architecture_json
+        json_representation=project.architecture.architecture_json
     )
 
     keras_model = wrapped_architecture.to_keras_model()
