@@ -8,6 +8,7 @@ from django.db import models
 from django.urls import reverse
 from json import loads
 from .training import TrainingParameter
+from schoolnn_app.settings import STORAGE
 from schoolnn.resources.static.layer_list import default_layers
 from schoolnn.resources.static.default_training_parameters import (
     default_training_parameters,
@@ -63,27 +64,9 @@ class Dataset(TimestampedModelMixin):
         return reverse("dataset-detail", kwargs={"pk": self.pk})
 
     @property
-    def workspace_dir(self) -> str:
-        """
-        The folder containing all data for the workspace this resource
-        belongs to.
-        """
-        return "storage/1"
-
-    @property
-    def extract_dir(self) -> str:
-        """ Temporary folder used to extract the uploaded zip. """
-        return "{}/{}_upload/".format(self.workspace_dir, self.id)
-
-    @property
-    def upload_file(self) -> str:
-        """ Location for the temporary stored upload zip. """
-        return "{}/{}_upload.zip".format(self.workspace_dir, self.id)
-
-    @property
     def dir(self) -> str:
-        """ Location where images from this dataset are stored. """
-        return "{}/{}/".format(self.workspace_dir, self.id)
+        """Get the folder containing all images for the dataset."""
+        return "{}/dataset-{}".format(STORAGE, self.id)
 
 
 class Label(models.Model):
