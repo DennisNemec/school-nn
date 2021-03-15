@@ -127,7 +127,7 @@ class WrappedArchitecture:
         """Get the architecture as keras model."""
         keras_model = keras.Sequential()
 
-        for dict_layer in self.dictionary_representation["layers"]:
+        for dict_layer in self.dictionary_representation:
             keras_model.add(_dict_to_layer(dict_layer))
 
         keras_model.compile()

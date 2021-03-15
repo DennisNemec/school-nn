@@ -1,4 +1,5 @@
 """Manages the executions of training jobs in the background."""
+from . import importsetup  # noqa:F401
 from typing import Optional
 from ..models import (
     TrainingPassState,

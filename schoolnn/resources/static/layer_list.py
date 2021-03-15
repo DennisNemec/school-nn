@@ -61,7 +61,7 @@ layer_list = """
                 "activated": false
               },
               {
-                "name": "filter",
+                "name": "filters",
                 "value": {
                   "type": "scalar",
                   "dataType": "int",
@@ -106,14 +106,16 @@ layer_list = """
               },
               {
                 "name": "padding",
-                "value": {
-                  "type": "scalar",
-                  "dataType": "int",
-                  "default_value": 32,
-                  "min": 0,
-                  "max": 65535
-                },
                 "description": "Padding",
+                "value": {
+                  "type": "list",
+                  "dataType": "string",
+                  "default_value": "valid",
+                  "possible_values": [
+                    "same",
+                    "valid"
+                  ]
+                },
                 "activated": true
               }
             ]
