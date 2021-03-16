@@ -1,12 +1,13 @@
 import asyncio
-
-from tests.integration.IntegrationTestCase import IntegrationTestCase
+from tests.integration.integration_test_case import (
+    IntegrationTestCase,
+    make_sync,
+)
 
 
 class LoginTests(IntegrationTestCase):
+    @make_sync
     async def test_login(self):
-        await self.asyncSetUp()
-
         await self.login(self.user.username, "wrong")
         content = await self.page.content()
         assert "Please enter a correct username" in content
@@ -21,5 +22,3 @@ class LoginTests(IntegrationTestCase):
         )
 
         assert "login" in self.page.url
-
-        await self.asyncTearDown()

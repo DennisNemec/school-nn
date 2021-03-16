@@ -24,6 +24,7 @@ schoolnn_app.settings.DATABASES = TEST_DATABASES
 def setup():
     django.setup()
     call_command("migrate", "schoolnn")
+    call_command("migrate")
     makedirs(TEST_STORAGE, exist_ok=True)
 
 
