@@ -10,7 +10,6 @@ from django.views.generic.edit import (
 )
 from django.contrib.messages.views import SuccessMessageMixin
 from schoolnn.models import Dataset, Label, Image
-from .widgets import ImageCheckboxWidget
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 
@@ -39,7 +38,6 @@ class LabelDeletionForm(forms.ModelForm):
     image_id_list = forms.ModelMultipleChoiceField(
         required=True,
         queryset=Image.objects.none(),
-        widget=ImageCheckboxWidget,
         label="",
     )
 
@@ -47,7 +45,7 @@ class LabelDeletionForm(forms.ModelForm):
         model = Label
         fields = ["id"]
 
-    def __init__(self, pk=None, *args, **kwargs):
+    def __init__(self, dataset_id=None, pk=None, *args, **kwargs):
         super(LabelDeletionForm, self).__init__(*args, **kwargs)
         self.fields["image_id_list"].queryset = Image.objects.filter(label=pk)
 
@@ -73,7 +71,7 @@ class LabelDetailView(UpdateView):
     """ Standard view of a label """
 
     model = Label
-    template_name = "label/detail.html"
+    template_name = "datasets/label/label_details.html"
     form_class = LabelDeletionForm
 
     def get_form_kwargs(self):
@@ -81,14 +79,32 @@ class LabelDetailView(UpdateView):
         kwargs.update(self.kwargs)
         return kwargs
 
-    def get_context_data(self, **kwargs):
-        """ Retrieve required information for template """
-        context = super().get_context_data(**kwargs)
-        context["image_count"] = Image.objects.filter(
-            label=self.kwargs["pk"]
-        ).count()
+    def remove_label(self, image_id):
+        """ Removes a label of a given image. """
 
-        return context
+        Image.objects.filter(pk=image_id).update(label=None)
+
+    def form_valid(self, form):
+        """
+        Used for label deletion.
+        """
+
+        image_ids = form.data.getlist("image_id_list")
+
+        for image in image_ids:
+            self.remove_label(image)
+
+        count = len(image_ids)
+        image_word = "Bild" if count == 1 else "Bilder"
+
+        messages.success(
+            self.request,
+            f"{count} {image_word} erfolgreich aus der Klasse entfernt.",
+        )
+
+        return HttpResponseRedirect(
+            reverse("dataset-label-details", kwargs=self.kwargs)
+        )
 
 
 class LabelCreateView(SuccessMessageMixin, CreateView):
@@ -96,11 +112,11 @@ class LabelCreateView(SuccessMessageMixin, CreateView):
 
     model = Label
     form_class = LabelCreateForm
-    template_name = "label/create.html"
+    template_name = "datasets/label/create_label.html"
     success_message = "Klasse erfolgreich erstellt."
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy("dataset-edit", kwargs=self.kwargs)
+        return reverse_lazy("dataset-details", kwargs=self.kwargs)
 
     def get_context_data(self, **kwargs):
         """ Retrieve required information for template """
@@ -115,12 +131,12 @@ class LabelUpdateView(SuccessMessageMixin, UpdateView):
 
     model = Label
     form_class = LabelEditForm
-    template_name = "label/edit.html"
+    template_name = "datasets/label/edit_label.html"
 
     success_message = "Klasse erfolgreich bearbeitet."
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy("label-detail", kwargs=self.kwargs)
+        return reverse_lazy("dataset-label-details", kwargs=self.kwargs)
 
 
 class LabelCreateImageView(FormView):
@@ -128,22 +144,17 @@ class LabelCreateImageView(FormView):
 
     form_class = LabelCreateImageForm
     model = Image
-    template_name = "label/addimage.html"
+    template_name = "datasets/label/add_image.html"
 
     def get_context_data(self, **kwargs):
         """ Retrieve required information for template """
         context = super().get_context_data(**kwargs)
 
-        if (
-            "label" not in self.request.GET
-            or "dataset" not in self.request.GET
-        ):
+        if "pk" not in self.kwargs or "dataset_id" not in self.kwargs:
             raise ValueError("Kein Datensatz oder Label angegeben")
 
-        context["label"] = Label.objects.get(pk=self.request.GET["label"])
-        context["dataset"] = Dataset.objects.get(
-            pk=self.request.GET["dataset"]
-        )
+        context["label"] = Label.objects.get(pk=self.kwargs["pk"])
+        context["dataset"] = Dataset.objects.get(pk=self.kwargs["dataset_id"])
 
         return context
 
@@ -171,15 +182,18 @@ class LabelCreateImageView(FormView):
 
         return HttpResponseRedirect(
             reverse(
-                "label-detail",
-                kwargs={"pk": self.get_context_data()["label"].id},
+                "dataset-label-details",
+                kwargs={
+                    "pk": self.get_context_data()["label"].id,
+                    "dataset_id": self.get_context_data()["dataset"].id,
+                },
             )
         )
 
     def form_valid(self, form: LabelCreateImageForm):
         """ validate the form and create a new image """
 
-        label = label = Label.objects.get(pk=form.data["label"])
+        label = Label.objects.get(pk=form.data["label"])
         dataset = Dataset.objects.get(pk=form.data["dataset"])
         image = self.create_image_entry(label, dataset)
         self.copy_file(self.request.FILES["file"], image.path)
@@ -188,15 +202,18 @@ class LabelCreateImageView(FormView):
 
         return HttpResponseRedirect(
             reverse(
-                "label-detail",
-                kwargs={"pk": self.get_context_data()["label"].id},
+                "dataset-label-details",
+                kwargs={
+                    "pk": self.get_context_data()["label"].id,
+                    "dataset_id": self.get_context_data()["dataset"].id,
+                },
             )
         )
 
 
 class LabelDeleteView(DeleteView):
     model = Label
-    template_name = "label/delete.html"
+    template_name = "datasets/label/delete_label.html"
 
     def delete(self, request, *args, **kwargs):
         label = self.get_object()
