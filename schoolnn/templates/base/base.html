@@ -34,8 +34,8 @@
 
         <nav class="w-1/5 min-h-screen-minus-header bg-white flex flex-col justify-between shadow-base z-40 xl:w-1/6">
             <ul class="pl-8 pt-20 space-y-8 xl:pl-12">
-                <!--TODO: remove redundancy -->
-                <li class="menu-item {% if "/datasets/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
+                <!--TODO: remove redundancy, maybe with custom template tag? -->
+                <li class="menu-item {% if "/dataset/" in request.path and "/edit/dataset/" not in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/datasets.svg' %} ')">
                     <a href="{% url "dataset-list" %}">Datensätze</a>
                 </li>
                 <li class="menu-item {% if "/architectures/" in request.path %}active{% endif %}" style="background-image: url('{% static 'assets/icons/architectures.svg' %} ')">

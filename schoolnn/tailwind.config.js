@@ -29,6 +29,7 @@ module.exports = {
 
       spacing: {
         "screen-minus-header": "calc(100vh - 6rem)",
+        "128": "32rem"
       },
 
       boxShadow: {

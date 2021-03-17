@@ -59,7 +59,6 @@ from .views.users import (
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-
     path("dataset/", DatasetList.as_view(), name="dataset-list"),
     path("dataset/create/", DatasetCreate.as_view(), name="dataset-create"),
     path(
@@ -81,7 +80,6 @@ urlpatterns = [
         DatasetClassify.as_view(),
         name="dataset-labeleditor",
     ),
-
     path(
         "dataset/<int:dataset_id>/label/<int:pk>/",
         LabelDetailView.as_view(),
@@ -102,9 +100,7 @@ urlpatterns = [
         LabelDeleteView.as_view(),
         name="dataset-label-delete",
     ),
-
     path("images/<int:pk>", ImageView.as_view(), name="image-show"),
-
     path(
         "architectures/",
         ArchitectureListView.as_view(),

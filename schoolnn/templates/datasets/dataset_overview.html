@@ -15,30 +15,32 @@
             <option value="{% url 'dataset-list' %}?type=own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
             <option value="{% url 'dataset-list' %}?type=shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
         </select>
-        <a href="{% url "dataset-add" %}" class="button-standard-add">Datensatz hinzufügen</a>
+        <a href="{% url "dataset-create" %}" class="button-standard-add">Datensatz hinzufügen</a>
     </div>
 {% endblock %}
 
 {% block main %}
+    <div class="space-y-8">
+
     {% for dataset in datasets.1 %}
-        <div class="card flex justify-between items-center w-full">
+        <article class="card flex justify-between items-center">
             <div class="flex items-center">
                 <h3>{{ dataset.name }}</h3>
 
-                <div class="w-48 flex justify-end h-10 pr-8 text-white">
-                    <div class="p-2 pl-6 pr-6 rounded-2xl text-center {{ dataset.status.background_color }}">
-                        <p>{{ dataset.status.text}}</p>
-                    </div>
-                </div>
+                <span class="py-2 px-6 rounded-xl text-white ml-4 {{ dataset.status.background_color }}">
+                    {{ dataset.status.text}}
+                </span>
             </div>
 
             <div class="flex items-center justify-between">
                 <div>
-                    <a class="text-text-gray" href="{% url "dataset-detail" dataset.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "dataset-details" dataset.id %}">Details</a> &bullet;
                     <a class="text-text-gray" href="{% url "dataset-edit" dataset.id %}">Einstellungen</a> &bullet;
                     <a class="text-red" href="{% url "dataset-delete" dataset.id %}" >Löschen</a>
                 </div>
             </div>
-        </div>
+        </article>
     {% endfor %}
+
+    </div>
 {% endblock %}
