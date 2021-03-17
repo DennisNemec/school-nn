@@ -7,70 +7,84 @@
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Datensätze" "dataset-list" %}
-    {% url "dataset-detail" dataset.id as detail_url %}
+    {% url "dataset-details" dataset.id as detail_url %}
     {% breadcrumb dataset.name detail_url %}
 {% endblock %}
 
 {% block top %}
-    <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
-    <a class="button-standard" href="{% url "dataset-edit" pk=dataset.id %}">Bearbeiten</a>
+    <h1>Datensatz „{{ dataset.name }}“</h1>
+    <div class="space-x-4">
+        <a class="button-standard" href="{% url "dataset-edit" dataset.id %}">Datensatzeinstellungen</a>
+        <a class="button-inverted border-red text-red" href="{% url "dataset-delete" dataset.id %}">Datensatz löschen</a>
+    </div>
 {% endblock %}
 
 {% block main %}
-    <section class="card mb-5">
-        <div class="flex items-center space-x-4 mb-6">
-            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
-            <h3>Allgemeines</h3>
-        </div>
-        <table class="w-full md:w-1/2 xl:w-2/5">
-            <tr>
-                <td class="font-semibold">ID</td>
-                <td>{{ dataset.id }}</td>
-            </tr>
-            <tr>
-                <td class="font-semibold">Ersteller</td>
-                <td>{{ dataset.user.username }}</td>
-            </tr>
-            <tr>
-                <td class="font-semibold">Erstellt am</td>
-                <td>{{ dataset.created_at | date:"d.m.Y \u\m H:i"}}</td>
-            </tr>
-            <tr>
-                <td class="font-semibold">Zuletzt geändert am</td>
-                <td>
-                    {% if dataset.created_at|date:"U" == dataset.updated_at|date:"U" %}
-                        Noch nie bearbeitet
-                    {% else %}
-                        {{ dataset.updated_at | date:"d.m.Y \u\m H:i" }}
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
-    </section>
+    <div class="space-y-8 my-8">
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Allgemeines</h3>
+            </div>
+            <table class="w-full md:w-1/2 xl:w-2/5">
+                <tr>
+                    <td class="font-semibold">ID</td>
+                    <td>{{ dataset.id }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Ersteller</td>
+                    <td>{{ dataset.user.username }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Anzahl Bilder</td>
+                    <td>{{ dataset.image_set.count }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Erstellt am</td>
+                    <td>{{ dataset.created_at | date:"d.m.Y \u\m H:i"}}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Zuletzt geändert am</td>
+                    <td>
+                        {% if dataset.created_at|date:"U" == dataset.updated_at|date:"U" %}
+                            Noch nie bearbeitet
+                        {% else %}
+                            {{ dataset.updated_at | date:"d.m.Y \u\m H:i" }}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </section>
 
-    <section class="card w-full mb-4">
-        <div class="flex items-center space-x-4 mb-6">
-            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
-            <h3>Unklassifizierte Bilder</h3>
-        </div>
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Unklassifizierte Bilder</h3>
+            </div>
 
-        <div class="p-4"> 
             {% if unlabeled_count > 0 %}
-                <p>Es sind <strong>{{ unlabeled_count }}</strong> Bilder unklassifiziert. Klicke auf Bearbeiten, um diese zu klassifizieren.</p>
+                <p>Es sind <strong>{{ unlabeled_count }}</strong> Bilder unklassifiziert.</p>
+                <a href="{% url "dataset-labeleditor" dataset.id %}" class="button-inverted mt-4">Bilder klassifizieren</a>
             {% else %}
                 <p>Glückwunsch, alle Bilder sind klassifiziert!</p>
             {% endif %}
-        </div>
-    </section>
+        </section>
 
-    <section class="w-full card">
-        <div class="flex items-center space-x-4 mb-6">
-            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
-            <h3>Labels</h3>
-        </div>
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Klassen</h3>
+            </div>
 
-        <div class="flex flex-wrap">
-            {% include "datasets/partials/label_list.html" with labels=dataset.label_set.all %}
-        </div>
-    </section>
+            <div class="grid grid-cols-5 gap-8">
+                {% for label in dataset.label_set.all %}
+                    {% include "datasets/partials/label_preview_card.html" %}
+                {% endfor %}
+            </div>
+
+            <a class="button-standard-add mt-8" href="{% url 'dataset-create-label' pk=dataset.id %}">Neue Klasse erstellen</a>
+        </section>
+
+        <a class="button-inverted" href="{% url "dataset-list" %}">&larr; Zurück</a>
+    </div>
 {% endblock %}
