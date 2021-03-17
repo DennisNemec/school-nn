@@ -13,9 +13,9 @@ TEST_DATABASES = {
     }
 }
 TEST_STORAGE = "/tmp/schoolnnstorage-{}".format(uuid4().hex)
-load_dotenv()
 environ.setdefault("DJANGO_SETTINGS_MODULE", "schoolnn_app.settings")
 environ.setdefault("STORAGE", TEST_STORAGE)
+load_dotenv()
 import schoolnn_app.settings  # noqa: 402
 
 schoolnn_app.settings.DATABASES = TEST_DATABASES
@@ -23,7 +23,6 @@ schoolnn_app.settings.DATABASES = TEST_DATABASES
 
 def setup():
     django.setup()
-    call_command("migrate", "schoolnn")
     call_command("migrate")
     makedirs(TEST_STORAGE, exist_ok=True)
 

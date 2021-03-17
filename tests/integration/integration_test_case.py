@@ -23,7 +23,7 @@ def make_sync(old_f):
     return new_f
 
 
-class IntegrationTestCase(StaticLiveServerTestCase):
+class BrowserIntegrationTestCase(StaticLiveServerTestCase):
     browser: Browser
     page: Page
     user: User

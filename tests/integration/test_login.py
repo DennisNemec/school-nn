@@ -1,11 +1,11 @@
 import asyncio
 from tests.integration.integration_test_case import (
-    IntegrationTestCase,
+    BrowserIntegrationTestCase,
     make_sync,
 )
 
 
-class LoginTests(IntegrationTestCase):
+class LoginTests(BrowserIntegrationTestCase):
     @make_sync
     async def test_login(self):
         await self.login(self.user.username, "wrong")
