@@ -7,17 +7,17 @@
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Datensätze" "dataset-list" %}
-    {% url "dataset-detail" label.dataset.id as detail_url %}
+    {% url "dataset-details" label.dataset.id as detail_url %}
     {% url "label-detail" label.id as label_detail_url %}
     {% url "dataset-edit" label.dataset.id as edit_url %}
-    {% url "label-delete" label.id as label_delete_url %}
+    {% url "dataset-label-delete" label.id as label_delete_url %}
     {% breadcrumb label.dataset.name detail_url %}
     {% breadcrumb label.name label_detail_url %}
     {% breadcrumb "Löschen" label_delete_url %}
 {% endblock %}
 
 {% block top %}
-    <h1>Klasse &bdquo;{{ label.name }}&ldquo; löschen</h1>
+    <h1>Klasse „{{ label.name }}“ löschen</h1>
 {% endblock %}
 
 {% block main %}
