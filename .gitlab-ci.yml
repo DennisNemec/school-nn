@@ -50,7 +50,8 @@ pytest-tests:
     - pip install pipenv
     - pipenv install --dev
   script:
-    - pipenv run python3 -m coverage run --source=schoolnn -m pytest . --confcutdir tests
+    - pipenv run python3 -m coverage run -m pytest tests -v
+    - pipenv run python3 -m coverage combine  # merge multiprocessing data
     - pipenv run python3 -m coverage xml
     - pipenv run python3 -m coverage report
     - pipenv run python3 -m coverage html
