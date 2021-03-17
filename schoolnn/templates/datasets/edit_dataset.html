@@ -6,91 +6,27 @@
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Datensätze" "dataset-list" %}
-    {% url "dataset-detail" dataset.id as detail_url %}
+    {% url "dataset-details" dataset.id as detail_url %}
     {% url "dataset-edit" dataset.id as edit_url %}
     {% breadcrumb dataset.name detail_url %}
-    {% breadcrumb "Bearbeiten" edit_url %}
+    {% breadcrumb "Einstellungen" edit_url %}
 {% endblock %}
 
 {% block top %}
-    <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
-    <a href="{% url 'dataset-delete' pk=dataset.id %}" class="button-inverted border-red text-red">
-        <p>Löschen</p>
-    </a>
+    <h1>Einstellungen zum Datensatz „{{ dataset.name }}“</h1>
 {% endblock %}
 
 {% block main %}
-    <section class="card mb-5">
-        <div class="flex items-center space-x-4 mb-6">
-            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
-            <h3>Allgemeines</h3>
-        </div>
-
-        <form method="POST">
+    <section class="card">
+        <form method="POST"enctype="multipart/form-data">
             {% csrf_token %}
-            <table class="w-full md:w-1/2 xl:w-2/5 mb-6">
-                <tr>
-                    <td class="font-semibold">ID</td>
-                    <td>{{ dataset.id }}</td>
-                </tr>
+            <label for="name">Datensatzname</label>
+            <input class="mb-8" type="text" value="{{ dataset.name }}" name="name" id="name">
 
-                <tr>
-                    <td class="font-semibold">Name</td>
-                    <td><input name="name" class="w-full" type="text" value="{{dataset.name}}" ></td>
-                </tr>
-                
-                <tr>
-                    <td class="font-semibold">Ersteller</td>
-                    <td>{{ dataset.user.username }}</td>
-                </tr>
-                <tr>
-                    <td class="font-semibold">Erstellt am</td>
-                    <td>{{ dataset.created_at | date:"d.m.Y \u\m H:i"}}</td>
-                </tr>
-                <tr>
-                    <td class="font-semibold">Zuletzt geändert am</td>
-                    <td>
-                        {% if dataset.created_at|date:"U" == dataset.updated_at|date:"U" %}
-                            Noch nie bearbeitet
-                        {% else %}
-                            {{ dataset.updated_at | date:"d.m.Y \u\m H:i" }}
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
-
-            <input type="submit" class="w-32 button-standard" value="Speichern">
+            <div class="space-x-4">
+                <a class="button-inverted" href="{% url "dataset-details" dataset.id %}">&larr; Abbrechen</a>
+                <input class="button-standard w-auto" type="submit" value="Speichern"/>
+            </div>
         </form>
-    </section>
-
-    <section class="card w-full mb-4">
-        <div class="flex items-center space-x-4 mb-6">
-            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
-            <h3>Unklassifizierte Bilder</h3>
-        </div>
-
-        <div class="p-4"> 
-            {% include "datasets/partials/dataset_classify_form.html" with form=classify_form %}
-        </div>
-    </section>
-
-    <section class="card w-full mb-4">
-        <div class="flex items-center space-x-4 mb-6">
-            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
-            <h3>Klasse erstellen</h3>
-        </div>
-
-        <a class="button-standard" href="{% url 'label-create' pk=dataset.id %}">Klasse erstellen</a>
-    </section>
-
-    <section class="w-full card">
-        <div class="flex items-center space-x-4 mb-6">
-            <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
-            <h3>Labels</h3>
-        </div>
-
-        <div class="flex flex-wrap">
-            {% include "datasets/partials/label_list.html" with labels=dataset.label_set.all %}
-        </div>
     </section>
 {% endblock %}
