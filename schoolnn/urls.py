@@ -59,49 +59,52 @@ from .views.users import (
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path("datasets/", DatasetList.as_view(), name="dataset-list"),
+
+    path("dataset/", DatasetList.as_view(), name="dataset-list"),
+    path("dataset/create/", DatasetCreate.as_view(), name="dataset-create"),
     path(
-        "datasets/create/image",
-        LabelCreateImageView.as_view(),
-        name="label-addimage",
-    ),
-    path("datasets/add/", DatasetCreate.as_view(), name="dataset-add"),
-    path(
-        "datasets/<int:pk>/edit/", DatasetUpdate.as_view(), name="dataset-edit"
-    ),
-    path("datasets/<int:pk>/", DatasetDetail.as_view(), name="dataset-detail"),
-    path(
-        "datasets/<int:pk>/label",
-        DatasetClassify.as_view(),
-        name="dataset-label",
-    ),
-    path(
-        "datasets/label/<int:pk>/",
-        LabelDetailView.as_view(),
-        name="label-detail",
-    ),
-    path(
-        "datasets/label/<int:pk>/delete",
-        LabelDeleteView.as_view(),
-        name="label-delete",
-    ),
-    path("datasets/label/", LabelDetailView.as_view(), name="label-detail"),
-    path(
-        "datasets/<int:pk>/create/label/",
+        "dataset/<int:pk>/create/label/",
         LabelCreateView.as_view(),
-        name="label-create",
+        name="dataset-create-label",
+    ),
+    path("dataset/<int:pk>/", DatasetDetail.as_view(), name="dataset-details"),
+    path(
+        "dataset/<int:pk>/edit/", DatasetUpdate.as_view(), name="dataset-edit"
     ),
     path(
-        "datasets/label/<int:pk>/edit",
-        LabelUpdateView.as_view(),
-        name="label-edit",
-    ),
-    path(
-        "datasets/<int:pk>/delete/",
+        "dataset/<int:pk>/delete/",
         DatasetDelete.as_view(),
         name="dataset-delete",
     ),
+    path(
+        "dataset/<int:pk>/labeleditor/",
+        DatasetClassify.as_view(),
+        name="dataset-labeleditor",
+    ),
+
+    path(
+        "dataset/<int:dataset_id>/label/<int:pk>/",
+        LabelDetailView.as_view(),
+        name="dataset-label-details",
+    ),
+    path(
+        "dataset/<int:dataset_id>/label/<int:pk>/edit/",
+        LabelUpdateView.as_view(),
+        name="dataset-label-edit",
+    ),
+    path(
+        "dataset/<int:dataset_id>/label/<int:pk>/addimage/",
+        LabelCreateImageView.as_view(),
+        name="dataset-label-addimage",
+    ),
+    path(
+        "dataset/<int:dataset_id>/label/<int:pk>/delete/",
+        LabelDeleteView.as_view(),
+        name="dataset-label-delete",
+    ),
+
     path("images/<int:pk>", ImageView.as_view(), name="image-show"),
+
     path(
         "architectures/",
         ArchitectureListView.as_view(),
