@@ -1,0 +1,17 @@
+<form class="w-full card border" action="{% url "dataset-labeleditor" dataset.id %}" method="post">
+    {% csrf_token %}
+
+    <p class="font-bold">Bilder wählen</p>
+    <div class="max-h-128 overflow-y-scroll">
+        {% include "datasets/partials/image_selection.html" with images=unlabeled_images %}
+    </div>
+
+    <label for="provided-label">Klasse wählen</label>
+    <select class="block w-1/2" id="provided-label" name="label">
+        {% for label in labels %}
+            <option value="{{label.id}}">{{label.name}}</option>
+        {% endfor %}
+    </select>
+
+    <input type="submit" class="w-auto button-standard mt-8" value="Klasse zuordnen">
+</form>
