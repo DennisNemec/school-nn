@@ -1,10 +1,10 @@
 from tests.integration.integration_test_case import (
-    IntegrationTestCase,
+    BrowserIntegrationTestCase,
     make_sync,
 )
 
 
-class TestArchitecture(IntegrationTestCase):
+class TestArchitecture(BrowserIntegrationTestCase):
     @make_sync
     async def test_create_architecture(self):
         await self.login(self.user.username, self.password)
