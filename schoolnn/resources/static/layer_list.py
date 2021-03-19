@@ -192,33 +192,19 @@ def default_layers() -> str:
     Django expected the default value of JSONField
     to be a callable.
     """
-    return json.loads(
-        """
-        [
-          {
-            "type": "MaxPooling2D",
+    layers = [
+        {
+            "type": "Dense",
             "name": "Input Layer",
-            "pool_size": [
-              32,
-              32
-            ],
-            "strides": [
-              0,
-              0
-            ]
-          },
-          {
-            "type": "MaxPooling2D",
+            "activation": "relu",
+            "units": 32,
+        },
+        {
+            "type": "Dense",
             "name": "Output Layer",
-            "pool_size": [
-              32,
-              32
-            ],
-            "strides": [
-              0,
-              0
-            ]
-          }
-        ]
-        """
-    )
+            "activation": "relu",
+            "units": 32,
+        },
+    ]
+
+    return json.dumps(layers)
