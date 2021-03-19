@@ -34,6 +34,8 @@ class BrowserIntegrationTestCase(StaticLiveServerTestCase):
         self.user = User.objects.create(
             username="peter", password=make_password(self.password)
         )
+        if asyncio.get_event_loop().is_closed():
+            asyncio.set_event_loop(asyncio.new_event_loop())
         self._event_loop = asyncio.get_event_loop()
         self._event_loop.run_until_complete(self.asyncSetUp())
 
@@ -54,8 +56,17 @@ class BrowserIntegrationTestCase(StaticLiveServerTestCase):
     async def asyncTearDown(self):
         await self.browser.close()
 
+    def goto(self, url):
+        return self.page.goto("{}/{}".format(self.live_server_url, url))
+
+    async def submitXpath(self, selector):
+        button = await self.page.Jx(selector)
+        return await asyncio.wait(
+            [button[0].click(), self.page.waitForNavigation()]
+        )
+
     async def login(self, username, password):
-        await self.page.goto("{}{}".format(self.live_server_url, "/login/"))
+        await self.goto("login/")
 
         await self.page.type("#id_username", username)
         await self.page.type("#id_password", password)
