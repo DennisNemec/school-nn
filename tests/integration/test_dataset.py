@@ -1,12 +1,12 @@
 import os
 
 from tests.integration.integration_test_case import (
-    IntegrationTestCase,
+    BrowserIntegrationTestCase,
     make_sync,
 )
 
 
-class TestDataset(IntegrationTestCase):
+class TestDataset(BrowserIntegrationTestCase):
     @make_sync
     async def test_create_dataset(self):
         await self.login(self.user.username, self.password)
