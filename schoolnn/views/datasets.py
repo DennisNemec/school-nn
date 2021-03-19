@@ -1,6 +1,5 @@
 """Contains all HTTP handling having to do with datasets."""
 import shutil
-import zipfile
 from typing import Optional
 from io import BytesIO
 
