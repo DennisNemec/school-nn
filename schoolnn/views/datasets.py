@@ -1,8 +1,8 @@
 """Contains all HTTP handling having to do with datasets."""
-import os
 import shutil
 import zipfile
 from typing import Optional
+from io import BytesIO
 
 from django.contrib import messages
 from django import forms
@@ -19,8 +19,7 @@ from django.views.generic.edit import (
 )
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, DetailView
-from django.db import transaction
-from PIL import Image as PIL_Image, ImageOps
+from schoolnn.dataset import zip_to_full_dataset
 from schoolnn.models import Dataset, Label, Image
 from schoolnn.views.mixins import (
     LoginRequiredMixin,
@@ -181,57 +180,19 @@ class DatasetCreate(LoginRequiredMixin, CreateView):
             raise ValueError("Failed to parse the dataset create form")
 
         self.handle_upload(self.request.FILES["file"])
-        self.create_tags(self.object)
-
-        shutil.rmtree(self.object.extract_dir)
-        os.remove(self.object.upload_file)
 
         messages.success(self.request, "Datensatz erfolgreich erstellt.")
 
         return HttpResponseRedirect(self.get_success_url())
 
     def handle_upload(self, zip_binary):
-        """"Unzips uploaded zip."""
-        os.makedirs(self.object.extract_dir, exist_ok=True)
+        """Unzip uploaded file to storage."""
+        zip_in_ram = BytesIO()
 
-        with open(self.object.upload_file, "wb+") as destination:
-            for chunk in zip_binary.chunks():
-                destination.write(chunk)
+        for chunk in zip_binary.chunks():
+            zip_in_ram.write(chunk)
 
-        with zipfile.ZipFile(self.object.upload_file, "r") as zip_ref:
-            zip_ref.extractall(self.object.extract_dir)
-
-    def create_tags(self, dataset: Dataset):
-        """Create labels."""
-        os.makedirs(os.path.join(dataset.dir), exist_ok=True)
-        dir_name = dataset.extract_dir
-        entries = os.listdir(dir_name)
-
-        if len(entries) == 1:
-            dir_name = os.path.join(dataset.extract_dir, entries[0])
-
-        for entry in os.scandir(dir_name):
-            if entry.is_dir():
-                label = Label.objects.create(name=entry.name, dataset=dataset)
-                self.process_images(entry, label, dataset)
-
-    @transaction.atomic
-    def process_images(
-        self, path: os.DirEntry, label: Label, dataset: Dataset
-    ):
-        """Save images center cropped."""
-        for entry in os.scandir(path):
-            if entry.name == ".DS_Store":
-                continue
-
-            image = Image.objects.create(dataset=dataset, label=label)
-            image_pil = PIL_Image.open(entry.path)
-            width, height = image_pil.size
-            target_size = min([width, height, 512])
-            image_pil = ImageOps.fit(
-                image_pil, (target_size, target_size), PIL_Image.ANTIALIAS
-            )
-            image_pil.save(image.path)
+        zip_to_full_dataset(zip_in_ram, self.object)
 
 
 class DatasetUpdate(

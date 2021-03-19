@@ -90,7 +90,7 @@ class MultiprocessingBatchGenerator(utils.Sequence):
         self.pool = Pool(processes_count)
         self.batch_size = batch_size
         self.batch_count = 0
-        self.batches_generated_count = 0
+        self.batches_yielded_count = 0
         self.batches_in_queue_not_fetched = 0
         self.precalculate_batches_count = precalculate_batches_count
 
@@ -128,20 +128,26 @@ class MultiprocessingBatchGenerator(utils.Sequence):
 
     def __getitem__(self, index):
         """Get one batch from queue. Used by keras."""
-        if self.batches_generated_count < self.batch_count:
+        ordered_batches_sum = (
+            self.batches_yielded_count + self.batches_in_queue_not_fetched
+        )
+        if ordered_batches_sum < self.batch_count:
             self.generate_and_enqueue_batch_task()
-            self.batches_generated_count += 1
+
+        if self.batches_in_queue_not_fetched < 1:
+            raise ValueError("Trying to yield batch where none was ordered.")
+
         pool_task = self.batch_task_queue.get()
         batch = pool_task.get()
         self.batches_in_queue_not_fetched -= 1
+        self.batches_yielded_count += 1
         return batch
 
     def reset_batch_count(self, batch_count: int):
         self.batch_count = batch_count
-        self.batches_generated_count = 0
-        while (
-            self.batches_in_queue_not_fetched < self.precalculate_batches_count
-        ):
+        self.batches_yielded_count = 0
+        generate_max = min(self.precalculate_batches_count, batch_count)
+        while self.batches_in_queue_not_fetched < generate_max:
             self.generate_and_enqueue_batch_task()
 
     def close(self):

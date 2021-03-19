@@ -52,7 +52,13 @@
         {% include "editor/partials/editor.html" %}
         <a class="button-inverted mt-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
     {% elif step == "parameters" %}
-        <a class="button-inverted mb-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
+        <div class="flex justify-between">
+            <a class="button-inverted mb-8" href="{% url "project-details" project.id %}">&larr; Zurück</a>
+            <form action="{% url "project-edit-reset_parameters" project.id %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="submit" class="button-inverted border-red text-red w-auto" value="Standardwerte wiederherstellen">
+            </form>
+        </div>
         {% include "project/partials/parameter-form.html" %}
     {% endif %}
 {% endblock %}

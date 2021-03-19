@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from sys import exit
 from typing import List
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -131,5 +132,10 @@ STATICFILES_DIRS = [
     "./schoolnn/public",
 ]
 
-IMAGE_DIR = "./images"
+STORAGE = os.environ.get("STORAGE")
+if not STORAGE:
+    print("Please add STORAGE to your .env.")
+    exit(1)
+os.makedirs(STORAGE, exist_ok=True)
+
 TRAINING_BLOCK_BATCH_COUNT = 16

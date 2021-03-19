@@ -1,6 +1,6 @@
 """Convert from keras to a simple dictionary/json format and vice versa."""
 from tensorflow.keras import layers
-from typing import Union, Any, Callable
+from typing import Union, Any, Callable, List
 from json import dumps
 import tensorflow.keras as keras
 
@@ -99,9 +99,9 @@ def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
 class WrappedArchitecture:
     """Wrapper around the dictionary representation of a nn architecture."""
 
-    def __init__(self, dictionary_representation: dict):
+    def __init__(self, json_representation: List[dict]):
         """Create a wrapped object and validates for syntax errors."""
-        self.dictionary_representation = dictionary_representation
+        self.json_representation = json_representation
         self.to_keras_model()  # Raises exception for invalid dictionary
 
     @classmethod
@@ -116,18 +116,21 @@ class WrappedArchitecture:
         for keras_layer in keras_model.layers:
             arch_layers.append(_layer_to_dict(keras_layer))
 
-        architecture_dict = {"layers": arch_layers}
-        return cls(architecture_dict)
+        return cls(arch_layers)
 
     def to_json_indent(self) -> str:
         """Get the architecture as humand readable json string."""
-        return dumps(self.dictionary_representation, indent=4)
+        return dumps(self.json_representation, indent=4)
+
+    def to_json(self) -> List[dict]:
+        """Get json dumpable representation."""
+        return self.json_representation
 
     def to_keras_model(self) -> keras.Model:
         """Get the architecture as keras model."""
         keras_model = keras.Sequential()
 
-        for dict_layer in self.dictionary_representation["layers"]:
+        for dict_layer in self.json_representation:
             keras_model.add(_dict_to_layer(dict_layer))
 
         keras_model.compile()

@@ -3,7 +3,6 @@ from django.views.generic import ListView
 from django.db.models.query import QuerySet
 from schoolnn.models import TrainingPass, Project
 from schoolnn.views.mixins import UserIsProjectOwnerMixin
-from schoolnn.training import TrainingManager
 
 
 class TrainingListView(UserIsProjectOwnerMixin, ListView):
@@ -19,7 +18,6 @@ class TrainingListView(UserIsProjectOwnerMixin, ListView):
         return context
 
     def get_queryset(self) -> QuerySet:
-        TrainingManager()
         return (
             super().get_queryset().filter(project_id=self.kwargs["project_pk"])
         )

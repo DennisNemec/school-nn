@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.hashers import make_password
 from schoolnn.views.mixins import UserIsWorkspaceAdminMixin
 from django import forms
+from django.contrib import messages
 
 
 class UserForm(forms.ModelForm):
@@ -37,8 +38,18 @@ class UserDeleteView(UserIsWorkspaceAdminMixin, DeleteView):
 class UserEditView(UserIsWorkspaceAdminMixin, UpdateView):
     model = User
     context_object_name = "detail_user"
-    fields = ["username", "password"]
-    template_name = "users/add.html"
+    form_class = UserForm
+    template_name = "users/edit.html"
+
+    def form_valid(self, form):
+        user = self.get_object()
+
+        form.instance.password = make_password(form.instance.password)
+
+        messages.success(
+            self.request, f"Nutzer „{user.username}“ erfolgreich editiert."
+        )
+        return super().form_valid(form)
 
 
 class UserCreateView(UserIsWorkspaceAdminMixin, CreateView):
