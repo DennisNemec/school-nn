@@ -26,7 +26,7 @@
     <form method="POST">
         {% csrf_token %}
         <div class="space-x-4">
-            <a class="button-inverted" href="{% url "label-detail" label.id %}">&larr; Abbrechen</a>
+            <a class="button-inverted" href="{% url "dataset-label-details" label.dataset.id label.id %}">&larr; Abbrechen</a>
             <input class="button-standard w-auto border-red bg-red" type="submit" value="Klasse löschen"/>
         </div>
     </form>

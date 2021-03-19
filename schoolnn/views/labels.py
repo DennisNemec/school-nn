@@ -218,7 +218,7 @@ class LabelDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         label = self.get_object()
         self.success_url = reverse_lazy(
-            "dataset-edit", kwargs={"pk": label.dataset.id}
+            "dataset-details", kwargs={"pk": label.dataset.id}
         )
 
         messages.success(self.request, "Klasse erfolgreich gelöscht.")
