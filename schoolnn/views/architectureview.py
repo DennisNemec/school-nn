@@ -57,8 +57,6 @@ class ArchitectureEditorView(AuthenticatedQuerysetMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["layer_list"] = layer_list
-        context["architecture_json"] = json.dumps(
-            self.object.architecture_json, indent=4, sort_keys=True
-        )
+        context["architecture_json"] = json.dumps(self.object.architecture_json)
 
         return context

@@ -5,6 +5,8 @@ layer_list = """
           {
             "type": "MaxPooling2D",
             "default_name": "MaxPooling2D",
+            "input_dimension": 2,
+            "output_dimension": 2,
             "properties": [
               {
                 "name": "pool_size",
@@ -42,6 +44,8 @@ layer_list = """
           },
           {
             "type": "Conv2D",
+            "input_dimension": 2,
+            "output_dimension": 2,
             "default_name": "Conv2D",
             "properties": [
               {
@@ -122,11 +126,15 @@ layer_list = """
           },
           {
             "type": "Flatten",
+            "input_dimension": 2,
+            "output_dimension": 1,
             "default_name": "Flatten",
             "properties": []
           },
           {
             "type": "Dense",
+            "input_dimension": 1,
+            "output_dimension": 1,
             "default_name": "Dense",
             "properties": [
               {
@@ -194,10 +202,16 @@ def default_layers() -> str:
     """
     layers = [
         {
-            "type": "Dense",
+            "type": "MaxPooling2D",
             "name": "Input Layer",
-            "activation": "relu",
-            "units": 32,
+            "pool_size": [
+              32,
+              32,
+            ],
+            "strides": [
+              0,
+              0,
+            ],
         },
         {
             "type": "Dense",
@@ -207,4 +221,4 @@ def default_layers() -> str:
         },
     ]
 
-    return json.dumps(layers)
+    return layers
