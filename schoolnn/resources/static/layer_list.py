@@ -207,4 +207,4 @@ def default_layers() -> str:
         },
     ]
 
-    return json.dumps(layers)
+    return layers
