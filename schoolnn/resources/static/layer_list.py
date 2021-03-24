@@ -1,5 +1,3 @@
-import json
-
 layer_list = """
         [
           {
@@ -187,7 +185,7 @@ layer_list = """
         """
 
 
-def default_layers() -> str:
+def default_layers() -> list:
     """
     Django expected the default value of JSONField
     to be a callable.
