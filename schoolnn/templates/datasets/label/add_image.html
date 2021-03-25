@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Bild der Klasse {{label.name}} hinzufügen{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-details" label.dataset.id as detail_url %}
+    {% url "dataset-label-details" label.dataset.id label.id as label_detail_url %}
+    {% breadcrumb label.dataset.name detail_url %}
+    {% breadcrumb label.name label_detail_url %}
+    {% breadcrumb "Bild hinzufügen" %}
+{% endblock %}
+
+{% block top %}
+    <h1>Bild der Klasse „{{label.name}}“ hinzufügen</h1>
+{% endblock %}
+
+{% block main %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-4">
+            <input type="hidden" name="label" value="{{label.id}}">
+            <input type="hidden" name="dataset" value="{{dataset.id}}">
+            <div class="card">
+                {{form}}
+            </div>
+        </div>
+
+        <div class="space-x-4">
+            <a class="button-inverted" href="{% url "dataset-label-details" dataset.id label.id%}">&larr; Abbrechen</a>
+            <input class="button-standard w-auto" type="submit" value="Bild hochladen"/>
+        </div>
+    </form>
+{% endblock %}

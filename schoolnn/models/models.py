@@ -61,7 +61,7 @@ class Dataset(TimestampedModelMixin):
 
     def get_absolute_url(self):
         """Web link to this dataset."""
-        return reverse("dataset-detail", kwargs={"pk": self.pk})
+        return reverse("dataset-details", kwargs={"pk": self.pk})
 
     @property
     def dir(self) -> str:

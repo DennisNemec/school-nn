@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% load breadcrumbs %}
+
+{% block title %}Datensatz {{dataset.name}}{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-details" dataset.id as detail_url %}
+    {% breadcrumb dataset.name detail_url %}
+    {% breadcrumb "Unklassifizierte Bilder" %}
+{% endblock %}
+
+{% block top %}
+    <h1>Unklassifizierte Bilder des Datensatzes „{{ dataset.name }}“</h1>
+    <div class="space-x-4">
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="space-y-8 my-8">
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Unklassifizierte Bilder</h3>
+            </div>
+
+            {% if unlabeled_count > 0 %}
+                {% include "datasets/partials/label_add_form.html" %}
+            {% else %}
+                <p class="text-md">Glückwunsch, alle Bilder sind klassifiziert!</p>
+            {% endif %}
+        </section>
+
+        <a class="button-inverted mt-8" href="{% url "dataset-details" dataset.id %}">&larr; Zurück</a>
+    </div>
+{% endblock %}

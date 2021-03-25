@@ -1,0 +1,22 @@
+{% load static %}
+
+<article class="card border space-y-4">
+    <div class="flex-col w-full">
+        <p class="font-bold text-lg">{{label.name}}</p>
+    </div>
+
+    <table>
+        <tr>
+            <td>Anzahl Bilder</td>
+            <td>{{label.image_set.count}}</td>
+        </tr>
+    </table>
+
+    {% if label.image_set.count > 0%}
+        <img class="w-full" alt="" src="/images/{{ label.image_set.first.id }}">
+    {% else %}
+        <img class="w-full" alt="Kein Bild vorhanden" src="{% static "assets/no_image_found.png" %}">
+    {% endif %}
+
+    <a class="button-inverted mt-4" href="{% url 'dataset-label-details' dataset.id label.id %}">Klasse bearbeiten</a>
+</article>

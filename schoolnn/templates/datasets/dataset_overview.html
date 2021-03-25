@@ -15,17 +15,32 @@
             <option value="{% url 'dataset-list' %}?type=own" {% if datasets.0 == "" %} selected {% endif %}>Eigene Datensätze</option>
             <option value="{% url 'dataset-list' %}?type=shared" {% if datasets.0 == "shared" %} selected {% endif %}>Freigegebene Datensätze</option>
         </select>
-        <a href="{% url "dataset-add" %}" class="button-standard-add">Datensatz hinzufügen</a>
+        <a href="{% url "dataset-create" %}" class="button-standard-add">Datensatz hinzufügen</a>
     </div>
 {% endblock %}
 
 {% block main %}
-    <!-- Content-Header -->
-    <input type="hidden" value="{{ datasets.1 }}" id="django_dataset_list">
+    <div class="space-y-8">
 
-    <!-- Datasetlist -->
-    <div id="app"></div>
+    {% for dataset in datasets.1 %}
+        <article class="card flex justify-between items-center">
+            <div class="flex items-center">
+                <h3>{{ dataset.name }}</h3>
 
-    <script src="{% static '/js/datasets.chunk-vendors.js' %}"></script>
-    <script src="{% static '/js/datasets.app.js' %}"></script>
+                <span class="py-2 px-6 rounded-xl text-white ml-4 {{ dataset.status.background_color }}">
+                    {{ dataset.status.text}}
+                </span>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div>
+                    <a class="text-text-gray" href="{% url "dataset-details" dataset.id %}">Details</a> &bullet;
+                    <a class="text-text-gray" href="{% url "dataset-edit" dataset.id %}">Einstellungen</a> &bullet;
+                    <a class="text-red" href="{% url "dataset-delete" dataset.id %}" >Löschen</a>
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+
+    </div>
 {% endblock %}

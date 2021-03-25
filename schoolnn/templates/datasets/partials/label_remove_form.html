@@ -1,0 +1,12 @@
+<form class="w-full card border" action="{% url "dataset-label-details" dataset.id label.id %}" method="post">
+    {% csrf_token %}
+
+    <div class="max-h-128 overflow-y-scroll">
+        {% include "datasets/partials/image_selection.html" with images=images %}
+    </div>
+
+    <div class="mt-8 flex justify-between">
+        <a class="button-standard-add" href="{% url 'dataset-label-addimage' label.dataset.id label.id %}">Bild hinzufügen</a>
+        <input id="submit" class="button-inverted border-red text-red w-auto" type="submit" value="Zuordnung löschen">
+    </div>
+</form>

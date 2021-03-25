@@ -3,18 +3,18 @@
 
 {% load breadcrumbs %}
 
-{% block title %}Datensatz {{dataset.name}}  löschen{% endblock %}
+{% block title %}Datensatz „{{dataset.name}}“ löschen{% endblock %}
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Datensätze" "dataset-list" %}
-    {% url "dataset-detail" dataset.id as detail_url %}
+    {% url "dataset-details" dataset.id as detail_url %}
     {% url "dataset-delete" dataset.id as delete_url %}
     {% breadcrumb dataset.name detail_url %}
     {% breadcrumb "Löschen" delete_url %}
 {% endblock %}
 
 {% block top %}
-    <h1>Datensatz „{{ dataset.name }}“</h1>
+    <h1>Datensatz „{{ dataset.name }}“ löschen</h1>
 {% endblock %}
 
 {% block main %}
@@ -23,7 +23,7 @@
     <form method="POST">
         {% csrf_token %}
         <div class="space-x-4">
-            <a class="button-inverted" href="{% url "dataset-detail" dataset.id %}">&larr; Abbrechen</a>
+            <a class="button-inverted" href="{% url "dataset-details" dataset.id %}">&larr; Abbrechen</a>
             <input class="button-standard w-auto border-red bg-red" type="submit" value="Datensatz löschen"/>
         </div>
     </form>

@@ -7,7 +7,7 @@
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Datensätze" "dataset-list" %}
-    {% url "dataset-add" as dataset_create_url %}
+    {% url "dataset-create" as dataset_create_url %}
     {% breadcrumb "Datensatz erstellen" dataset_create_url %}
 {% endblock %}
 
@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block main %}
-    <form method="POST" enctype="multipart/form-data">
+    <form class="card" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form }}
         <div class="space-x-4 mt-8">

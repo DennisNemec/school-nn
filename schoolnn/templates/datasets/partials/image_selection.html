@@ -1,0 +1,8 @@
+{% for image in images %}
+    <div class="inline-block animated-checkbox-container">
+        <input type="checkbox" id="image-{{ image.id }}" name="image_id_list" value="{{ image.id }}">
+        <label class="relative inline-block cursor-pointer" for="image-{{ image.id }}">
+            <img class="w-32 h-32 shadow-md" src="{% url 'image-show' pk=image.id %}" loading=lazy>
+        </label>
+    </div>
+{% endfor %}

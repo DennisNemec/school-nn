@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Klasse &bdquo;{{ label.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-details" label.dataset.id as detail_url %}
+    {% url "dataset-label-details" label.dataset.id label.id as label_detail_url %}
+    {% url "dataset-label-edit" label.dataset.id label.id as label_edit_url %}
+    {% breadcrumb label.dataset.name detail_url %}
+    {% breadcrumb label.name label_detail_url %}
+    {% breadcrumb "Einstellungen" label_edit_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Klasse &bdquo;{{ label.name }}“ bearbeiten&ldquo;</h1>
+
+    <a href="{% url "dataset-label-delete" label.dataset.id label.id %}" class="button-inverted border-red text-red">
+        <p>Löschen</p>
+    </a>
+{% endblock %}
+
+{% block main %}
+    <section class="card">
+        <form method="POST"enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="name">Klassenname</label>
+            <input class="mb-8" type="text" value="{{ label.name }}" name="name" id="name">
+
+            <div class="space-x-4">
+                <a class="button-inverted" href="{% url "dataset-label-details" label.dataset.id label.id %}">&larr; Abbrechen</a>
+                <input class="button-standard w-auto" type="submit" value="Speichern"/>
+            </div>
+        </form>
+    </section>
+{% endblock %}

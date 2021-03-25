@@ -6,74 +6,27 @@
 
 {% block breadcrumbs %}
     {% breadcrumb_url "Datensätze" "dataset-list" %}
-    {% url "dataset-detail" dataset.id as detail_url %}
+    {% url "dataset-details" dataset.id as detail_url %}
     {% url "dataset-edit" dataset.id as edit_url %}
     {% breadcrumb dataset.name detail_url %}
-    {% breadcrumb "Bearbeiten" edit_url %}
+    {% breadcrumb "Einstellungen" edit_url %}
 {% endblock %}
 
 {% block top %}
-    <h1>Datensatz: &bdquo;{{ dataset.name }}&ldquo;</h1>
-    <a href="{% url 'dataset-delete' pk=dataset.id %}" class="button-standard">
-        <p>Löschen</p>
-    </a>
+    <h1>Einstellungen zum Datensatz „{{ dataset.name }}“</h1>
 {% endblock %}
 
 {% block main %}
-    <div class="mb-5"> 
-        <h3 class="font-bold text-lg">Allgemeines</h3>
-        <div class="p-4">
-            <form method="post">
-                {% csrf_token %}
-                <div class="w-1/4">
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>ID:</label>
-                        <input type="text" value="{{dataset.id}}" disabled>
-                    </div>  
+    <section class="card">
+        <form method="POST"enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="name">Datensatzname</label>
+            <input class="mb-8" type="text" value="{{ dataset.name }}" name="name" id="name">
 
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Name:</label>
-                        <input name="name" type="text" value="{{dataset.name}}" >
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Ersteller:</label>
-                        <input type="text"  value="{{dataset.user.name}}" disabled>
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Benutzerdefiniert:</label>
-                        <input type="text" value="{{dataset.custom}}" disabled>
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Erstellt am:</label>
-                        <input type="text" value="{{dataset.created_at}}" disabled>
-                    </div>
-
-                    <div class="flex flex-wrap justify-between w-full">
-                        <label>Geändert am:</label>
-                        <input type="text" value="{{dataset.updated_at}}" disabled>
-                    </div>
-                </div>
-
-
-                <input type="submit" class="w-32 button-standard" value="Speichern">
-            </form>
-        </div>
-    </div>
-
-    <div class="w-full mb-4">
-        <h3 class="font-bold text-lg">Unklassifizierte Bilder</h3>
-
-        <div class="p-4"> 
-            {% include "datasets/partials/dataset_classify_form.html" with form=classify_form %}
-        </div>
-    </div>
-
-    <div class="w-full min-h-screen">
-        <h3 class="font-bold text-lg">Klassen</h3>
-
-        {% include "datasets/partials/label_list_with_add.html" with labels=dataset.label_set.all %}
-    </div>
+            <div class="space-x-4">
+                <a class="button-inverted" href="{% url "dataset-details" dataset.id %}">&larr; Abbrechen</a>
+                <input class="button-standard w-auto" type="submit" value="Speichern"/>
+            </div>
+        </form>
+    </section>
 {% endblock %}

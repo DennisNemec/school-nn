@@ -1,0 +1,72 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load breadcrumbs %}
+
+{% block title %}Klasse: „{{ label.name }}“{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumb_url "Datensätze" "dataset-list" %}
+    {% url "dataset-details" label.dataset.id as detail_url %}
+    {% url "dataset-label-details" label.dataset.id label.id as label_detail_url %}
+    {% breadcrumb label.dataset.name detail_url %}
+    {% breadcrumb label.name label_detail_url %}
+{% endblock %}
+
+{% block top %}
+    <h1>Klasse „{{ label.name }}“</h1>
+    <div class="space-x-4">
+        <a class="button-standard" href="{% url "dataset-label-edit" label.dataset.id label.id %}">Klasseneinstellungen</a>
+        <a class="button-inverted border-red text-red" href="{% url "dataset-label-delete" label.dataset.id label.id %}">Klasse löschen</a>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="space-y-8">
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Allgemeines</h3>
+            </div>
+
+            <table class="w-full md:w-1/2 xl:w-2/5">
+                <tr>
+                    <td class="font-semibold">ID</td>
+                    <td>{{ label.id }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Anzahl Bilder</td>
+                    <td>{{ label.image_set.count }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Gehört zum Datensatz</td>
+                    <td>
+                        {{label.dataset.name}} (ID {{label.dataset.id}})
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="card">
+            <div class="flex items-center space-x-4 mb-6">
+                <img class="h-6 w-6" src="{% static "assets/icons/documents.svg" %}">
+                <h3>Bilder der Klasse</h3>
+            </div>
+
+            <div class="flex flex-wrap space-y-8">
+                {% if label.image_set.count > 0 %}
+                    <p>
+                        Hier siehst du alle Bilder, die der Klasse zugeordnet sind. <br>
+                        <span class="underline">Tipp:</span> Du kannst Bilder aus der Klasse entfernen, indem du sie durch Klicken auswählst und anschließend „Zuordnung löschen“ anklickst.
+                    </p>
+
+                    {% include "datasets/partials/label_remove_form.html" with dataset=label.dataset images=label.image_set.all %}
+                {% else %}
+                    <p class="w-full">Der Klasse „{{ label.name }}“ sind noch keine Bilder zugewiesen.</p>
+                    <a class="button-standard-add" href="{% url 'dataset-label-addimage' label.dataset.id label.id %}">Bild hinzufügen</a>
+                {% endif %}
+            </div>
+        </section>
+
+        <a class="button-inverted" href="{% url "dataset-details" label.dataset.id %}">&larr; Zurück</a>
+    </div>
+{% endblock %}

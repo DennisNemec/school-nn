@@ -1,6 +1,5 @@
 """Contains all HTTP handling having to do with datasets."""
 import shutil
-import json
 from typing import Optional
 from io import BytesIO
 
@@ -26,8 +25,6 @@ from schoolnn.views.mixins import (
     AuthenticatedQuerysetMixin,
 )
 
-from .widgets import ImageCheckboxWidget
-
 
 class DatasetCreateForm(forms.ModelForm):
     """Dataset form that contains an additional file field."""
@@ -48,7 +45,6 @@ class DatasetClassifyForm(forms.Form):
 
     image_id_list = forms.ModelMultipleChoiceField(
         queryset=Image.objects.filter(label__isnull=True),
-        widget=ImageCheckboxWidget,
         label="",
     )
 
@@ -95,8 +91,6 @@ class DatasetList(AuthenticatedQuerysetMixin, ListView):
             raise Http404
 
         for dataset in datasets:
-            labels = self.get_label_of_datasets(dataset)
-
             unlabeled_count = Image.objects.filter(
                 dataset=dataset, label__isnull=True
             ).count()
@@ -105,35 +99,23 @@ class DatasetList(AuthenticatedQuerysetMixin, ListView):
             dataset_dict = {}
             dataset_dict["name"] = dataset.name
             dataset_dict["id"] = dataset.id
-            dataset_dict["image_amount"] = 0
             dataset_dict["status"] = {
                 "is_completely_labeled": unlabeled_count,
                 # TODO: add locale
-                "text": "Vollständig" if unlabeled_count == 0 else "In Arbeit",
+                "text": "Vollständig"
+                if unlabeled_count == 0
+                else "Unvollständig",
+                "background_color": "bg-green"
+                if unlabeled_count == 0
+                else "bg-yellow",
             }
             dataset_dict["created_at"] = dataset.created_at.strftime(
                 "%d.%m.%Y um %H:%M Uhr"
             )
 
-            label_list = []
-            for label in labels:
-                label_dict = {}
-                image_ids = self.get_images_of_label(label, dataset)
-
-                # save label specific details in label object
-                # TODO: add locale
-                label_dict["name"] = "Klasse: " + label.name
-                label_dict["image_ids"] = image_ids[:19]
-                label_list.append(label_dict)
-
-                dataset_dict["image_amount"] += len(image_ids)
-
-            dataset_dict["label"] = label_list
-            dataset_dict["label_amount"] = len(label_list)
-
             dataset_list.append(dataset_dict)
 
-        return [listing_type, json.dumps(dataset_list)]
+        return [listing_type, dataset_list]
 
 
 class DatasetDetail(AuthenticatedQuerysetMixin, DetailView):
@@ -222,6 +204,44 @@ class DatasetUpdate(
     template_name = "datasets/edit_dataset.html"
     success_message = "Datensatz erfolgreich bearbeitet."
 
+
+class DatasetClassify(FormView):
+    """ Classifies unlabeled images of an existing dataset. """
+
+    form_class = DatasetClassifyForm
+    template_name = "datasets/dataset_label_unlabelled.html"
+    model = Image
+
+    def set_label(self, image_id, label_id):
+        """ Classifiy an image with an specific label. """
+
+        Image.objects.filter(pk=image_id).update(label=label_id)
+
+    def form_valid(self, form):
+        """Handling request of valid form.
+        Occurs if the user want to label images.
+        """
+
+        image_ids = form.data.getlist("image_id_list")
+        label_id = form.data["label"]
+
+        for image in image_ids:
+            self.set_label(image, label_id)
+
+        count = len(image_ids)
+        label_name = Label.objects.get(id=label_id).name
+        image_word = "Bild" if count == 1 else "Bilder"
+
+        messages.success(
+            self.request,
+            f"{count} {image_word} erfolgreich der Klasse „{label_name}“ "
+            f"zugeordnet.",
+        )
+
+        return HttpResponseRedirect(
+            reverse("dataset-labeleditor", kwargs=self.kwargs)
+        )
+
     def get_unlabeled_count(self):
         """
         Returns the amount of unclassified images of a specific dataset.
@@ -245,72 +265,13 @@ class DatasetUpdate(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["unlabeled_count"] = self.get_unlabeled_count()
+
         context["unlabeled_images"] = self.get_unlabeled_images()
-        context["dataset_id"] = self.kwargs["pk"]
+        context["unlabeled_count"] = self.get_unlabeled_count()
+        context["dataset"] = Dataset.objects.get(id=self.kwargs["pk"])
         context["labels"] = Label.objects.filter(dataset=self.kwargs["pk"])
-        context["classify_form"] = DatasetClassifyForm()
 
         return context
-
-
-class DatasetClassify(FormView):
-    """ Classifies unlabeled images of an existing dataset. """
-
-    form_class = DatasetClassifyForm
-    template_name = "datasets/partials/dataset_classify_form.html"
-    model = Image
-
-    def set_label(self, image_id, label_id):
-        """ Classifiy an image with an specific label. """
-
-        Image.objects.filter(pk=image_id).update(label=label_id)
-
-    def remove_label(self, image_id):
-        """ Removes a label of a given image. """
-
-        Image.objects.filter(pk=image_id).update(label=None)
-
-    def form_invalid(self, form):
-        """Handling request of invalid form.
-        Occurs if the given id is invalid.
-
-        Used for label deletion.
-        """
-        redirect = HttpResponseRedirect(
-            reverse("dataset-edit", kwargs=self.kwargs)
-        )
-
-        if "id" not in form.data:
-            return redirect
-
-        image_ids = form.data.getlist("image_id_list")
-
-        for image in image_ids:
-            self.remove_label(image)
-
-        messages.success(
-            self.request, "Bild erfolgreich aus der Klasse gelöscht."
-        )
-
-        return redirect
-
-    def form_valid(self, form):
-        """Handling request of valid form.
-        Occurs if the user want to label images.
-        """
-
-        image_ids = form.data.getlist("image_id_list")
-        label_id = form.data["label"]
-
-        for image in image_ids:
-            self.set_label(image, label_id)
-
-        messages.success(self.request, "Klasse erfolgreich zugeordnet.")
-
-        return HttpResponseRedirect(
-            reverse("dataset-edit", kwargs=self.kwargs)
-        )
 
 
 class DatasetDelete(AuthenticatedQuerysetMixin, DeleteView):
