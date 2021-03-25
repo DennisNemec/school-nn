@@ -102,7 +102,7 @@ class WrappedArchitecture:
     def __init__(self, json_representation: List[dict]):
         """Create a wrapped object and validates for syntax errors."""
         self.json_representation = json_representation
-        self.to_keras_model()  # Raises exception for invalid dictionary
+        self.to_keras_model(1)  # Raises exception for invalid dictionary hence output_dimension is irrelevant
 
     @classmethod
     def from_keras_model(cls, keras_model: keras.Model):
@@ -135,6 +135,6 @@ class WrappedArchitecture:
 
         # add auto generated output layer
         keras_model.add(layers.Dense(units=output_dimension,activation="softmax"))
-        
+
         keras_model.compile()
         return keras_model
