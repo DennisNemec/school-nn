@@ -57,7 +57,9 @@ class ArchitectureEditorView(AuthenticatedQuerysetMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["layer_list"] = json.dumps(provided_layer())
-        context["architecture_json"] = json.dumps(self.object.architecture_json)
-        context["selected_dataset_label_count"] = 32 # dummy value
+        context["architecture_json"] = json.dumps(
+            self.object.architecture_json
+        )
+        context["selected_dataset_label_count"] = 32  # dummy value
 
         return context

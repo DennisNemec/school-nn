@@ -102,6 +102,7 @@ def _initialize_training_pass(
     )
 
     output_dimension = project.dataset.label_set.count()
+    print(project.architecture.architecture_json)
 
     keras_model = wrapped_architecture.to_keras_model(output_dimension)
     keras_model.compile(
