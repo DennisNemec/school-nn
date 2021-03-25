@@ -1,9 +1,9 @@
 """Generate batches for training and validation."""
+from typing import List, Tuple, Optional, Union, Dict
 from multiprocessing.pool import Pool, AsyncResult
 from queue import Queue
 from random import shuffle, seed, randint
 from io import BytesIO
-from typing import List, Tuple, Optional, Union
 from numpy import array
 from tensorflow.keras import utils
 from imgaug import augmenters
@@ -93,6 +93,9 @@ class MultiprocessingBatchGenerator(utils.Sequence):
         self.batches_yielded_count = 0
         self.batches_in_queue_not_fetched = 0
         self.precalculate_batches_count = precalculate_batches_count
+        # Keras asks sometimes for the same batch
+        # twice, meaning running __getitem__(0) twice
+        self.deduplication_dict: Dict[int, array] = {}
 
     def __len__(self) -> int:
         return self.batch_count
@@ -128,24 +131,29 @@ class MultiprocessingBatchGenerator(utils.Sequence):
 
     def __getitem__(self, index):
         """Get one batch from queue. Used by keras."""
+        if self.deduplication_dict.get(index, False):
+            return self.deduplication_dict[index]
+
         ordered_batches_sum = (
             self.batches_yielded_count + self.batches_in_queue_not_fetched
         )
         if ordered_batches_sum < self.batch_count:
             self.generate_and_enqueue_batch_task()
 
-        if self.batches_in_queue_not_fetched < 1:
+        if self.batches_in_queue_not_fetched <= 0:
             raise ValueError("Trying to yield batch where none was ordered.")
 
         pool_task = self.batch_task_queue.get()
         batch = pool_task.get()
         self.batches_in_queue_not_fetched -= 1
         self.batches_yielded_count += 1
+        self.deduplication_dict[index] = batch
         return batch
 
     def reset_batch_count(self, batch_count: int):
         self.batch_count = batch_count
         self.batches_yielded_count = 0
+        self.deduplication_dict = {}
         generate_max = min(self.precalculate_batches_count, batch_count)
         while self.batches_in_queue_not_fetched < generate_max:
             self.generate_and_enqueue_batch_task()

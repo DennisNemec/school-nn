@@ -18,8 +18,6 @@ def make_sync(old_f):
         loop = self._event_loop
         return loop.run_until_complete(old_f(self, *args, **kwargs))
 
-    # new_f.__name__ == old_f.__name__
-
     return new_f
 
 
@@ -37,13 +35,13 @@ class BrowserIntegrationTestCase(StaticLiveServerTestCase):
         if asyncio.get_event_loop().is_closed():
             asyncio.set_event_loop(asyncio.new_event_loop())
         self._event_loop = asyncio.get_event_loop()
-        self._event_loop.run_until_complete(self.asyncSetUp())
+        self._event_loop.run_until_complete(self.async_set_up())
 
     def tearDown(self):
-        self._event_loop.run_until_complete(self.asyncTearDown())
+        self._event_loop.run_until_complete(self.async_tear_down())
         self._event_loop.close()
 
-    async def asyncSetUp(self):
+    async def async_set_up(self):
         self.browser = await launch(
             handleSIGINT=False,
             handleSIGTERM=False,
@@ -53,7 +51,7 @@ class BrowserIntegrationTestCase(StaticLiveServerTestCase):
         )
         self.page = await self.browser.newPage()
 
-    async def asyncTearDown(self):
+    async def async_tear_down(self):
         await self.browser.close()
 
     def goto(self, url):
