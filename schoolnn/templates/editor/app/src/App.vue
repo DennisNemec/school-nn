@@ -104,9 +104,15 @@ export default {
   created() {
     // use data given by Django
     this.providedLayerList = JSON.parse(document.getElementsByName("django_provided_layer_list")[0].value)
-    const importData = JSON.parse(document.getElementsByName("architecture_json")[0].value)
-
+    let importData = JSON.parse(document.getElementsByName("architecture_json")[0].value)
     const length = importData.length
+
+    importData.push({
+      type: "Dense",
+      name: "Output Layer (automatisch generiert)",
+      activation: "softmax",
+      units: document.getElementsByName("output_dimension")[0].value
+    })
 
     this.selectedLayerList = importData.map((backendLayer, index) => {
       const frontendLayer = {
@@ -218,6 +224,7 @@ export default {
 
     onSave() {
       let layerList = []
+      this.selectedLayerList.pop() // remove dummy output layer
 
       for (const selected_layer of this.selectedLayerList) {
         const selected_layer_dto = {

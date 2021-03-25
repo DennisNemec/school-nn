@@ -4,6 +4,7 @@
     {% csrf_token %}
 
     <input type="hidden" value="{{ layer_list }}" name="django_provided_layer_list"/>
+    <input type="hidden" value="{{ selected_dataset_label_count }}" name="output_dimension"/>
     <input type="hidden" value="{{ architecture_json }}" name="architecture_json"/>
 </form>
 

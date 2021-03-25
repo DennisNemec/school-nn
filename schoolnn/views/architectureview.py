@@ -4,7 +4,7 @@ from django.views.generic.edit import UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from schoolnn.models import Architecture
 from django.urls import reverse_lazy
-from schoolnn.resources.static.layer_list import layer_list
+from schoolnn.resources.static.layer_list import provided_layer
 from schoolnn.views.mixins import (
     AuthenticatedCreateView,
     AuthenticatedQuerysetMixin,
@@ -56,7 +56,8 @@ class ArchitectureEditorView(AuthenticatedQuerysetMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["layer_list"] = layer_list
+        context["layer_list"] = json.dumps(provided_layer())
         context["architecture_json"] = json.dumps(self.object.architecture_json)
+        context["selected_dataset_label_count"] = 32 # dummy value
 
         return context

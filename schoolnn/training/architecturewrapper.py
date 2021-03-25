@@ -126,12 +126,15 @@ class WrappedArchitecture:
         """Get json dumpable representation."""
         return self.json_representation
 
-    def to_keras_model(self) -> keras.Model:
+    def to_keras_model(self, output_dimension: int) -> keras.Model:
         """Get the architecture as keras model."""
         keras_model = keras.Sequential()
 
         for dict_layer in self.json_representation:
             keras_model.add(_dict_to_layer(dict_layer))
 
+        # add auto generated output layer
+        keras_model.add(layers.Dense(units=output_dimension,activation="softmax"))
+        
         keras_model.compile()
         return keras_model

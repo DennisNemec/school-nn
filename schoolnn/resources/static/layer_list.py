@@ -1,198 +1,225 @@
 import json
 
-layer_list = """
-        [
-          {
-            "type": "MaxPooling2D",
-            "default_name": "MaxPooling2D",
-            "input_dimension": 2,
-            "output_dimension": 2,
-            "properties": [
-              {
-                "name": "pool_size",
-                "description": "Poolgröße",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    32,
-                    32
-                  ],
-                  "min": 0,
-                  "max": 65535
-                },
-                "activated": true
-              },
-              {
-                "name": "strides",
-                "description": "Strides",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    0,
-                    0
-                  ],
-                  "min": 0,
-                  "max": 65535
-                },
-                "activated": true
-              }
+def provided_layer() -> str: 
+  provided_layer = [
+    {
+      "type": "MaxPooling2D",
+      "default_name": "MaxPooling2D",
+      "input_dimension": 2,
+      "output_dimension": 2,
+      "properties": [
+        {
+          "name": "pool_size",
+          "description": "Poolgröße",
+          "value": {
+            "type": "vector",
+            "dataType": "int",
+            "dimension": 2,
+            "default_value": [
+              32,
+              32
+            ],
+            "min": 0,
+            "max": 65535
+          },
+          "activated": True
+        },
+        {
+          "name": "strides",
+          "description": "Strides",
+          "value": {
+            "type": "vector",
+            "dataType": "int",
+            "dimension": 2,
+            "default_value": [
+              0,
+              0
+            ],
+            "min": 0,
+            "max": 65535
+          },
+          "activated": True
+        }
+      ]
+    },
+    {
+      "type": "Conv2D",
+      "input_dimension": 2,
+      "output_dimension": 2,
+      "default_name": "Conv2D",
+      "properties": [
+        {
+          "name": "activation",
+          "description": "Aktivierungsfunktion",
+          "value": {
+            "type": "list",
+            "dataType": "string",
+            "default_value": "relu",
+            "possible_values": [
+              "tanh",
+              "sigmoid",
+              "softmax",
+              "relu"
             ]
           },
-          {
-            "type": "Conv2D",
-            "input_dimension": 2,
-            "output_dimension": 2,
-            "default_name": "Conv2D",
-            "properties": [
-              {
-                "name": "activation",
-                "description": "Aktivierungsfunktion",
-                "value": {
-                  "type": "list",
-                  "dataType": "string",
-                  "default_value": "relu",
-                  "possible_values": [
-                    "tanh",
-                    "sigmoid",
-                    "softmax",
-                    "relu"
-                  ]
-                },
-                "activated": false
-              },
-              {
-                "name": "filters",
-                "value": {
-                  "type": "scalar",
-                  "dataType": "int",
-                  "default_value": 0,
-                  "min": 0,
-                  "max": 65535
-                },
-                "description": "Filter",
-                "activated": true
-              },
-              {
-                "name": "strides",
-                "description": "Strides",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    0,
-                    0
-                  ],
-                  "min": 0,
-                  "max": 65535
-                },
-                "activated": true
-              },
-              {
-                "name": "kernel_size",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    32,
-                    32
-                  ],
-                  "min": 0,
-                  "max": 65535
-                },
-                "description": "Kernelgröße",
-                "activated": true
-              },
-              {
-                "name": "padding",
-                "description": "Padding",
-                "value": {
-                  "type": "list",
-                  "dataType": "string",
-                  "default_value": "valid",
-                  "possible_values": [
-                    "same",
-                    "valid"
-                  ]
-                },
-                "activated": true
-              }
+          "activated": False
+        },
+        {
+          "name": "filters",
+          "value": {
+            "type": "scalar",
+            "dataType": "int",
+            "default_value": 0,
+            "min": 0,
+            "max": 65535
+          },
+          "description": "Filter",
+          "activated": True
+        },
+        {
+          "name": "strides",
+          "description": "Strides",
+          "value": {
+            "type": "vector",
+            "dataType": "int",
+            "dimension": 2,
+            "default_value": [
+              0,
+              0
+            ],
+            "min": 0,
+            "max": 65535
+          },
+          "activated": True
+        },
+        {
+          "name": "kernel_size",
+          "value": {
+            "type": "vector",
+            "dataType": "int",
+            "dimension": 2,
+            "default_value": [
+              32,
+              32
+            ],
+            "min": 0,
+            "max": 65535
+          },
+          "description": "Kernelgröße",
+          "activated": True
+        },
+        {
+          "name": "padding",
+          "description": "Padding",
+          "value": {
+            "type": "list",
+            "dataType": "string",
+            "default_value": "valid",
+            "possible_values": [
+              "same",
+              "valid"
             ]
           },
-          {
-            "type": "Flatten",
-            "input_dimension": 2,
-            "output_dimension": 1,
-            "default_name": "Flatten",
-            "properties": []
-          },
-          {
-            "type": "Dense",
-            "input_dimension": 1,
-            "output_dimension": 1,
-            "default_name": "Dense",
-            "properties": [
-              {
-                "name": "activation",
-                "description": "Aktivierungsfunktion",
-                "value": {
-                  "type": "list",
-                  "dataType": "string",
-                  "default_value": "tanh",
-                  "possible_values": [
-                    "tanh",
-                    "sigmoid",
-                    "softmax",
-                    "relu"
-                  ]
-                },
-                "activated": true
-              },
-              {
-                "name": "units",
-                "description": "Anzahl Neuronen",
-                "value": {
-                  "type": "scalar",
-                  "dataType": "int",
-                  "default_value": 32,
-                  "min": 0,
-                  "max": 65535
-                },
-                "activated": true
-              }
+          "activated": True
+        }
+      ]
+    },
+    {
+      "type": "Flatten",
+      "input_dimension": 2,
+      "output_dimension": 1,
+      "default_name": "Flatten",
+      "properties": []
+    },
+    {
+      "type": "Dense",
+      "input_dimension": 1,
+      "output_dimension": 1,
+      "default_name": "Dense",
+      "properties": [
+        {
+          "name": "activation",
+          "description": "Aktivierungsfunktion",
+          "value": {
+            "type": "list",
+            "dataType": "string",
+            "default_value": "tanh",
+            "possible_values": [
+              "tanh",
+              "sigmoid",
+              "softmax",
+              "relu"
             ]
           },
-          {
-            "type": "Dropout",
-            "default_name": "Dropout",
-            "properties": [
-              {
-                "name": "rate",
-                "description": "Dropoutrate",
-                "value": {
-                  "type": "scalar",
-                  "dataType": "float",
-                  "default_value": 0.1,
-                  "min": 0,
-                  "max": 1,
-                  "step": 0.01
-                },
-                "activated": true
-              }
-            ]
+          "activated": True
+        },
+        {
+          "name": "units",
+          "description": "Anzahl Neuronen",
+          "value": {
+            "type": "scalar",
+            "dataType": "int",
+            "default_value": 32,
+            "min": 0,
+            "max": 65535
           },
-          {
-            "type": "BatchNormalization",
-            "default_name": "Batch normalization",
-            "properties": []
-          }
-        ]
-        """
+          "activated": True
+        }
+      ]
+    },
+    {
+      "type": "Dropout",
+      "default_name": "Dropout",
+      "properties": [
+        {
+          "name": "rate",
+          "description": "Dropoutrate",
+          "value": {
+            "type": "scalar",
+            "dataType": "float",
+            "default_value": 0.1,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "activated": True
+        }
+      ]
+    },
+    {
+      "type": "BatchNormalization",
+      "default_name": "Batch normalization",
+      "properties": []
+    },
+
+    {
+      "type": "Input",
+      "default_name": "Input",
+      "input_dimension": 2,
+      "output_dimension": 2,
+      "properties": [
+        {
+          "name": "shape",
+          "description": "Eingabegröße",
+          "value": {
+            "type": "vector",
+            "dataType": "int",
+            "dimension": 3,
+            "default_value": [
+              32,
+              32,
+              3
+            ],
+            "min": 0,
+            "max": 65535
+          },
+          "activated": True
+        },
+      ]
+    },
+  ]
+
+  return provided_layer
 
 
 def default_layers() -> str:
@@ -202,22 +229,13 @@ def default_layers() -> str:
     """
     layers = [
         {
-            "type": "MaxPooling2D",
+            "type": "Input",
             "name": "Input Layer",
-            "pool_size": [
+            "shape": [
               32,
               32,
+              3,
             ],
-            "strides": [
-              0,
-              0,
-            ],
-        },
-        {
-            "type": "Dense",
-            "name": "Output Layer",
-            "activation": "relu",
-            "units": 32,
         },
     ]
 
