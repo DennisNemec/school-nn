@@ -239,8 +239,6 @@ export default {
         layerList.push(selected_layer_dto)
       }
 
-      console.log(layerList, this.selectedLayerList)
-
       document.getElementsByName("architecture_json")[0].value =
           JSON.stringify(layerList,null,2)
 
