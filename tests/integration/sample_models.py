@@ -1,5 +1,9 @@
 """Get sample objects for testing."""
+from typing import List
 from datetime import datetime
+from os import makedirs
+from numpy import array, random
+from PIL import Image as PillowImage
 from schoolnn.models import (
     TrainingParameter,
     TerminationCondition,
@@ -24,7 +28,20 @@ VALIDATION_SPLIT = 0.1
 BATCH_SIZE = 16
 
 
-def get_test_project() -> Project:
+def _generate_random_images(image_list: List[Image]) -> array:
+    dataset_dir = image_list[0].dataset.dir
+    makedirs(dataset_dir, exist_ok=True)
+
+    for img in image_list:
+        img_dimension = random.randint(20) + 10  # 10 - 30
+        arr = random.rand(img_dimension, img_dimension, 3)
+        arr *= 255
+        arr = arr.astype("uint8")
+        pil_img = PillowImage.fromarray(arr)
+        pil_img.save(img.path)
+
+
+def get_test_project(make_images_existing=False) -> Project:
     user = User.objects.create()
 
     architecture = Architecture.objects.create(
@@ -37,7 +54,7 @@ def get_test_project() -> Project:
     label0 = Label.objects.create(dataset=dataset, name=LABEL_0_NAME)
     label1 = Label.objects.create(dataset=dataset, name=LABEL_1_NAME)
     label2 = Label.objects.create(dataset=dataset, name=LABEL_2_NAME)
-    for _ in range(1000):
+    for _ in range(234):
         for lab in [label0, label1, label2]:
             Image.objects.create(dataset=dataset, label=label0)
 
@@ -48,12 +65,17 @@ def get_test_project() -> Project:
         architecture=architecture,
     )
 
+    if make_images_existing:
+        _generate_random_images(
+            image_list=Image.objects.filter(dataset=dataset)
+        )
+
     return project
 
 
-def get_test_training_pass() -> TrainingPass:
+def get_test_training_pass(make_images_existing=False) -> TrainingPass:
 
-    project = get_test_project()
+    project = get_test_project(make_images_existing=make_images_existing)
 
     training_parameter = TrainingParameter(
         validation_split=VALIDATION_SPLIT,

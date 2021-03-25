@@ -1,7 +1,5 @@
 """Test schoolnn.training.one_hot_coding."""
 from django.test import TestCase
-from typing import List
-from schoolnn.models import Image
 from schoolnn.training.batch_generator import (
     BatchGeneratorTraining,
     BatchGeneratorValidation,
@@ -9,9 +7,6 @@ from schoolnn.training.batch_generator import (
 from schoolnn.training.load_dataset import (
     get_training_and_validation_images,
 )
-from os import makedirs
-from numpy import array, random
-from PIL import Image as PillowImage
 from ..sample_models import (
     BATCH_SIZE,
     LABEL_COUNT,
@@ -19,32 +14,18 @@ from ..sample_models import (
 )
 
 
-def _generate_random_images(image_list: List[Image]) -> array:
-    dataset_dir = image_list[0].dataset.dir
-    makedirs(dataset_dir, exist_ok=True)
-
-    for img in image_list:
-        img_dimension = random.randint(20) + 10  # 10 - 30
-        arr = random.rand(img_dimension, img_dimension, 3)
-        arr *= 255
-        arr = arr.astype("uint8")
-        pil_img = PillowImage.fromarray(arr)
-        pil_img.save(img.path)
-
-
 class BatchGenerationTestCase(TestCase):
     """Test one hot coding methods."""
 
     def setUp(self):
         # project has three labels
-        self.training_pass = get_test_training_pass()
+        self.training_pass = get_test_training_pass(make_images_existing=True)
         self.project = self.training_pass.project
 
     def test_batch_generation_training(self):
         imgs_trainig, _ = get_training_and_validation_images(
             self.training_pass
         )
-        _generate_random_images(imgs_trainig)
 
         generator_training = BatchGeneratorTraining(
             image_list=imgs_trainig,
@@ -88,7 +69,6 @@ class BatchGenerationTestCase(TestCase):
         _, imgs_validation = get_training_and_validation_images(
             self.training_pass
         )
-        _generate_random_images(imgs_validation)
 
         generator_validation = BatchGeneratorValidation(
             image_list=imgs_validation,
@@ -98,8 +78,9 @@ class BatchGenerationTestCase(TestCase):
             precalculate_batches_count=4,
         )
 
-        generator_validation.reset_batch_count(8)
-        assert len(generator_validation) == 8
+        expected_batch_count = 8
+        generator_validation.reset_batch_count(expected_batch_count)
+        assert len(generator_validation) == expected_batch_count
         actual_batch_count = 0
         for batch in generator_validation:
             x, y = batch
@@ -107,5 +88,5 @@ class BatchGenerationTestCase(TestCase):
             assert x.shape == (BATCH_SIZE, 44, 44, 3)
             assert y.shape == (BATCH_SIZE, LABEL_COUNT)
 
-        assert actual_batch_count == 8
+        assert actual_batch_count == expected_batch_count
         assert generator_validation.batches_in_queue_not_fetched == 0
