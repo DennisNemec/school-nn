@@ -85,7 +85,10 @@ WSGI_APPLICATION = "schoolnn_app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "timeout": 80,
+        "NAME": os.environ.get(
+            "DATABASE", os.path.join(BASE_DIR, "db.sqlite3")
+        ),
     }
 }
 

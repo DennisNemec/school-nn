@@ -6,19 +6,13 @@ from os import environ, remove, makedirs
 from uuid import uuid4
 from django.core.management import call_command
 
-TEST_DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "/tmp/schoolnn-testing-{}.sqlite3".format(uuid4().hex),
-    }
-}
 TEST_STORAGE = "/tmp/schoolnnstorage-{}".format(uuid4().hex)
+TEST_DATABASE = "/tmp/schoolnn-testing-{}.sqlite3".format(uuid4().hex)
 environ.setdefault("DJANGO_SETTINGS_MODULE", "schoolnn_app.settings")
 environ.setdefault("STORAGE", TEST_STORAGE)
+environ.setdefault("DATABASE", TEST_DATABASE)
 load_dotenv()
 import schoolnn_app.settings  # noqa: 402
-
-schoolnn_app.settings.DATABASES = TEST_DATABASES
 
 
 def setup():
@@ -28,5 +22,5 @@ def setup():
 
 
 def teardown():
-    remove(schoolnn_app.settings.DATABASES["default"]["NAME"])
+    remove(TEST_DATABASE)
     shutil.rmtree(TEST_STORAGE)

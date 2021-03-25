@@ -127,7 +127,7 @@ def _worker(q: Queue):
     while True:
         training_pass = q.get()
         if not isinstance(training_pass, TrainingPass):
-            raise ValueError("Wrong type in queue, expected TraininPass")
+            raise ValueError("Wrong type in queue, expected TrainingPass")
         if DEBUG:
             print("Running training pass", training_pass)
         run_job_until_done_or_terminated(
