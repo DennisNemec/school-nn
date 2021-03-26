@@ -6,7 +6,6 @@ node_modules/
 __pycache__/
 .env
 upload.zip
-migrations/
 storage/*
 !storage/.gitkeep
 .DS_Store

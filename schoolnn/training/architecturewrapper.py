@@ -103,9 +103,9 @@ class WrappedArchitecture:
         """Create a wrapped object and validates for syntax errors."""
         self.json_representation = json_representation
         print(self.json_representation)
-        self.to_keras_model(
-            1
-        )  # Raises exception for invalid dictionary hence output_dimension is irrelevant
+        # Raises exception for invalid dictionary
+        # hence output_dimension is irrelevant
+        self.to_keras_model(1)
 
     @classmethod
     def from_keras_model(cls, keras_model: keras.Model):

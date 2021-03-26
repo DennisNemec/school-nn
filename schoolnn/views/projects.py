@@ -170,8 +170,12 @@ class ProjectEditView(LoginRequiredMixin, View):
         if self.step == "dataset":
             return {"datasets": self._get_user_datasets()}
         elif self.step == "architecture":
+            if self.project.dataset is None:
+                label_count = 0
+            else:
+                label_count = self.project.dataset.label_set.count()
             return {
-                "selected_dataset_label_count": self.project.dataset.label_set.count(),
+                "selected_dataset_label_count": label_count,
                 "layer_list": json.dumps(provided_layer()),
                 "architecture_json": json.dumps(
                     self.project.architecture.architecture_json
