@@ -1,23 +1,8 @@
 """Test schoolnn.training.grad_cam.py"""
-from tensorflow.keras import Model, layers, Sequential
 from schoolnn.training.grad_cam import get_submodels, grad_cam
 from schoolnn.training.batch_generator import numpy_image_batch_to_x_batch
 from numpy import random, array
-
-
-def get_sample_model() -> Model:
-    m = Sequential(
-        [
-            layers.Input(shape=(16, 16, 3)),
-            layers.Conv2D(filters=8, kernel_size=(4, 4)),
-            layers.MaxPooling2D(pool_size=(2, 2)),
-            layers.Flatten(),
-            layers.Dense(3, activation="softmax"),
-        ]
-    )
-
-    m.compile(loss="crossentropy", optimizer="adam")
-    return m
+from ..sample_models import get_sample_model
 
 
 def test_get_submodels():

@@ -1,9 +1,12 @@
 """Get sample objects for testing."""
 from typing import List
+from uuid import uuid4
+from tensorflow.keras import Model, layers, Sequential
 from datetime import datetime
 from os import makedirs
 from numpy import array, random
 from PIL import Image as PillowImage
+from schoolnn.training import WrappedArchitecture
 from schoolnn.models import (
     TrainingParameter,
     TerminationCondition,
@@ -33,7 +36,7 @@ def _generate_random_images(image_list: List[Image]) -> array:
     makedirs(dataset_dir, exist_ok=True)
 
     for img in image_list:
-        img_dimension = random.randint(20) + 10  # 10 - 30
+        img_dimension = random.randint(4) + 8  # 8 to 12
         arr = random.rand(img_dimension, img_dimension, 3)
         arr *= 255
         arr = arr.astype("uint8")
@@ -41,25 +44,45 @@ def _generate_random_images(image_list: List[Image]) -> array:
         pil_img.save(img.path)
 
 
+def get_sample_model() -> Model:
+    m = Sequential(
+        [
+            layers.Input(shape=(8, 8, 3)),
+            layers.Conv2D(filters=8, kernel_size=(4, 4)),
+            layers.MaxPooling2D(pool_size=(2, 2)),
+            layers.Flatten(),
+            layers.Dense(3, activation="softmax"),
+        ]
+    )
+
+    m.compile(loss="crossentropy", optimizer="adam")
+    return m
+
+
+_wrapped_arch = WrappedArchitecture.from_keras_model(get_sample_model())
+
+
 def get_test_project(make_images_existing=False) -> Project:
-    user = User.objects.create()
+    user = User.objects.create(
+        username=uuid4().hex,
+    )
 
     architecture = Architecture.objects.create(
-        name="",
-        architecture_json={},
+        name=uuid4().hex,
+        architecture_json=_wrapped_arch.json_representation,
         user=user,
     )
 
-    dataset = Dataset.objects.create(name="")
+    dataset = Dataset.objects.create(name=uuid4().hex)
     label0 = Label.objects.create(dataset=dataset, name=LABEL_0_NAME)
     label1 = Label.objects.create(dataset=dataset, name=LABEL_1_NAME)
     label2 = Label.objects.create(dataset=dataset, name=LABEL_2_NAME)
-    for _ in range(234):
+    for _ in range(123):
         for lab in [label0, label1, label2]:
             Image.objects.create(dataset=dataset, label=label0)
 
     project = Project.objects.create(
-        name="",
+        name=uuid4().hex,
         dataset=dataset,
         user=user,
         architecture=architecture,
@@ -88,7 +111,7 @@ def get_test_training_pass(make_images_existing=False) -> TrainingPass:
     )
 
     training_pass = TrainingPass.objects.create(
-        name="",
+        name=uuid4().hex,
         dataset_id=project.dataset,
         project=project,
         architecture=project.architecture,

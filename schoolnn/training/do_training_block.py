@@ -74,7 +74,6 @@ def do_training_block(
     )
 
     # Saving metrics
-    # print(training_metrics.history)
     training_loss = training_metrics.history["loss"][0]
     training_accuracy = training_metrics.history["precision"][0]
     validation_loss = validation_metrics[0]

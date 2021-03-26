@@ -33,7 +33,8 @@ class LoadDatasetTestCase(TestCase):
             img_count_val + img_count_tra
         )
 
-        assert abs(validation_split_calced - VALIDATION_SPLIT) < 0.001
+        # assert split is approximately as desired
+        assert abs(validation_split_calced - VALIDATION_SPLIT) < 0.01
 
     def test_label_distribution(self):
         training_pass = get_test_training_pass()

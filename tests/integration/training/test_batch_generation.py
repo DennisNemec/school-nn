@@ -69,7 +69,6 @@ class BatchGenerationTestCase(TestCase):
         _, imgs_validation = get_training_and_validation_images(
             self.training_pass
         )
-
         generator_validation = BatchGeneratorValidation(
             image_list=imgs_validation,
             training_pass=self.training_pass,
