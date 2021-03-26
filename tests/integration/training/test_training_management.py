@@ -1,5 +1,6 @@
 """Test schoolnn.training.training_magement."""
 from schoolnn.models import (
+    TrainingPass,
     Architecture,
     TrainingParameter,
     TerminationCondition,
@@ -34,7 +35,7 @@ MINIMAL_ARCH = [
 ]
 
 
-def _get_training_pass_id_existing_in_db() -> int:
+def _get_training_pass_existing_in_db() -> TrainingPass:
     project = get_test_project(make_images_existing=True)
     project.training_parameter = TrainingParameter(
         validation_split=0.1,
@@ -61,7 +62,7 @@ def _get_training_pass_id_existing_in_db() -> int:
 
 
 def test_run_job_until_done_or_terminated():
-    training_pass = _get_training_pass_id_existing_in_db()
+    training_pass = _get_training_pass_existing_in_db()
     run_job_until_done_or_terminated(
         training_pass=training_pass,
         verbose=True,
