@@ -13,7 +13,7 @@
     {% url "show-training" training_pass.project.id training_pass.id as show_training_url %}
     {% breadcrumb training_pass.name show_training_url %}
     {% url "inference" training_pass.project.id training_pass.id as inference_url %}
-    {% breadcrumb "Inferenze" inference_url %}
+    {% breadcrumb "Inferenz" inference_url %}
 {% endblock %}
 
 {% block top %}
