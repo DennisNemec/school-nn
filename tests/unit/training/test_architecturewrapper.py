@@ -41,7 +41,7 @@ def test_dict_to_model():
     """Test dict to model conversion."""
     d = _get_example_list()
     wrapped = WrappedArchitecture(d)
-    keras_model: Model = wrapped.to_keras_model()
+    keras_model: Model = wrapped.to_keras_model(1024)
     keras_model.compile("adam", loss="mse")
 
     assert keras_model.input_shape == (None, 128, 128, 3)

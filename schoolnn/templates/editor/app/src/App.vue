@@ -1,6 +1,9 @@
 <template>
   <div id="app" class="text-primary font-sans">
     <div class="w-full card">
+      <div v-if="invalidState == true" class="w-full p-4 rounded text-white bg-red" >
+        <p>{{ errorMessage }}</p>
+      </div>
       <div class="p-4 flex items-start flex-wrap">
         <!-- Print preview layer -->
         <div class="w-1/4 self-stretch pt-6 border-text-gray border-dotted border-r-2">
@@ -31,6 +34,7 @@
               group="layer"
               @start="drag=false"
               @end="drag=true"
+              @sort="onArchitectureChange"
               :move="onMove">
 
             <div class="flex" v-for="element in selectedLayerList" :key="element.id">
@@ -66,6 +70,8 @@ export default {
        */
       selectedLayer: {},
 
+      errorMessage: "",
+
       invalidState: false,
 
       /*
@@ -86,7 +92,7 @@ export default {
         Layers on the drag and drop field
         Input and output layer are obligatory
 
-        Given by Django
+        Initialized by Django
        */
       selectedLayerList: [],
     }
@@ -98,9 +104,15 @@ export default {
   created() {
     // use data given by Django
     this.providedLayerList = JSON.parse(document.getElementsByName("django_provided_layer_list")[0].value)
-    const importData = JSON.parse(document.getElementsByName("architecture_json")[0].value)
-
+    let importData = JSON.parse(document.getElementsByName("architecture_json")[0].value)
     const length = importData.length
+
+    importData.push({
+      type: "Dense",
+      name: "Output Layer (automatisch generiert)",
+      activation: "softmax",
+      units: document.getElementsByName("output_dimension")[0].value
+    })
 
     this.selectedLayerList = importData.map((backendLayer, index) => {
       const frontendLayer = {
@@ -110,11 +122,11 @@ export default {
         fixed: index === 0 || index === length - 1,
         note: '',
         name: backendLayer.name,
-        layer_information: this.providedLayerList.find(element => element.type === backendLayer.type),
+        layer_information: this.getLayerInformationByType(backendLayer.type),
         layer: {
           type: backendLayer.type,
           properties: []
-        }
+        },
       }
 
       return Object.keys(backendLayer).reduce((frontendLayer, key) => {
@@ -172,7 +184,7 @@ export default {
         properties: properties
       }
 
-      const layerInformation = this.providedLayerList.find(element => element.type === event.type)
+      const layerInformation = this.getLayerInformationByType(event.type)
 
       const newSelectedLayer =  {id: newId, name: event.default_name, layer_information: layerInformation, note: "", layer: layer}
 
@@ -183,6 +195,17 @@ export default {
       return newSelectedLayer
     },
 
+    // Validate the given architecture
+    onArchitectureChange() {
+      const isValid = this.isArchitectureValid()
+
+      if (!isValid) {
+        this.invalidState = true
+      } else {
+        this.invalidState = false
+        this.setErrorMessage("")
+      }
+    },
 
     onInvalidStateToggle(state) {
       this.invalidState = state
@@ -193,12 +216,15 @@ export default {
         return
       }
 
+      console.log(layer)
+
       this.invalidState = false
       this.setSelectedLayer(layer)
     },
 
     onSave() {
       let layerList = []
+      this.selectedLayerList.pop() // remove dummy output layer
 
       for (const selected_layer of this.selectedLayerList) {
         const selected_layer_dto = {
@@ -213,8 +239,6 @@ export default {
         layerList.push(selected_layer_dto)
       }
 
-      console.log(layerList, this.selectedLayerList)
-
       document.getElementsByName("architecture_json")[0].value =
           JSON.stringify(layerList,null,2)
 
@@ -223,10 +247,11 @@ export default {
 
     onDeleteLayer(layer) {
       if (!layer.fixed) {
-        this.selectedLayer = this.selectedLayerList.find(element => element.id === 1)
+        this.selectedLayer = this.selectedLayerList[0] // select input layer
         const ind = this.selectedLayerList.indexOf(this.selectedLayerList.find(element => element.id === layer.id))
         this.$delete(this.selectedLayerList, ind)
         this.invalidState = false
+        this.onArchitectureChange()
       }
     },
 
@@ -247,12 +272,82 @@ export default {
 
       // add
       this.selectedLayerList.splice(oldIndex, 0, clonedLayer)
+
+      this.onArchitectureChange()
     },
 
     /* Helper methods */
     setSelectedLayer(layer) {
       this.selectedLayer = layer
     },
+
+    setErrorMessage(message) {
+      this.errorMessage = message
+    },
+
+    getLayerInformationByType(type) {
+      return this.providedLayerList.find(element => element.type === type)
+    },
+
+    getNextLayer(currentLayer) {
+      const indexOfCurrentLayer = this.selectedLayerList.indexOf(currentLayer)
+
+      if (indexOfCurrentLayer >= 0 && indexOfCurrentLayer < this.selectedLayerList.length - 1) {
+        return this.selectedLayerList[indexOfCurrentLayer + 1]
+      }
+
+      return false
+    },
+
+    isLastLayer(currentLayer) {
+      const indexOfCurrentLayer = this.selectedLayerList.indexOf(currentLayer)
+
+      return (indexOfCurrentLayer === this.selectedLayerList.length - 1) ? true : false
+    },
+
+    isArchitectureValid() {
+      const inputLayer = this.selectedLayerList[0]
+      const followingLayer = this.getNextLayer(inputLayer)
+
+      return this.validateAdjacentLayerDimension(inputLayer, null, followingLayer)
+    },
+
+    // DFS-like dimension validation
+    validateAdjacentLayerDimension(currentLayer, previousOutputDimension, followingLayer) {
+      if (this.isLastLayer(currentLayer)) {
+        return true
+      }
+
+      const currentLayerInformation = this.getLayerInformationByType(currentLayer.layer.type)
+      const followingLayerInformation = this.getLayerInformationByType(followingLayer.layer.type)
+      const nextLayer = this.getNextLayer(followingLayer)
+
+      if (typeof followingLayerInformation.input_dimension === 'undefined' && typeof currentLayerInformation.output_dimension !== 'undefined') {
+        return this.validateAdjacentLayerDimension(followingLayer, currentLayerInformation.output_dimension, nextLayer)
+      }
+
+      if (typeof followingLayerInformation.input_dimension === 'undefined' && typeof currentLayerInformation.output_dimension === 'undefined') {
+        return this.validateAdjacentLayerDimension(followingLayer, previousOutputDimension, nextLayer)
+      }
+
+      if (typeof currentLayerInformation.output_dimension === 'undefined') {
+        if (previousOutputDimension !== followingLayerInformation.input_dimension) {
+          this.setErrorMessage("Dimension von " + followingLayer.name + " und der vorherigen Schicht stimmen nicht überein.")
+          return false
+        } else {
+          return this.validateAdjacentLayerDimension(followingLayer, previousOutputDimension, nextLayer)
+        }
+      }
+
+      if (currentLayerInformation.output_dimension === followingLayerInformation.input_dimension) {
+        return this.validateAdjacentLayerDimension(followingLayer, currentLayerInformation.output_dimension, nextLayer)
+      } else {
+        this.setErrorMessage("Dimension von " + followingLayer.name + " und der vorherigen Schicht stimmen nicht überein.")
+        return false
+      }
+
+    }
+  
   },
 }
 

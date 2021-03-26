@@ -23,7 +23,7 @@ from schoolnn.models import (
 from schoolnn.resources.static.default_training_parameters import (
     default_training_parameters,
 )
-from schoolnn.resources.static.layer_list import layer_list
+from schoolnn.resources.static.layer_list import provided_layer
 from schoolnn.views.mixins import (
     LoginRequiredMixin,
     AuthenticatedQuerysetMixin,
@@ -171,7 +171,8 @@ class ProjectEditView(LoginRequiredMixin, View):
             return {"datasets": self._get_user_datasets()}
         elif self.step == "architecture":
             return {
-                "layer_list": layer_list,
+                "selected_dataset_label_count": self.project.dataset.label_set.count(),
+                "layer_list": json.dumps(provided_layer()),
                 "architecture_json": json.dumps(
                     self.project.architecture.architecture_json
                 ),

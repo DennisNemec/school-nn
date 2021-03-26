@@ -73,7 +73,7 @@ def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
         )
     elif layer_type == "Conv2D":
         keras_layer = layers.Conv2D(
-            filters=layer_dict["filters"],
+            filters=int(layer_dict["filters"]),
             kernel_size=layer_dict["kernel_size"],
             strides=layer_dict["strides"],
             padding=layer_dict["padding"],
@@ -82,12 +82,12 @@ def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
     elif layer_type == "Flatten":
         keras_layer = layers.Flatten()
     elif layer_type == "Dropout":
-        keras_layer = layers.Dropout(rate=layer_dict["rate"])
+        keras_layer = layers.Dropout(rate=float(layer_dict["rate"]))
     elif layer_type == "BatchNormalization":
         keras_layer = layers.BatchNormalization()
     elif layer_type == "Dense":
         keras_layer = layers.Dense(
-            units=layer_dict["units"], activation=layer_dict["activation"]
+            units=int(layer_dict["units"]), activation=layer_dict["activation"]
         )
     else:
         err_msg = "Unsupported layer: {}".format(layer_type)
@@ -102,7 +102,10 @@ class WrappedArchitecture:
     def __init__(self, json_representation: List[dict]):
         """Create a wrapped object and validates for syntax errors."""
         self.json_representation = json_representation
-        self.to_keras_model()  # Raises exception for invalid dictionary
+        print(self.json_representation)
+        self.to_keras_model(
+            1
+        )  # Raises exception for invalid dictionary hence output_dimension is irrelevant
 
     @classmethod
     def from_keras_model(cls, keras_model: keras.Model):
@@ -126,12 +129,17 @@ class WrappedArchitecture:
         """Get json dumpable representation."""
         return self.json_representation
 
-    def to_keras_model(self) -> keras.Model:
+    def to_keras_model(self, output_dimension: int) -> keras.Model:
         """Get the architecture as keras model."""
         keras_model = keras.Sequential()
 
         for dict_layer in self.json_representation:
             keras_model.add(_dict_to_layer(dict_layer))
+
+        # add auto generated output layer
+        keras_model.add(
+            layers.Dense(units=output_dimension, activation="softmax")
+        )
 
         keras_model.compile()
         return keras_model

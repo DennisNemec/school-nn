@@ -1,188 +1,203 @@
-layer_list = """
-        [
-          {
+def provided_layer() -> str:
+    provided_layer = [
+        {
             "type": "MaxPooling2D",
             "default_name": "MaxPooling2D",
+            "input_dimension": 2,
+            "output_dimension": 2,
             "properties": [
-              {
-                "name": "pool_size",
-                "description": "Poolgröße",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    32,
-                    32
-                  ],
-                  "min": 0,
-                  "max": 65535
+                {
+                    "name": "pool_size",
+                    "description": "Poolgröße",
+                    "value": {
+                        "type": "vector",
+                        "dataType": "int",
+                        "dimension": 2,
+                        "default_value": [32, 32],
+                        "min": 0,
+                        "max": 65535,
+                    },
+                    "activated": True,
                 },
-                "activated": true
-              },
-              {
-                "name": "strides",
-                "description": "Strides",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    0,
-                    0
-                  ],
-                  "min": 0,
-                  "max": 65535
+                {
+                    "name": "strides",
+                    "description": "Strides",
+                    "value": {
+                        "type": "vector",
+                        "dataType": "int",
+                        "dimension": 2,
+                        "default_value": [0, 0],
+                        "min": 0,
+                        "max": 65535,
+                    },
+                    "activated": True,
                 },
-                "activated": true
-              }
-            ]
-          },
-          {
+            ],
+        },
+        {
             "type": "Conv2D",
+            "input_dimension": 2,
+            "output_dimension": 2,
             "default_name": "Conv2D",
             "properties": [
-              {
-                "name": "activation",
-                "description": "Aktivierungsfunktion",
-                "value": {
-                  "type": "list",
-                  "dataType": "string",
-                  "default_value": "relu",
-                  "possible_values": [
-                    "tanh",
-                    "sigmoid",
-                    "softmax",
-                    "relu"
-                  ]
+                {
+                    "name": "activation",
+                    "description": "Aktivierungsfunktion",
+                    "value": {
+                        "type": "list",
+                        "dataType": "string",
+                        "default_value": "relu",
+                        "possible_values": [
+                            "tanh",
+                            "sigmoid",
+                            "softmax",
+                            "relu",
+                        ],
+                    },
+                    "activated": False,
                 },
-                "activated": false
-              },
-              {
-                "name": "filters",
-                "value": {
-                  "type": "scalar",
-                  "dataType": "int",
-                  "default_value": 0,
-                  "min": 0,
-                  "max": 65535
+                {
+                    "name": "filters",
+                    "value": {
+                        "type": "scalar",
+                        "dataType": "int",
+                        "default_value": 0,
+                        "min": 0,
+                        "max": 65535,
+                    },
+                    "description": "Filter",
+                    "activated": True,
                 },
-                "description": "Filter",
-                "activated": true
-              },
-              {
-                "name": "strides",
-                "description": "Strides",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    0,
-                    0
-                  ],
-                  "min": 0,
-                  "max": 65535
+                {
+                    "name": "strides",
+                    "description": "Strides",
+                    "value": {
+                        "type": "vector",
+                        "dataType": "int",
+                        "dimension": 2,
+                        "default_value": [0, 0],
+                        "min": 0,
+                        "max": 65535,
+                    },
+                    "activated": True,
                 },
-                "activated": true
-              },
-              {
-                "name": "kernel_size",
-                "value": {
-                  "type": "vector",
-                  "dataType": "int",
-                  "dimension": 2,
-                  "default_value": [
-                    32,
-                    32
-                  ],
-                  "min": 0,
-                  "max": 65535
+                {
+                    "name": "kernel_size",
+                    "value": {
+                        "type": "vector",
+                        "dataType": "int",
+                        "dimension": 2,
+                        "default_value": [32, 32],
+                        "min": 0,
+                        "max": 65535,
+                    },
+                    "description": "Kernelgröße",
+                    "activated": True,
                 },
-                "description": "Kernelgröße",
-                "activated": true
-              },
-              {
-                "name": "padding",
-                "description": "Padding",
-                "value": {
-                  "type": "list",
-                  "dataType": "string",
-                  "default_value": "valid",
-                  "possible_values": [
-                    "same",
-                    "valid"
-                  ]
+                {
+                    "name": "padding",
+                    "description": "Padding",
+                    "value": {
+                        "type": "list",
+                        "dataType": "string",
+                        "default_value": "valid",
+                        "possible_values": ["same", "valid"],
+                    },
+                    "activated": True,
                 },
-                "activated": true
-              }
-            ]
-          },
-          {
+            ],
+        },
+        {
             "type": "Flatten",
+            "input_dimension": 2,
+            "output_dimension": 1,
             "default_name": "Flatten",
-            "properties": []
-          },
-          {
+            "properties": [],
+        },
+        {
             "type": "Dense",
+            "input_dimension": 1,
+            "output_dimension": 1,
             "default_name": "Dense",
             "properties": [
-              {
-                "name": "activation",
-                "description": "Aktivierungsfunktion",
-                "value": {
-                  "type": "list",
-                  "dataType": "string",
-                  "default_value": "tanh",
-                  "possible_values": [
-                    "tanh",
-                    "sigmoid",
-                    "softmax",
-                    "relu"
-                  ]
+                {
+                    "name": "activation",
+                    "description": "Aktivierungsfunktion",
+                    "value": {
+                        "type": "list",
+                        "dataType": "string",
+                        "default_value": "tanh",
+                        "possible_values": [
+                            "tanh",
+                            "sigmoid",
+                            "softmax",
+                            "relu",
+                        ],
+                    },
+                    "activated": True,
                 },
-                "activated": true
-              },
-              {
-                "name": "units",
-                "description": "Anzahl Neuronen",
-                "value": {
-                  "type": "scalar",
-                  "dataType": "int",
-                  "default_value": 32,
-                  "min": 0,
-                  "max": 65535
+                {
+                    "name": "units",
+                    "description": "Anzahl Neuronen",
+                    "value": {
+                        "type": "scalar",
+                        "dataType": "int",
+                        "default_value": 32,
+                        "min": 0,
+                        "max": 65535,
+                    },
+                    "activated": True,
                 },
-                "activated": true
-              }
-            ]
-          },
-          {
+            ],
+        },
+        {
             "type": "Dropout",
             "default_name": "Dropout",
             "properties": [
-              {
-                "name": "rate",
-                "description": "Dropoutrate",
-                "value": {
-                  "type": "scalar",
-                  "dataType": "float",
-                  "default_value": 0.1,
-                  "min": 0,
-                  "max": 1,
-                  "step": 0.01
-                },
-                "activated": true
-              }
-            ]
-          },
-          {
+                {
+                    "name": "rate",
+                    "description": "Dropoutrate",
+                    "value": {
+                        "type": "scalar",
+                        "dataType": "float",
+                        "default_value": 0.1,
+                        "min": 0,
+                        "max": 1,
+                        "step": 0.01,
+                    },
+                    "activated": True,
+                }
+            ],
+        },
+        {
             "type": "BatchNormalization",
             "default_name": "Batch normalization",
-            "properties": []
-          }
-        ]
-        """
+            "properties": [],
+        },
+        {
+            "type": "Input",
+            "default_name": "Input",
+            "input_dimension": 2,
+            "output_dimension": 2,
+            "properties": [
+                {
+                    "name": "shape",
+                    "description": "Eingabegröße",
+                    "value": {
+                        "type": "vector",
+                        "dataType": "int",
+                        "dimension": 3,
+                        "default_value": [32, 32, 3],
+                        "min": 0,
+                        "max": 65535,
+                    },
+                    "activated": True,
+                },
+            ],
+        },
+    ]
+
+    return provided_layer
 
 
 def default_layers() -> list:
@@ -192,16 +207,13 @@ def default_layers() -> list:
     """
     layers = [
         {
-            "type": "Dense",
+            "type": "Input",
             "name": "Input Layer",
-            "activation": "relu",
-            "units": 32,
-        },
-        {
-            "type": "Dense",
-            "name": "Output Layer",
-            "activation": "relu",
-            "units": 32,
+            "shape": [
+                32,
+                32,
+                3,
+            ],
         },
     ]
 
