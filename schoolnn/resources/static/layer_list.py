@@ -1,4 +1,4 @@
-def provided_layer() -> str:
+def provided_layer():
     provided_layer = [
         {
             "type": "MaxPooling2D",
