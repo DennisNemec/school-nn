@@ -66,18 +66,3 @@ def test_run_job_until_done_or_terminated():
         training_pass=training_pass,
         verbose=True,
     )
-
-
-"""
-class RunJobTestCase(TestCase):
-#@pytest.mark.django_db
-    def setUp(self):
-        self.training_pass = _get_training_pass_id_existing_in_db()
-
-    def test_run_job_until_done_or_terminated(self):
-        #training_pass_id = _get_training_pass_id_existing_in_db()
-        run_job_until_done_or_terminated(
-            training_pass=self.training_pass,
-            verbose=True,
-        )
-"""

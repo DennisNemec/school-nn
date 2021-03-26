@@ -105,7 +105,7 @@ def _initialize_training_pass(
     keras_model.compile(
         optimizer=project.training_parameter.optimizer.value,
         loss=project.training_parameter.loss_function.value,
-        metrics=[metrics.Precision()],
+        metrics=[metrics.Precision(name="precision")],
     )
 
     weights_binary = BytesIO(keras_model_to_bytes(keras_model))

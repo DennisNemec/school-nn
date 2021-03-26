@@ -50,7 +50,7 @@ def numpy_image_batch_to_x_batch(
 
 
 class BatchTask:
-    """Task to calculate one batch, used by process pool"""
+    """Task to calculate one batch, used by process pool."""
 
     def __init__(self, filepaths: List[str], labels_hotencoded: List[array]):
         """Initialize batch task."""
