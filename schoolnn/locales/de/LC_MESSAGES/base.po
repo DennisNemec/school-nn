@@ -1,2 +1,0 @@
-msgid = "Hello there"
-msgstr = "Sei gegrüßt der Herr"

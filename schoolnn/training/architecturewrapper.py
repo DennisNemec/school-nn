@@ -105,9 +105,7 @@ class WrappedArchitecture:
         print(self.json_representation)
         # Raises exception for invalid dictionary
         # hence output_dimension is irrelevant
-        self.to_keras_model(
-            1
-        )
+        self.to_keras_model(1)
 
     @classmethod
     def from_keras_model(cls, keras_model: keras.Model):
