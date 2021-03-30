@@ -53,6 +53,7 @@ def run_job_until_done_or_terminated(
     )
 
     # Run
+    overhead_start = time()
     while True:
 
         training_pass.refresh_from_db()
@@ -84,8 +85,12 @@ def run_job_until_done_or_terminated(
             verbose=verbose,
         )
         duration_seconds_block = time() - training_start_timestamp
-        training_pass.duration_seconds += duration_seconds_block
-        training_pass.save(update_fields=["duration_seconds"])
+        overhead_seconds = training_start_timestamp - overhead_start
+        overhead_start = time()
+        training_pass.duration_milliseconds += 1000 * (
+            duration_seconds_block + overhead_seconds
+        )
+        training_pass.save(update_fields=["duration_milliseconds"])
 
     training_generator.close()
     validation_generator.close()

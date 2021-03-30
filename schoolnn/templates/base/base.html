@@ -61,7 +61,7 @@
                 <div class="space-y-4 mb-8">
                 {% for message in messages %}
                     <div class="w-full py-3 px-6 border-2 rounded-lg rounded-lg text-white  {% if message.tags %}{% if message.tags == "success" %}bg-light-green border-green{% elif message.tags == "error" %}bg-red border-red{% endif %}{% endif %}">
-                        {{ message }}
+                        {{ message|linebreaks }}
                     </div>
                 {% endfor %}
                 </div>
