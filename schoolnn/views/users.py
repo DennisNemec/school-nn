@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from schoolnn.views.mixins import UserIsWorkspaceAdminMixin
 from django import forms
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
 class UserForm(forms.ModelForm):
@@ -34,6 +35,17 @@ class UserDeleteView(UserIsWorkspaceAdminMixin, DeleteView):
     success_url = reverse_lazy("user-list")
     template_name = "users/delete.html"
 
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+
+        messages.success(
+            self.request, f"Benutzer „{user.username}“ erfolgreich gelöscht."
+        )
+
+        user.delete()
+
+        return HttpResponseRedirect(self.success_url)
+
 
 class UserEditView(UserIsWorkspaceAdminMixin, UpdateView):
     model = User
@@ -56,7 +68,15 @@ class UserCreateView(UserIsWorkspaceAdminMixin, CreateView):
     form_class = UserForm
     template_name = "users/add.html"
 
-    def form_valid(self, form):
+    def form_valid(self, form: UserForm):
         form.instance.password = make_password(form.instance.password)
         form.instance.workspace = self.request.user.workspace
+
+        messages.success(
+            self.request,
+            "Benutzer „{}“ erfolgreich erstellt.".format(
+                form.cleaned_data["username"]
+            ),
+        )
+
         return super().form_valid(form)
