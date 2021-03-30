@@ -78,13 +78,13 @@ def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
     if layer_type == "Input":
         keras_layer = layers.Input(
             shape=layer_dict["shape"],
-            name=layer_dict.get('name', None),
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "MaxPooling2D":
         keras_layer = layers.MaxPooling2D(
             pool_size=layer_dict["pool_size"],
             strides=layer_dict["strides"],
-            name=layer_dict.get('name', None),
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "Conv2D":
         keras_layer = layers.Conv2D(
@@ -93,26 +93,26 @@ def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
             strides=layer_dict["strides"],
             padding=layer_dict["padding"],
             activation=layer_dict["activation"],
-            name=layer_dict.get('name', None),
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "Flatten":
         keras_layer = layers.Flatten(
-            name=layer_dict.get('name', None),
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "Dropout":
         keras_layer = layers.Dropout(
             rate=float(layer_dict["rate"]),
-            name=layer_dict.get('name', None),
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "BatchNormalization":
         keras_layer = layers.BatchNormalization(
-            name=layer_dict.get('name', None),
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "Dense":
         keras_layer = layers.Dense(
             units=int(layer_dict["units"]),
             activation=layer_dict["activation"],
-            name=layer_dict.get('name', None),
+            name=layer_dict.get("name", None),
         )
     else:
         err_msg = "Unsupported layer: {}".format(layer_type)
