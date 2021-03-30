@@ -140,7 +140,7 @@ class ArchitectureCreateView(AuthenticatedCreateView):
         if error_message:
             messages.error(self.request, error_message)
         else:
-            msg = "Architektur „{}“ erfolgreich gesetzt.".format(
+            msg = "Architektur „{}“ erfolgreich erstellt.".format(
                 architecture.name
             )
             messages.success(self.request, msg)
