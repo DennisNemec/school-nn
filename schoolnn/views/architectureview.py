@@ -162,7 +162,6 @@ class ArchitectureEditorView(AuthenticatedQuerysetMixin, UpdateView):
             architecture_json=architecture.architecture_json,
             arch_name=architecture.name,
         )
-
         if error_message:
             messages.error(self.request, error_message)
         else:
