@@ -45,4 +45,8 @@ class TestArchitecture(BrowserIntegrationTestCase):
         assert "architectures/" in self.page.url
 
         content = await self.page.content()
+        assert "erfolgreich gelöscht" in content
+
+        await self.page.reload()
+        content = await self.page.content()
         assert "Test 2" not in content

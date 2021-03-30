@@ -1,6 +1,7 @@
 """Convert from keras to a simple dictionary/json format and vice versa."""
+from typing import Union, Any, Callable, List, Optional
+from enum import Enum
 from tensorflow.keras import layers
-from typing import Union, Any, Callable, List
 from json import dumps
 import tensorflow.keras as keras
 
@@ -143,3 +144,52 @@ class WrappedArchitecture:
 
         keras_model.compile()
         return keras_model
+
+
+class ArchitectureValidationError(Enum):
+    """Possible validation errors."""
+
+    TOO_MANY_CONVOLUTIONS = "too_many_convolutions"
+    INVALID_DIMENSION = "invalid_dimensions"
+    INPUT_SHAPE_NOT_3D = "not_3d"
+    INPUT_SHAPE_NOT_RGB = "not_rgb"
+    INPUT_SHAPE_NOT_SQUARE = "not_square"
+    NULL_VALUE = "null_value"
+    UNKNOWN = "unknown"
+
+
+def validate_architecture_json_representation(
+    architecture_json_representation: List[dict],
+) -> Optional[ArchitectureValidationError]:
+    """Validate the json representation of a given dict."""
+    input_shape = architecture_json_representation[0]["shape"]
+    if len(input_shape) != 3:
+        return ArchitectureValidationError.INPUT_SHAPE_NOT_3D
+
+    if input_shape[-1] != 3:
+        return ArchitectureValidationError.INPUT_SHAPE_NOT_RGB
+
+    if input_shape[0] != input_shape[1]:
+        return ArchitectureValidationError.INPUT_SHAPE_NOT_SQUARE
+
+    for layer in architecture_json_representation:
+        if layer.get("filters", 1) == 0:
+            return ArchitectureValidationError.NULL_VALUE
+        if layer.get("strides", [1, 1]) == [0, 0]:
+            return ArchitectureValidationError.NULL_VALUE
+        if layer.get("kernel_size", [1, 1]) == [0, 0]:
+            return ArchitectureValidationError.NULL_VALUE
+
+    try:
+        WrappedArchitecture(
+            json_representation=architecture_json_representation
+        )
+    except ValueError as e:
+        if "Negative dimension size caused" in e.args[0]:
+            return ArchitectureValidationError.TOO_MANY_CONVOLUTIONS
+        if "must be > 0":
+            return ArchitectureValidationError.NULL_VALUE
+        print("Unbekannter Fehler:", e.args[0])
+        return ArchitectureValidationError.UNKNOWN
+
+    return None

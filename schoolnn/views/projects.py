@@ -28,6 +28,7 @@ from schoolnn.views.mixins import (
     LoginRequiredMixin,
     AuthenticatedQuerysetMixin,
 )
+from .architectureview import get_error_message
 
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -275,9 +276,15 @@ class ProjectEditView(LoginRequiredMixin, View):
         )
         self.project.architecture.save()
 
-        messages.success(
-            self.request, "Die Änderungen wurden erfolgreich gespeichert."
+        error_message = get_error_message(
+            self.project.architecture.architecture_json
         )
+        if error_message:
+            messages.error(self.request, error_message)
+        else:
+            messages.success(
+                self.request, "Die Änderungen wurden erfolgreich gespeichert."
+            )
 
         return redirect("project-edit-architecture", self.kwargs["pk"])
 

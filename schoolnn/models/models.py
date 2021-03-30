@@ -155,7 +155,7 @@ class TrainingPass(models.Model):
     """One training pass of a project."""
 
     name = models.CharField(max_length=15)
-    duration_seconds = models.BigIntegerField(default=0)
+    duration_milliseconds = models.BigIntegerField(default=0)
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -176,12 +176,19 @@ class TrainingPass(models.Model):
         self.training_parameter_json = training_parameter.to_dict()
 
     @property
+    def duration_seconds(self) -> int:
+        return round(self.duration_milliseconds / 1000)
+
+    @property
     def duration_human_readable(self) -> str:
         """Get training duration readable for humans."""
-        duration = self.duration_seconds
         result = ""
         if self.duration_seconds > 24 * 3600:
-            result += "{} {} ".format(duration.days, "Tage")
+            seconds_of_one_day = 24 * 3600
+            result += "{} {} ".format(
+                int(self.duration_seconds / seconds_of_one_day),
+                "Tage",
+            )
         result += "{:02}:{:02}:{:02}h".format(
             int(self.duration_seconds / 3600),
             int(self.duration_seconds / 60) % 60,
