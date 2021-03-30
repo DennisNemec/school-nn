@@ -16,6 +16,21 @@ class TrainingPassState(Enum):
     STOP_REQUESTED = "stop_requested"
     STOPPED = "stopped"
 
+    @property
+    def human_readable(self):
+        """Get human readable text of status."""
+        lookup_dict = {
+            self.START_REQUESTED: "In der Warteschlange...",
+            self.RUNNING: "Läuft",
+            self.PAUSE_REQUESTED: "Wird pausiert...",
+            self.PAUSED: "Pausiert",
+            self.RESUME_REQUESTED: "In der Warteschlange...",
+            self.COMPLETED: "Fertig",
+            self.STOP_REQUESTED: "Wird gestoppt...",
+            self.STOPPED: "Gestoppt",
+        }
+        return lookup_dict[self]
+
 
 class LossFunction(Enum):
     """Enumeration of the loss function."""
@@ -60,6 +75,21 @@ class TerminationCondition:
     def from_dict(cls, dictionary: dict):
         """Load object from a dictionary."""
         return cls(seconds=dictionary["seconds"], epochs=dictionary["epochs"])
+
+    @property
+    def time_human_readable(self) -> str:
+        """Get seconds as human readable string."""
+        if self.seconds is None:
+            return "∞"  # infinity
+        result = ""
+        if self.seconds > 24 * 3600:
+            result += "{} {} ".format(int(self.seconds / 24 / 3600), "Tage")
+        result += "{:02}:{:02}:{:02}h".format(
+            int(self.seconds / 3600),
+            int(self.seconds / 60) % 60,
+            int(self.seconds) % 60,
+        )
+        return result
 
     def termination_criteria_fulfilled(
         self, running_for_seconds: float, epoche: int

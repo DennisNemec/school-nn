@@ -2,7 +2,6 @@
 from io import BytesIO
 from tensorflow.keras import models
 from django.db import transaction
-from datetime import datetime
 from schoolnn_app.settings import (
     TRAINING_BLOCK_BATCH_COUNT,
 )
@@ -92,11 +91,8 @@ def do_training_block(
 
     with transaction.atomic():
         # Saving new weights
-        training_pass_to_continue.end_datetime = datetime.now()
         training_pass_to_continue.model_weights = keras_model_to_bytes(model)
-        training_pass_to_continue.save(
-            update_fields=["model_weights", "end_datetime"]
-        )
+        training_pass_to_continue.save(update_fields=["model_weights"])
 
         TrainingStepMetrics.objects.create(
             training_pass=training_pass_to_continue,

@@ -2,7 +2,6 @@
 from typing import List
 from uuid import uuid4
 from tensorflow.keras import Model, layers, Sequential
-from datetime import datetime
 from os import makedirs
 from numpy import array, random
 from PIL import Image as PillowImage
@@ -115,8 +114,6 @@ def get_test_training_pass(make_images_existing=False) -> TrainingPass:
         dataset_id=project.dataset,
         project=project,
         architecture=project.architecture,
-        start_datetime=datetime.now(),
-        end_datetime=datetime.now(),
         training_parameter_json=training_parameter.to_dict(),
     )
     return training_pass

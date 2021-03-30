@@ -6,3 +6,4 @@ from .delete import TrainingDeleteView  # noqa:F401
 from .stop import TrainingStopView  # noqa:F401
 from .list_view import TrainingListView  # noqa:F401
 from .compare import TrainingCompareView  # noqa:F401
+from .continue_ import TrainingContinueView  # noqa:F401
