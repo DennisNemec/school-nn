@@ -2,6 +2,7 @@
 from . import importsetup  # noqa:F401
 from typing import Optional
 from ..models import (
+    TerminationCondition,
     TrainingPassState,
     TrainingPass,
     Project,
@@ -17,7 +18,7 @@ from .batch_generator import BatchGeneratorTraining, BatchGeneratorValidation
 from tensorflow.keras import metrics
 from schoolnn_app.settings import DEBUG
 from multiprocessing import Process, Queue
-from datetime import datetime
+from time import time
 from io import BytesIO
 
 
@@ -34,11 +35,7 @@ def run_job_until_done_or_terminated(
         training_pass.training_parameter.termination_condition
     )
     training_pass.status = TrainingPassState.RUNNING.value
-    training_pass.start_datetime = datetime.now()
-    training_pass.end_datetime = datetime.now()
-    training_pass.save(
-        update_fields=["status", "start_datetime", "end_datetime"]
-    )
+    training_pass.save(update_fields=["status"])
 
     model = bytes_to_keras_model(training_pass.model_weights)
     image_dimensions = model.input_shape[1:-1]
@@ -57,6 +54,7 @@ def run_job_until_done_or_terminated(
 
     # Run
     while True:
+
         training_pass.refresh_from_db()
         training_pass_status = TrainingPassState(training_pass.status)
         if training_pass_status == TrainingPassState.PAUSE_REQUESTED:
@@ -70,28 +68,27 @@ def run_job_until_done_or_terminated(
         if training_pass_status == TrainingPassState.COMPLETED:
             break
 
-        running_for_seconds = (
-            datetime.now().timestamp()
-            - training_pass.start_datetime.timestamp()
-        )
         if termination_condition.termination_criteria_fulfilled(
-            running_for_seconds=running_for_seconds,
+            running_for_seconds=training_pass.duration_seconds,
             epoche=training_pass.epoche,
         ):
             training_pass.status = TrainingPassState.COMPLETED.value
             training_pass.save()
             break
 
+        training_start_timestamp = time()
         do_training_block(
             training_pass_to_continue=training_pass,
             training_generator=training_generator,
             validation_generator=validation_generator,
             verbose=verbose,
         )
+        duration_seconds_block = time() - training_start_timestamp
+        training_pass.duration_seconds += duration_seconds_block
+        training_pass.save(update_fields=["duration_seconds"])
+
     training_generator.close()
     validation_generator.close()
-    training_pass.end_datetime = datetime.now()
-    training_pass.save(update_fields=["end_datetime"])
 
 
 def _initialize_training_pass(
@@ -102,7 +99,6 @@ def _initialize_training_pass(
     )
 
     output_dimension = project.dataset.label_set.count()
-    print(project.architecture.architecture_json)
 
     keras_model = wrapped_architecture.to_keras_model(output_dimension)
     keras_model.compile(
@@ -115,8 +111,6 @@ def _initialize_training_pass(
 
     return TrainingPass.objects.create(
         name=training_pass_name,
-        start_datetime=datetime.now(),
-        end_datetime=datetime.now(),
         dataset_id=project.dataset,
         training_parameter_json=project.training_parameter_json,
         project=project,
@@ -173,6 +167,34 @@ class TrainingManager:
         )
         TrainingManager._queue.put(training_pass)
         return training_pass
+
+    def continue_training_pass(
+        self,
+        training_pass: TrainingPass,
+    ):
+        """Continue an already started training pass."""
+        fallback_continue_seconds = 600
+        fallback_continue_epochs = 3
+
+        if TrainingManager._queue is None:
+            raise ValueError("TrainingManager singleton not initialized!")
+        training_pass.status = TrainingPassState.RESUME_REQUESTED.value
+        training_parameter = training_pass.project.training_parameter
+        seconds_to_continue = (
+            training_parameter.termination_condition.seconds
+            or fallback_continue_seconds
+        )
+        epochs_to_continue = (
+            training_parameter.termination_condition.epochs
+            or fallback_continue_epochs
+        )
+        training_parameter.termination_condition = TerminationCondition(
+            seconds=training_pass.duration_seconds + seconds_to_continue,
+            epochs=training_pass.epoche + epochs_to_continue,
+        )
+        training_pass.training_parameter = training_parameter
+        training_pass.save(update_fields=["status", "training_parameter_json"])
+        TrainingManager._queue.put(training_pass)
 
     def _read_back_tasks_from_database(self):
         training_passes = TrainingPass.objects.filter(

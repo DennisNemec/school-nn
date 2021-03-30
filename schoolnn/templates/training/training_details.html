@@ -20,8 +20,13 @@
         <a class="button-standard" href="{% url "inference" project.id training_pass.id%}">Inferenz</a>
         {% if training_pass.status == 'running' %}
         <a class="border-red text-red button-inverted" href="{% url "stop-training" project.id training_pass.id %}">Stop</a>
+        {% elif training_pass.status == 'finished' or training_pass.status ==  'stopped' %}
+        <a class="border-standart text-standart button-inverted" href="{% url "continue-training" project.id training_pass.id %}">Fortsetzen</a>
+        {% endif %}
+        {% if training_pass.status == 'stopped' %}
+        <a class="border-red text-white button-inverted" href="{% url "delete-training" project.id training_pass.id %}">Löschen</a>
         {% else %}
-        <a class="border-red text-red button-inverted" href="{% url "delete-training" project.id training_pass.id %}">Löschen</a>
+        <!--a class="border-disabled text-disabled button-disabled" project.id training_pass.id %}">Löschen</a-->
         {% endif %}
         <a class="button-standard button-inverted" href="{% url "show-trainings" project.id %}">Zurück</a>
     </div>
@@ -38,9 +43,18 @@
         <br>
     {% else %}
     <div class="card">
-        Status: {{ training_pass.status }}<br>
-        Epoche: {{ training_pass.epoche }}<br>
-        Dauer: {{ training_pass.duration_human_readable }}
+        Status: {{ training_pass.status_human_readable }}<br>
+        {% if training_pass.training_parameter.termination_condition.epochs %}
+            Epoche: {{ training_pass.epoche }} / {{ training_pass.training_parameter.termination_condition.epochs }} <br>
+        {% else %}
+            Epoche: {{ training_pass.epoche }}<br>
+        {% endif %}
+        {% if training_pass.training_parameter.termination_condition.seconds %}
+            Dauer: {{ training_pass.duration_human_readable }} / {{ training_pass.training_parameter.termination_condition.time_human_readable }} <br>
+        {% else %}
+            Dauer: {{ training_pass.duration_human_readable }}
+        {% endif %}
+        
     </div>
     <br>
     <div class="card">

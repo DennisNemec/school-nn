@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
 from json import loads
-from .training import TrainingParameter
+from .training import TrainingParameter, TrainingPassState
 from schoolnn_app.settings import STORAGE
 from schoolnn.resources.static.layer_list import default_layers
 from schoolnn.resources.static.default_training_parameters import (
@@ -155,8 +155,7 @@ class TrainingPass(models.Model):
     """One training pass of a project."""
 
     name = models.CharField(max_length=15)
-    start_datetime = models.DateTimeField()
-    end_datetime = models.DateTimeField()
+    duration_seconds = models.BigIntegerField(default=0)
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     training_parameter_json = models.JSONField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -179,14 +178,14 @@ class TrainingPass(models.Model):
     @property
     def duration_human_readable(self) -> str:
         """Get training duration readable for humans."""
-        duration = self.end_datetime - self.start_datetime
+        duration = self.duration_seconds
         result = ""
-        if duration.days:
+        if self.duration_seconds > 24 * 3600:
             result += "{} {} ".format(duration.days, "Tage")
         result += "{:02}:{:02}:{:02}h".format(
-            int(duration.seconds / 3600),
-            int(duration.seconds / 60) % 60,
-            int(duration.seconds) % 60,
+            int(self.duration_seconds / 3600),
+            int(self.duration_seconds / 60) % 60,
+            int(self.duration_seconds) % 60,
         )
         return result
 
@@ -200,6 +199,11 @@ class TrainingPass(models.Model):
         if last:
             return last[0]
         return None
+
+    @property
+    def status_human_readable(self) -> str:
+        """Gives back nice string rather than start_requested."""
+        return TrainingPassState(self.status).human_readable
 
 
 class TrainingStepMetrics(models.Model):

@@ -15,6 +15,7 @@ from .views.training import (
     TrainingDeleteView,
     TrainingListView,
     TrainingStopView,
+    TrainingContinueView,
     TrainingCompareView,
 )
 from .views.auth import AuthLoginView
@@ -156,6 +157,11 @@ urlpatterns = [
         "project/<int:project_pk>/training/<int:training_pk>/stop",
         TrainingStopView.as_view(),
         name="stop-training",
+    ),
+    path(
+        "project/<int:project_pk>/training/<int:training_pk>/continue",
+        TrainingContinueView.as_view(),
+        name="continue-training",
     ),
     path(
         "project/<int:project_pk>/training",
