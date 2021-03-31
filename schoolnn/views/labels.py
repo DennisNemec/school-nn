@@ -12,6 +12,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from schoolnn.models import Dataset, Label, Image
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
+from io import BytesIO
+from PIL import Image as ImagePillow, ImageOps
 
 
 class LabelEditForm(forms.ModelForm):
@@ -159,11 +161,17 @@ class LabelCreateImageView(FormView):
         return context
 
     def copy_file(self, image_binary, path):
-        """ Copy uploaded image to specified folder """
+        """Copy uploaded image to specified folder."""
+        image_bio = BytesIO()
+        for chunk in image_binary.chunks():
+            image_bio.write(chunk)
 
-        with open(path, "wb+") as destination:
-            for chunk in image_binary.chunks():
-                destination.write(chunk)
+        image_pillow = ImagePillow.open(image_bio)
+        width, height = image_pillow.size
+        target_size = min([width, height, 512])
+        image_pillow = ImageOps.fit(
+            image_pillow, (target_size, target_size), ImagePillow.ANTIALIAS
+        )
 
     def create_image_entry(self, label, dataset):
         """ Insert an Image object into the database """

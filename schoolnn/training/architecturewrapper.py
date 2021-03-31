@@ -210,7 +210,7 @@ def validate_architecture_json_representation(
     except ValueError as e:
         if "Negative dimension size caused" in e.args[0]:
             return ArchitectureValidationError.TOO_MANY_CONVOLUTIONS
-        if "must be > 0":
+        if "must be > 0" in e.args[0]:
             return ArchitectureValidationError.NULL_VALUE
         print("Unbekannter Fehler:", e.args[0])
         return ArchitectureValidationError.UNKNOWN
