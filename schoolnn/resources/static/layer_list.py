@@ -50,6 +50,7 @@ def provided_layer():
                         "dataType": "string",
                         "default_value": "relu",
                         "possible_values": [
+                            "linear",
                             "tanh",
                             "sigmoid",
                             "softmax",
@@ -130,8 +131,9 @@ def provided_layer():
                     "value": {
                         "type": "list",
                         "dataType": "string",
-                        "default_value": "tanh",
+                        "default_value": "relu",
                         "possible_values": [
+                            "linear",
                             "tanh",
                             "sigmoid",
                             "softmax",
