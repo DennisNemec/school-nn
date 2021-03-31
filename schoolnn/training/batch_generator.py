@@ -7,7 +7,7 @@ from io import BytesIO
 from numpy import array
 from tensorflow.keras import utils
 from imgaug import augmenters
-from PIL import Image as PillowImage
+from PIL import ImageOps, Image as PillowImage
 from PIL.JpegImagePlugin import JpegImageFile
 from .one_hot_coding import get_one_hot_encoder
 from ..models import (
@@ -30,7 +30,11 @@ def image_to_numpy_array(
     else:
         raise TypeError("Got unknown image type!")
 
-    image_pil_resized = image_pil.resize(target_dimensions)
+    image_pil_resized = ImageOps.fit(
+        image_pil,
+        target_dimensions,
+        PillowImage.ANTIALIAS,
+    )
     return array(image_pil_resized.convert("RGB"))
 
 
