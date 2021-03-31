@@ -84,7 +84,7 @@ class DatasetList(AuthenticatedQuerysetMixin, ListView):
 
         # check url location
         if listing_type == "own" or listing_type == "":
-            datasets = Dataset.objects.order_by("-created_at")
+            datasets = Dataset.objects.filter(user=self.request.user).order_by("-created_at")
         elif listing_type == "shared":
             datasets = []  # TODO: add shared functionality
         else:
