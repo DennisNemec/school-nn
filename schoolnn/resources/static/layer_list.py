@@ -5,6 +5,7 @@ def provided_layer():
             "default_name": "MaxPooling2D",
             "input_dimension": 2,
             "output_dimension": 2,
+            "hidden": False,
             "properties": [
                 {
                     "name": "pool_size",
@@ -36,6 +37,7 @@ def provided_layer():
         },
         {
             "type": "Conv2D",
+            "hidden": False,
             "input_dimension": 2,
             "output_dimension": 2,
             "default_name": "Conv2D",
@@ -109,6 +111,7 @@ def provided_layer():
         },
         {
             "type": "Flatten",
+            "hidden": False,
             "input_dimension": 2,
             "output_dimension": 1,
             "default_name": "Flatten",
@@ -116,6 +119,7 @@ def provided_layer():
         },
         {
             "type": "Dense",
+            "hidden": False,
             "input_dimension": 1,
             "output_dimension": 1,
             "default_name": "Dense",
@@ -152,6 +156,7 @@ def provided_layer():
         },
         {
             "type": "Dropout",
+            "hidden": False,
             "default_name": "Dropout",
             "properties": [
                 {
@@ -171,11 +176,13 @@ def provided_layer():
         },
         {
             "type": "BatchNormalization",
+            "hidden": False,
             "default_name": "Batch normalization",
             "properties": [],
         },
         {
             "type": "Input",
+            "hidden": True,
             "default_name": "Input",
             "input_dimension": 2,
             "output_dimension": 2,

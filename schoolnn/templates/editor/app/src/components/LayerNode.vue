@@ -6,20 +6,23 @@
       </svg>
     </span>
 
-    <div class="text-left select-none w-full ml-3">
+    <div  class="text-left select-none w-full ml-3">
       <div v-on:click="$emit('on-layer-select', layer)">
         <h4 class="mb-4">{{layer.name}}</h4>
-        <div class="mb-1 mt-0 block">Typ: {{layer.layer_information.type}}</div>
-        <div class="mb-1 mt-0 block" v-for="property in layer.layer_information.properties" :key="property.name">
-          {{property.description}}: {{
-            Array.isArray(getProperty(property.name).value)
-                ? getProperty(property.name).value.join("x")
-                : getProperty(property.name).value
-          }}
+
+        <div v-if="layer.dummy == false">
+          <div class="mb-1 mt-0 block">Typ: {{layer.layer_information.type}}</div>
+          <div class="mb-1 mt-0 block" v-for="property in layer.layer_information.properties" :key="property.name">
+            {{property.description}}: {{
+              Array.isArray(getProperty(property.name).value)
+                  ? getProperty(property.name).value.join("x")
+                  : getProperty(property.name).value
+            }}
+          </div>
         </div>
       </div>
 
-      <div class="inline-flex space-x-2 text-text-gray mt-4">
+      <div v-if="layer.fixed === false" class="inline-flex space-x-2 text-text-gray mt-4">
         <a class="flex-1 cursor-pointer text-red" v-on:click="$emit('on-delete-layer', layer)">Löschen</a>
         <svg class="inline self-center text-text-gray fill-current"  width="5" height="5" viewBox="0 0 120 120" version="1.1"
              xmlns="http://www.w3.org/2000/svg">

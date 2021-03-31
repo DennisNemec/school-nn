@@ -1275,6 +1275,13 @@ table {
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 
+[class*="button-disabled"] {
+  --tw-bg-opacity: 1;
+  background-color: rgba(241, 243, 245, var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
 [class*="button-inverted"] {
   background-color: transparent;
   --tw-border-opacity: 1;

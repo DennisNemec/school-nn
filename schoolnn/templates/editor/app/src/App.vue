@@ -19,7 +19,7 @@
           >
 
             <div class="flex" v-for="element in providedLayerList" :key="element.type">
-              <layer-preview :title=element.default_name />
+              <layer-preview v-if="element.hidden === false" :title=element.default_name />
             </div>
           </draggable>
 
@@ -105,7 +105,6 @@ export default {
     // use data given by Django
     this.providedLayerList = JSON.parse(document.getElementsByName("django_provided_layer_list")[0].value)
     let importData = JSON.parse(document.getElementsByName("architecture_json")[0].value)
-    const length = importData.length
 
     importData.push({
       type: "Dense",
@@ -118,9 +117,10 @@ export default {
       const frontendLayer = {
         id: index,
         first: index === 0,
-        last: index === length - 1,
-        fixed: index === 0 || index === length - 1,
+        last: index === importData.length - 1,
+        fixed: index === 0 || index === importData.length - 1,
         note: '',
+        dummy: index === importData.length - 1,
         name: backendLayer.name,
         layer_information: this.getLayerInformationByType(backendLayer.type),
         layer: {
@@ -130,10 +130,12 @@ export default {
       }
 
       return Object.keys(backendLayer).reduce((frontendLayer, key) => {
-        frontendLayer.layer.properties.push({
-          name: key,
-          value: backendLayer[key]
-        })
+        if (key !== 'name') {
+          frontendLayer.layer.properties.push({
+            name: key,
+            value: backendLayer[key]
+          })
+        }
 
         return frontendLayer
       }, frontendLayer)
@@ -158,7 +160,7 @@ export default {
         return 1
       }
 
-      // make sure items are inserted above the last element
+      // make sure items are inserted under the last element
       if (relatedContext.element.last) {
         return -1
       }
@@ -186,7 +188,7 @@ export default {
 
       const layerInformation = this.getLayerInformationByType(event.type)
 
-      const newSelectedLayer =  {id: newId, name: event.default_name, layer_information: layerInformation, note: "", layer: layer}
+      const newSelectedLayer =  {id: newId, dummy:false, fixed:false, name: event.default_name, layer_information: layerInformation, note: "", layer: layer}
 
       if (!this.invalidState) {
         this.setSelectedLayer(newSelectedLayer)
@@ -212,20 +214,13 @@ export default {
     },
 
     onLayerSelect(layer) {
-      if (this.invalidState === true) {
-        return
-      }
-
-      console.log(layer)
-
-      this.invalidState = false
       this.setSelectedLayer(layer)
     },
 
     onSave() {
       let layerList = []
       this.selectedLayerList.pop() // remove dummy output layer
-
+      
       for (const selected_layer of this.selectedLayerList) {
         const selected_layer_dto = {
           type: selected_layer.layer.type,
@@ -240,8 +235,8 @@ export default {
       }
 
       document.getElementsByName("architecture_json")[0].value =
-          JSON.stringify(layerList,null,2)
-
+          JSON.stringify(layerList)
+      
       document.querySelector("#architecture_form").submit()
     },
 

@@ -3,7 +3,8 @@
     <h4 class="mb-4">Schicht-Konfiguration</h4>
 
     <p class="text-text-gray font-light mb-2">Titel</p>
-    <input type="text" class="w-2/3" :name=layer.name @change="onChangeName" :value=layer.name  />
+    <input v-if="layer.dummy === false" type="text" class="w-2/3" :name=layer.name @change="onChangeName" :value=layer.name  />
+    <input v-else type="text" class="bg-light-gray w-2/3" :name=layer.name @change="onChangeName" :value=layer.name disabled />
 
     <p class="text-text-gray font-light mb-2">Typ</p>
     <input type="text" class="bg-light-gray w-2/3" :value=layer.layer_information.type disabled />
@@ -11,7 +12,8 @@
     <hr class="my-8 text-icon-gray">
 
     <!-- print activated properties -->
-    <div v-for="property in layer.layer_information.properties.filter(property => property.activated === true)" :key="property.name">
+    <div v-if="layer.dummy === false">
+      <div v-for="property in layer.layer_information.properties.filter(property => property.activated === true)" :key="property.name">
         <p class="text-text-gray font-light mb-2">{{property.description}}<br/></p>
 
         <!-- print scalar values -->
@@ -38,8 +40,9 @@
 
         <br />
       </div>
+    </div>
 
-    <button v-on:click="$emit('on-save')" class="button-standard disabled:opacity-0" :disabled="invalidState === true">Speichern</button>
+    <button v-on:click="$emit('on-save')" v-bind:class="invalidState === true ? 'button-disabled' : 'button-standard'" :disabled="invalidState === true">Speichern</button>
   </div>
 </template>
 
@@ -144,6 +147,7 @@ export default {
     },
 
     onChangeName(event) {
+      console.log(event)
       this.layer.name = event.target.value
     }
   }
