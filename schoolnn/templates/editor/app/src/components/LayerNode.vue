@@ -6,12 +6,19 @@
       </svg>
     </span>
 
-    <div  class="text-left select-none w-full ml-3">
+    <div class="text-left select-none w-full ml-3">
       <div v-on:click="$emit('on-layer-select', layer)">
-        <h4 class="mb-4">{{layer.name}}</h4>
+        <div class="flex justify-between items-center">
+          <h4 class="mb-2">{{layer.name}}</h4>
+          <a v-if="layer.fixed === false && layer.layer.properties.length > 1" class="mb-4 cursor-pointer" v-on:click="opened = !opened" v-bind:class="opened === true ? 'transform rotate-90' : ''">
+            <svg class="text-primary stroke-current" width="20" height="15" viewBox="-2.5 -5 75 60" preserveAspectRatio="none">
+              <path fill="none" d="M0,0 l35,50 l35,-50" stroke-linecap="round" stroke-width="5" />
+            </svg>
+          </a>
+        </div>
+        <div class="mb-1 mt-0 block">Typ: {{layer.layer_information.type}}</div>
 
-        <div v-if="layer.dummy == false">
-          <div class="mb-1 mt-0 block">Typ: {{layer.layer_information.type}}</div>
+        <div v-if="layer.dummy == false" v-bind:class="opened === false ? 'hidden' : ''">
           <div class="mb-1 mt-0 block" v-for="property in layer.layer_information.properties" :key="property.name">
             {{property.description}}: {{
               Array.isArray(getProperty(property.name).value)
@@ -22,7 +29,7 @@
         </div>
       </div>
 
-      <div v-if="layer.fixed === false" class="inline-flex space-x-2 text-text-gray mt-4">
+      <div v-if="layer.fixed === false" class="inline-flex space-x-2 text-text-gray mt-">
         <a class="flex-1 cursor-pointer text-red" v-on:click="$emit('on-delete-layer', layer)">Löschen</a>
         <svg class="inline self-center text-text-gray fill-current"  width="5" height="5" viewBox="0 0 120 120" version="1.1"
              xmlns="http://www.w3.org/2000/svg">
@@ -46,6 +53,12 @@ export default {
   methods: {
     getProperty(key) {
       return this.layer.layer.properties.find(element => element.name === key)
+    }
+  },
+
+  data() {
+    return {
+      opened: false,
     }
   }
 }

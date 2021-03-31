@@ -16,7 +16,7 @@
 {% block main %}
     <div class="space-y-8">
         {% for detail_user in detail_users %}
-            <article class="card flex items-center justify-between">
+            <article onclick="location.href='{% url "user-detail" detail_user.id %}';" class="card cursor-pointer flex items-center justify-between">
                 <h3>
                     {{ detail_user.username }}
                     {% if detail_user.id == user.id %}
@@ -24,7 +24,6 @@
                     {% endif %}
                 </h3>
                 <div>
-                    <a class="text-text-gray" href="{% url "user-detail" detail_user.id %}">Details</a> &bullet;
                     <a class="text-text-gray" href="{% url "user-edit" detail_user.id %}">Einstellungen</a> &bullet;
                     <a class="text-red" href="{% url "user-delete" detail_user.id %}">Löschen</a>
                 </div>
