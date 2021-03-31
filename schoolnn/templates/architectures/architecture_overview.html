@@ -15,10 +15,9 @@
 {% block main %}
     <div class="space-y-8">
         {% for architecture in architectures %}
-            <article class="card flex items-center justify-between">
+            <article onclick="location.href='{% url "architecture-detail" architecture.id %}';" class="card cursor-pointer flex items-center justify-between">
                 <h3>{{ architecture.name }}</h3>
                 <div>
-                    <a class="text-text-gray" href="{% url "architecture-detail" architecture.id %}">Details</a> &bullet;
                     <a class="text-text-gray" href="{% url "architecture-editor" architecture.id %}">Editor</a> &bullet;
                     <a class="text-text-gray" href="{% url "architecture-edit" architecture.id %}">Einstellungen</a> &bullet;
                     <a class="text-red" href="{% url "architecture-delete" architecture.id %}">Löschen</a>

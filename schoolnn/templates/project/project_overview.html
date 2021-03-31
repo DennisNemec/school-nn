@@ -15,10 +15,9 @@
 {% block main %}
     <div class="space-y-8">
         {% for project in projects %}
-            <article class="card flex items-center justify-between">
+            <article onclick="location.href='{% url "project-details" project.id %}';" class="card cursor-pointer flex justify-between items-center">
                 <h3>{{ project.name }}</h3>
                 <div>
-                    <a class="text-text-gray" href="{% url "project-details" project.id %}">Details</a> &bullet;
                     <a class="text-text-gray" href="{% url "project-edit-settings" project.id %}">Einstellungen</a> &bullet;
                     <a class="text-red" href="{% url "project-delete" project.id %}">Löschen</a>
                 </div>

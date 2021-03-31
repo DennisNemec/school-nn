@@ -23,7 +23,7 @@
     <div class="space-y-8">
 
     {% for dataset in datasets.1 %}
-        <article class="card flex justify-between items-center">
+        <article onclick="location.href='{% url "dataset-details" dataset.id %}';" class="card cursor-pointer flex justify-between items-center border-transparent">
             <div class="flex items-center">
                 <h3>{{ dataset.name }}</h3>
 
@@ -32,9 +32,8 @@
                 </span>
             </div>
 
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between" >
                 <div>
-                    <a class="text-text-gray" href="{% url "dataset-details" dataset.id %}">Details</a> &bullet;
                     <a class="text-text-gray" href="{% url "dataset-edit" dataset.id %}">Einstellungen</a> &bullet;
                     <a class="text-red" href="{% url "dataset-delete" dataset.id %}" >Löschen</a>
                 </div>
