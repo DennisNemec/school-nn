@@ -28,18 +28,18 @@ def zip_to_full_dataset(zip_file: BytesIO, dataset: Dataset):
             print("Skip file because of file ending:", entry)
             continue
 
-        label_name = entry.split("/")[0].title()
-        if label_name not in label_name_dict:
-            label_name_dict[label_name] = Label.objects.create(
-                dataset=dataset, name=label_name
-            )
-
         image_binary = BytesIO(dataset_zip.read(entry))
         try:
             image_pil = ImagePillow.open(image_binary)
         except UnidentifiedImageError:
             print("Skip file, seems to be no valid image: ", entry)
             continue
+
+        label_name = entry.split("/")[0].title()
+        if label_name not in label_name_dict:
+            label_name_dict[label_name] = Label.objects.create(
+                dataset=dataset, name=label_name
+            )
 
         width, height = image_pil.size
         target_size = min([width, height, 512])
