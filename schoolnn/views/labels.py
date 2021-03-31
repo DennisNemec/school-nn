@@ -172,6 +172,7 @@ class LabelCreateImageView(FormView):
         image_pillow = ImageOps.fit(
             image_pillow, (target_size, target_size), ImagePillow.ANTIALIAS
         )
+        image_pillow.save(path)
 
     def create_image_entry(self, label, dataset):
         """ Insert an Image object into the database """
