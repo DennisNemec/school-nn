@@ -1,14 +1,14 @@
 from typing import List
 from io import BytesIO
 import zipfile
-from base64 import b64encode
 from django import forms
 from django.views import View
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.core.validators import FileExtensionValidator
-from django.http import HttpResponse
 from schoolnn.models import TrainingPass
 from ..training import ClassificationResult, infere_images
+from PIL import Image as ImagePillow, UnidentifiedImageError
 
 
 class InferenceForm(forms.Form):
@@ -18,7 +18,10 @@ class InferenceForm(forms.Form):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=[
-                    "zip",  # "jpg", "jpeg", "png",
+                    "zip",
+                    "jpg",
+                    "jpeg",
+                    "png",
                 ]
             )
         ]
@@ -37,22 +40,25 @@ class InferenceView(View):
         images_binary = []
         images_filename = []
 
-        images_zipped = zipfile.ZipFile(form.cleaned_data["file"])
-        for filename in images_zipped.namelist():
-            images_filename.append(filename)
-            images_binary.append(BytesIO(images_zipped.read(filename)))
+        uploaded_file = form.cleaned_data["file"]
+
+        uploaded_file_binary = BytesIO(uploaded_file.read())
+        try:
+            # Single images
+            ImagePillow.open(uploaded_file_binary)
+            uploaded_file_binary.seek(0)
+            images_binary.append(uploaded_file_binary)
+        except UnidentifiedImageError:
+            # Multiple images in zip
+            images_zipped = zipfile.ZipFile(uploaded_file_binary)
+            for filename in images_zipped.namelist():
+                images_filename.append(filename)
+                images_binary.append(BytesIO(images_zipped.read(filename)))
 
         predictions = infere_images(
             training_pass=training_pass, images=images_binary
         )
         return predictions
-
-        result = []
-        for binary_data, prediction in zip(images_binary, predictions):
-            binary_data.seek(0)
-            result.append((b64encode(binary_data.read()).decode(), prediction))
-
-        return result
 
     def get(self, request, project_pk: int = 0, training_pk: int = 0):
         """Get site to start interference."""
@@ -69,11 +75,34 @@ class InferenceView(View):
 
         if form.is_valid():
             training_pass = TrainingPass.objects.get(pk=training_pk)
-            image_predictions = self._handle_valid_form(form, training_pass)
+            try:
+                image_predictions = self._handle_valid_form(
+                    form,
+                    training_pass,
+                )
+            except zipfile.BadZipFile:
+                messages.error(
+                    request,
+                    "Invalide Eingabedatei.\n"
+                    "Die Eingabedatei ist keine valide Zipdatei",
+                )
+                return redirect(
+                    "inference", project_pk=project_pk, training_pk=training_pk
+                )
+
             context = {
                 "request": request,
                 "training_pass": training_pass,
                 "image_predictions": image_predictions,
             }
             return render(request, "inference/inference_result.html", context)
-        return HttpResponse("SAD: INVALID")
+
+        messages.error(
+            request,
+            "Invalide Eingabedatei.\n"
+            "Bitte wöhle ein einzelnes Bild oder Bilder in einer Zipdatei.\n"
+            "Erwartete Dateiendungen: zip, jpg, jpeg, png",
+        )
+        return redirect(
+            "inference", project_pk=project_pk, training_pk=training_pk
+        )

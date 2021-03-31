@@ -27,7 +27,7 @@
 
 {% block main %}
 <div class="card">
-    Lade Bilder hoch um diese klassifizieren zu lassen.
+    Lade Bilder hoch um diese klassifizieren zu lassen (*.jpg, *.zip).
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
