@@ -87,15 +87,13 @@ def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
             activation=layer_dict["activation"],
         )
     elif layer_type == "Flatten":
-        keras_layer = layers.Flatten(
-        )
+        keras_layer = layers.Flatten()
     elif layer_type == "Dropout":
         keras_layer = layers.Dropout(
             rate=float(layer_dict["rate"]),
         )
     elif layer_type == "BatchNormalization":
-        keras_layer = layers.BatchNormalization(
-        )
+        keras_layer = layers.BatchNormalization()
     elif layer_type == "Dense":
         keras_layer = layers.Dense(
             units=int(layer_dict["units"]),
