@@ -35,6 +35,7 @@ def _layer_to_dict(keras_layer: Any) -> dict:
             "type": "MaxPooling2D",
             "pool_size": keras_layer.pool_size,
             "strides": keras_layer.strides,
+            "name": keras_layer.name,
         }
     if isinstance(keras_layer, layers.Conv2D):
         return {
@@ -44,33 +45,46 @@ def _layer_to_dict(keras_layer: Any) -> dict:
             "strides": keras_layer.strides,
             "kernel_size": keras_layer.kernel_size,
             "padding": keras_layer.padding,
+            "name": keras_layer.name,
         }
     if isinstance(keras_layer, layers.Dense):
         return {
             "type": "Dense",
             "activation": _activation_to_keyword(keras_layer.activation),
             "units": keras_layer.units,
+            "name": keras_layer.name,
         }
     if isinstance(keras_layer, layers.Dropout):
         return {
             "type": "Dropout",
             "rate": keras_layer.rate,
+            "name": keras_layer.name,
         }
     if isinstance(keras_layer, layers.Flatten):
-        return {"type": "Flatten"}
+        return {
+            "type": "Flatten",
+            "name": keras_layer.name,
+        }
     if isinstance(keras_layer, layers.BatchNormalization):
-        return {"type": "BatchNormalization"}
+        return {
+            "type": "BatchNormalization",
+            "name": keras_layer.name,
+        }
     raise ModelNotSupportedException(keras_layer.__class__.__name__)
 
 
 def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
     layer_type = layer_dict["type"]
     if layer_type == "Input":
-        keras_layer = layers.Input(shape=layer_dict["shape"])
+        keras_layer = layers.Input(
+            shape=layer_dict["shape"],
+            name=layer_dict.get("name", None),
+        )
     elif layer_type == "MaxPooling2D":
         keras_layer = layers.MaxPooling2D(
             pool_size=layer_dict["pool_size"],
             strides=layer_dict["strides"],
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "Conv2D":
         keras_layer = layers.Conv2D(
@@ -79,16 +93,26 @@ def _dict_to_layer(layer_dict: dict) -> SupportedLayers:
             strides=layer_dict["strides"],
             padding=layer_dict["padding"],
             activation=layer_dict["activation"],
+            name=layer_dict.get("name", None),
         )
     elif layer_type == "Flatten":
-        keras_layer = layers.Flatten()
+        keras_layer = layers.Flatten(
+            name=layer_dict.get("name", None),
+        )
     elif layer_type == "Dropout":
-        keras_layer = layers.Dropout(rate=float(layer_dict["rate"]))
+        keras_layer = layers.Dropout(
+            rate=float(layer_dict["rate"]),
+            name=layer_dict.get("name", None),
+        )
     elif layer_type == "BatchNormalization":
-        keras_layer = layers.BatchNormalization()
+        keras_layer = layers.BatchNormalization(
+            name=layer_dict.get("name", None),
+        )
     elif layer_type == "Dense":
         keras_layer = layers.Dense(
-            units=int(layer_dict["units"]), activation=layer_dict["activation"]
+            units=int(layer_dict["units"]),
+            activation=layer_dict["activation"],
+            name=layer_dict.get("name", None),
         )
     else:
         err_msg = "Unsupported layer: {}".format(layer_type)
@@ -103,7 +127,6 @@ class WrappedArchitecture:
     def __init__(self, json_representation: List[dict]):
         """Create a wrapped object and validates for syntax errors."""
         self.json_representation = json_representation
-        print(self.json_representation)
         # Raises exception for invalid dictionary
         # hence output_dimension is irrelevant
         self.to_keras_model(1)
