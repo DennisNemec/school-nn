@@ -25,6 +25,10 @@
     }
 }
 
+[class*="button-disabled"] {
+    @apply bg-light-gray text-white;
+}
+
 [class*="button-inverted"] {
     @apply bg-transparent border-accent text-accent;
 
