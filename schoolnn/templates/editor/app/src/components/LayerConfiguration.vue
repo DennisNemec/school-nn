@@ -76,7 +76,7 @@ export default {
 
   methods: {
     isInRange(value, min, max) {
-      return value > min && value < max
+      return value >= min && value <= max
     },
 
     addColorBorderError(htmlElement) {
@@ -96,6 +96,9 @@ export default {
 
       if (!this.isInRange(value, min, max)) {
         isValid = false
+        this.$emit("set-error-message", "Die Parameter enthalten fehlerhafte Werte.")
+      } else {
+        this.$emit("set-error-message", "")
       }
 
       this.$emit("set-invalid-state", !isValid)
@@ -137,10 +140,12 @@ export default {
       for (let val of value) {
         if (!this.isInRange(val, min, max)) {
           isValid = false
+          this.$emit("set-error-message", "Die Parameter enthalten fehlerhafte Werte.")
         }
       }
 
       this.$emit('set-invalid-state', !isValid)
+      this.$emit("set-error-message", "")
 
       this.layer.layer.properties.find(element => element.name === propertyName).value = value
 
