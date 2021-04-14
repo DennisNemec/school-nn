@@ -45,7 +45,7 @@
 
         <!-- Print configuration -->
         <div class="w-1/4 mb-6 pt-16">
-          <layer-configuration v-on:set-invalid-state="onInvalidStateToggle" v-on:on-save="onSave" v-bind:invalid-state="invalidState" v-bind:layer="selectedLayer" />
+          <layer-configuration v-on:set-invalid-state="onInvalidStateToggle" v-on:set-error-message="setErrorMessage" v-on:on-save="onSave" v-bind:invalid-state="invalidState" v-bind:layer="selectedLayer" />
         </div>
       </div>
     </div>
@@ -128,6 +128,8 @@ export default {
           properties: []
         },
       }
+
+      this.onArchitectureChange()
 
       return Object.keys(backendLayer).reduce((frontendLayer, key) => {
         if (key !== 'name') {
@@ -246,8 +248,9 @@ export default {
         const ind = this.selectedLayerList.indexOf(this.selectedLayerList.find(element => element.id === layer.id))
         this.$delete(this.selectedLayerList, ind)
         this.invalidState = false
-        this.onArchitectureChange()
       }
+
+      this.onArchitectureChange()
     },
 
     onDuplicateLayer(layer) {
