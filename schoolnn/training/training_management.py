@@ -20,8 +20,22 @@ from schoolnn_app.settings import DEBUG
 from multiprocessing import Process, Queue
 from time import time
 from io import BytesIO
+from django.db.utils import DatabaseError
 
 
+def _terminate_nicely_in_case_of_training_pass_deletion(old_f):
+    def new_f(*args, **kwargs):
+        try:
+            return old_f(*args, **kwargs)
+        except DatabaseError as e:
+            if "did not affect any rows" in e.args[0]:
+                return
+            raise
+
+    return new_f
+
+
+@_terminate_nicely_in_case_of_training_pass_deletion
 def run_job_until_done_or_terminated(
     training_pass: TrainingPass, verbose: bool = False
 ):
