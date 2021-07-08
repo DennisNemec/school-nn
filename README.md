@@ -1,6 +1,6 @@
 # school-nn
 
-SchoolNN ist im Rahmen einer Projektarbeit am KIT entstanden und bietet Schülern und Lehrern die Möglichkeit, einfach graphisch per Drag-and-drop künstliche neuronale Netze zu erstellen und zu trainieren. Aus didaktischen Gründen besteht der Fokus der Software auf Bilderkennung.
+SchoolNN ist im Rahmen einer Projektarbeit am KIT entstanden und bietet SchülerInnen und LehrerInnen die Möglichkeit, einfach graphisch per Drag-and-drop künstliche neuronale Netze zu erstellen und zu trainieren. Aus didaktischen Gründen besteht der Fokus der Software auf Bilderkennung.
 
 ### Verwendeter Software-Stack
 1. Vue.js für den Drag-and-drop Editor
