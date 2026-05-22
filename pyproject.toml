@@ -1,0 +1,24 @@
+[project]
+name = "school-nn"
+version = "0.1.0"
+description = "SchoolNN - eine Software zum Erlernen von ML"
+requires-python = "==3.8.*"
+dependencies = [
+    "django~=3.1.6",
+    "python-dotenv~=0.15.0",
+    "pillow~=8.1.0",
+    "schema~=0.7.3",
+    "tensorflow~=2.4.1",
+    "imgaug~=0.4.0",
+    "h5py~=2.10.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pyppeteer",
+    "coverage",
+]
+
+[tool.uv]
+package = false

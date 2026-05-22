@@ -14,10 +14,8 @@ SchoolNN ist im Rahmen einer Projektarbeit am KIT entstanden und bietet Schüler
 ## Installation
 
 ```
-$ python -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-$ python manage.py migrate
+$ uv sync
+$ uv run python manage.py migrate
 ```
 
 ## Konfiguration
@@ -27,5 +25,5 @@ Die `.env.example` muss zu `.env` kopiert und evtl. angepasst werden
 ## Starten
 
 ```
-$ python manage.py runserver
+$ uv run python manage.py runserver
 ```
